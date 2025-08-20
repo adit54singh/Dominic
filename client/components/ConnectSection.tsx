@@ -498,34 +498,38 @@ const ConnectSection = memo(({ onActivity }: ConnectSectionProps) => {
   );
 
   const handleFollow = useCallback((userId: string) => {
+    const user = users.find(u => u.id === userId);
+    const isCurrentlyFollowed = followedUsers.has(userId);
+
     setFollowedUsers((prev) => {
       const newFollowed = new Set(prev);
-      const user = users.find(u => u.id === userId);
-
       if (newFollowed.has(userId)) {
         newFollowed.delete(userId);
-        // Add unfollow activity
-        if (user && onActivity) {
-          onActivity({
-            type: "unfollow",
-            action: `Unfollowed ${user.name}`,
-            details: `No longer following ${user.title}`,
-          });
-        }
       } else {
         newFollowed.add(userId);
-        // Add follow activity
-        if (user && onActivity) {
-          onActivity({
-            type: "follow",
-            action: `Started following ${user.name}`,
-            details: `Now following ${user.title} from ${user.location}`,
-          });
-        }
       }
       return newFollowed;
     });
-  }, [users, onActivity]);
+
+    // Call onActivity after state update, not during
+    if (user && onActivity) {
+      if (isCurrentlyFollowed) {
+        // Add unfollow activity
+        onActivity({
+          type: "unfollow",
+          action: `Unfollowed ${user.name}`,
+          details: `No longer following ${user.title}`,
+        });
+      } else {
+        // Add follow activity
+        onActivity({
+          type: "follow",
+          action: `Started following ${user.name}`,
+          details: `Now following ${user.title} from ${user.location}`,
+        });
+      }
+    }
+  }, [users, onActivity, followedUsers]);
 
   const handleMessage = useCallback((userId: string) => {
     console.log("Message user:", userId);
