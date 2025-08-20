@@ -318,14 +318,56 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
             <CardContent className="space-y-4">
               {/* Profile Avatar */}
               <div className="text-center">
-                <Avatar className="w-20 h-20 mx-auto mb-4 border-4 border-border">
-                  <AvatarFallback className="bg-primary text-white text-xl font-bold">
-                    {profile.name.split(' ').map(n => n[0]).join('').toUpperCase() || 'AS'}
-                  </AvatarFallback>
-                </Avatar>
-                <Button variant="outline" size="sm">
-                  Change Photo
-                </Button>
+                <div className="relative">
+                  <Avatar className="w-20 h-20 mx-auto mb-4 border-4 border-border">
+                    {profile.avatar ? (
+                      <img
+                        src={profile.avatar}
+                        alt="Profile"
+                        className="w-full h-full object-cover rounded-full"
+                      />
+                    ) : (
+                      <AvatarFallback className="bg-primary text-white text-xl font-bold">
+                        {profile.name.split(' ').map(n => n[0]).join('').toUpperCase() || 'AS'}
+                      </AvatarFallback>
+                    )}
+                  </Avatar>
+                  {uploadingPhoto && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full">
+                      <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                    </div>
+                  )}
+                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoUpload}
+                  className="hidden"
+                  id="photo-upload"
+                  disabled={uploadingPhoto}
+                />
+                <label htmlFor="photo-upload">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={uploadingPhoto}
+                    asChild
+                  >
+                    <span className="cursor-pointer">
+                      {uploadingPhoto ? 'Uploading...' : 'Change Photo'}
+                    </span>
+                  </Button>
+                </label>
+                {profile.avatar && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setProfile(prev => ({ ...prev, avatar: "" }))}
+                    className="ml-2 text-destructive hover:text-destructive"
+                  >
+                    Remove
+                  </Button>
+                )}
               </div>
 
               <div className="space-y-3">
