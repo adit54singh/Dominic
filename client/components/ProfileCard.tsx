@@ -141,9 +141,9 @@ export const generateSampleProfiles = (): ProfileCardData[] => [
     avatar: "AD",
     experience: "3 Years",
     leetcodeRank: "#8,102",
-    domains: ["Web3 & DeFi"],
+    domains: ["Blockchain & Web3"],
     projectsCollaborated: 15,
-    mentorshipHours: 60,
+    rating: 4.8,
     skills: ["Solidity", "Ethers.js", "Hardhat"]
   },
   {
