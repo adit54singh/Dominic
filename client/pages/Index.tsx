@@ -24,7 +24,6 @@ import NavBar from "@/components/NavBar";
 import { useState, useEffect } from "react";
 
 export default function Index() {
-
   const domains = [
     {
       name: "Software Development",
@@ -306,7 +305,6 @@ export default function Index() {
           </div>
         </div>
       </footer>
-
     </div>
   );
 }

@@ -87,7 +87,6 @@ export default function AnimatedDomains() {
       clearInterval(techInterval);
       clearInterval(nonTechInterval);
     };
-
   }, []);
 
   return (
@@ -108,8 +107,8 @@ export default function AnimatedDomains() {
               delay: i * 0.2,
             }}
             style={{
-              left: `${20 + (i * 10)}%`,
-              top: `${20 + (i * 8)}%`,
+              left: `${20 + i * 10}%`,
+              top: `${20 + i * 8}%`,
             }}
           />
         ))}

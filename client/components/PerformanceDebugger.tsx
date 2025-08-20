@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { PerformanceMonitor } from '@/lib/performance';
-import { BarChart3, Zap, Activity, X } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { PerformanceMonitor } from "@/lib/performance";
+import { BarChart3, Zap, Activity, X } from "lucide-react";
 
 const PerformanceDebugger: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -11,7 +11,7 @@ const PerformanceDebugger: React.FC = () => {
   const [monitor] = useState(() => PerformanceMonitor.getInstance());
 
   useEffect(() => {
-    if (process.env.NODE_ENV !== 'development') return;
+    if (process.env.NODE_ENV !== "development") return;
 
     const updateMetrics = () => {
       setMetrics(monitor.getMetrics());
@@ -24,7 +24,7 @@ const PerformanceDebugger: React.FC = () => {
     return () => clearInterval(interval);
   }, [monitor]);
 
-  if (process.env.NODE_ENV !== 'development' || !isVisible) {
+  if (process.env.NODE_ENV !== "development" || !isVisible) {
     return (
       <Button
         variant="outline"
@@ -40,38 +40,44 @@ const PerformanceDebugger: React.FC = () => {
 
   const getScoreColor = (metric: string, value: number) => {
     switch (metric) {
-      case 'lcp':
-        if (value <= 2500) return 'bg-green-500';
-        if (value <= 4000) return 'bg-yellow-500';
-        return 'bg-red-500';
-      case 'fid':
-        if (value <= 100) return 'bg-green-500';
-        if (value <= 300) return 'bg-yellow-500';
-        return 'bg-red-500';
-      case 'cls':
-        if (value <= 0.1) return 'bg-green-500';
-        if (value <= 0.25) return 'bg-yellow-500';
-        return 'bg-red-500';
+      case "lcp":
+        if (value <= 2500) return "bg-green-500";
+        if (value <= 4000) return "bg-yellow-500";
+        return "bg-red-500";
+      case "fid":
+        if (value <= 100) return "bg-green-500";
+        if (value <= 300) return "bg-yellow-500";
+        return "bg-red-500";
+      case "cls":
+        if (value <= 0.1) return "bg-green-500";
+        if (value <= 0.25) return "bg-yellow-500";
+        return "bg-red-500";
       default:
-        return 'bg-gray-500';
+        return "bg-gray-500";
     }
   };
 
   const formatValue = (metric: string, value: number) => {
     switch (metric) {
-      case 'lcp':
-      case 'fid':
+      case "lcp":
+      case "fid":
         return `${value.toFixed(0)}ms`;
-      case 'cls':
+      case "cls":
         return value.toFixed(3);
       default:
         return `${value.toFixed(1)}ms`;
     }
   };
 
-  const coreWebVitals = ['lcp', 'fid', 'cls'].filter(metric => metrics[metric]);
-  const renderMetrics = Object.entries(metrics).filter(([name]) => name.startsWith('render_'));
-  const asyncMetrics = Object.entries(metrics).filter(([name]) => name.startsWith('async_'));
+  const coreWebVitals = ["lcp", "fid", "cls"].filter(
+    (metric) => metrics[metric],
+  );
+  const renderMetrics = Object.entries(metrics).filter(([name]) =>
+    name.startsWith("render_"),
+  );
+  const asyncMetrics = Object.entries(metrics).filter(([name]) =>
+    name.startsWith("async_"),
+  );
 
   return (
     <div className="fixed bottom-4 right-4 z-[9999] w-80">
@@ -104,8 +110,13 @@ const PerformanceDebugger: React.FC = () => {
                   const data = metrics[metric];
                   const colorClass = getScoreColor(metric, data.avg);
                   return (
-                    <div key={metric} className="flex items-center justify-between">
-                      <span className="text-sm font-medium uppercase">{metric}</span>
+                    <div
+                      key={metric}
+                      className="flex items-center justify-between"
+                    >
+                      <span className="text-sm font-medium uppercase">
+                        {metric}
+                      </span>
                       <Badge className={`${colorClass} text-white`}>
                         {formatValue(metric, data.avg)}
                       </Badge>
@@ -122,9 +133,12 @@ const PerformanceDebugger: React.FC = () => {
               <h4 className="font-semibold text-sm mb-2">Component Renders</h4>
               <div className="space-y-1">
                 {renderMetrics.slice(0, 5).map(([name, data]) => {
-                  const componentName = name.replace('render_', '');
+                  const componentName = name.replace("render_", "");
                   return (
-                    <div key={name} className="flex items-center justify-between text-sm">
+                    <div
+                      key={name}
+                      className="flex items-center justify-between text-sm"
+                    >
                       <span className="truncate">{componentName}</span>
                       <Badge variant="outline" className="text-xs">
                         {data.avg.toFixed(1)}ms
@@ -142,9 +156,12 @@ const PerformanceDebugger: React.FC = () => {
               <h4 className="font-semibold text-sm mb-2">Async Operations</h4>
               <div className="space-y-1">
                 {asyncMetrics.slice(0, 3).map(([name, data]) => {
-                  const operationName = name.replace('async_', '');
+                  const operationName = name.replace("async_", "");
                   return (
-                    <div key={name} className="flex items-center justify-between text-sm">
+                    <div
+                      key={name}
+                      className="flex items-center justify-between text-sm"
+                    >
                       <span className="truncate">{operationName}</span>
                       <Badge variant="outline" className="text-xs">
                         {data.avg.toFixed(1)}ms
