@@ -465,7 +465,35 @@ export default function UserDashboard() {
   };
 
   const renderMainContent = () => {
-    if (activeTab === "profile" || activeVerticalNav === "profile") {
+    if (activeTab === "edit-profile" || activeVerticalNav === "edit-profile") {
+      return (
+        <EditProfile
+          onBack={() => {
+            setActiveTab("profile");
+            setActiveVerticalNav("profile");
+          }}
+          onSave={(profile) => {
+            // Update user onboarding data
+            setUserOnboardingData(prevData => ({
+              ...prevData,
+              ...profile,
+              userProjects: profile.projects
+            }));
+
+            // Show success message and go back to profile
+            addActivity({
+              type: 'profile_updated',
+              action: 'Updated profile information',
+              details: 'Profile changes have been saved successfully',
+              timestamp: new Date().toISOString()
+            });
+
+            setActiveTab("profile");
+            setActiveVerticalNav("profile");
+          }}
+        />
+      );
+    } else if (activeTab === "profile" || activeVerticalNav === "profile") {
       return (
         <div className="space-y-12 animate-in slide-in-from-top-4 duration-700">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
