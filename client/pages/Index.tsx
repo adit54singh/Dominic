@@ -21,35 +21,9 @@ import {
 import { Link } from "react-router-dom";
 import ConnectSection from "@/components/ConnectSection";
 import NavBar from "@/components/NavBar";
-import { useState, useEffect, Suspense, lazy } from "react";
-
-// Lazy load heavy components
-const AnimatedDomains = lazy(() => import("@/components/AnimatedDomains"));
+import { useState, useEffect } from "react";
 
 export default function Index() {
-  const [showDomainsAnimation, setShowDomainsAnimation] = useState(false);
-
-  // Handle escape key to close domains animation
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && showDomainsAnimation) {
-        setShowDomainsAnimation(false);
-      }
-    };
-
-    if (showDomainsAnimation) {
-      document.addEventListener("keydown", handleEscape);
-      // Prevent body scroll when overlay is open
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-
-    return () => {
-      document.removeEventListener("keydown", handleEscape);
-      document.body.style.overflow = "unset";
-    };
-  }, [showDomainsAnimation]);
 
   const domains = [
     {
@@ -127,7 +101,7 @@ export default function Index() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5">
       {/* Navigation */}
-      <NavBar onDomainsClick={() => setShowDomainsAnimation(true)} />
+      <NavBar />
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 text-center animate-in slide-up duration-700">
@@ -242,9 +216,11 @@ export default function Index() {
           ))}
         </div>
         <div className="text-center mt-8">
-          <Button variant="outline" size="lg">
-            View All Domains
-          </Button>
+          <Link to="/domains">
+            <Button variant="outline" size="lg">
+              View All Domains
+            </Button>
+          </Link>
         </div>
       </section>
 
@@ -331,42 +307,6 @@ export default function Index() {
         </div>
       </footer>
 
-      {/* Domains Animation Overlay */}
-      {showDomainsAnimation && (
-        <div className="fixed inset-0 z-40 bg-background/98">
-          {/* Navbar stays visible */}
-          <div className="sticky top-0 z-50">
-            <NavBar onDomainsClick={() => setShowDomainsAnimation(false)} />
-          </div>
-
-          {/* Close button */}
-          <div className="absolute top-20 right-4 z-50">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowDomainsAnimation(false)}
-              className="bg-background/90 border-primary/20 hover:bg-primary/10"
-            >
-              <X className="w-4 h-4 mr-2" />
-              Close (ESC)
-            </Button>
-          </div>
-
-          {/* Scrollable content */}
-          <div className="relative overflow-y-auto max-h-screen">
-            <Suspense fallback={
-              <div className="min-h-[80vh] flex items-center justify-center">
-                <div className="flex flex-col items-center space-y-4">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                  <p className="text-muted-foreground text-sm">Loading domains...</p>
-                </div>
-              </div>
-            }>
-              <AnimatedDomains />
-            </Suspense>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
