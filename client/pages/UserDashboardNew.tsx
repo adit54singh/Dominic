@@ -180,22 +180,7 @@ export default function UserDashboard() {
     }
   }, []);
 
-  // Handle domain initialization when userOnboardingData first loads
-  useEffect(() => {
-    console.log("Domain validation useEffect triggered", {
-      hasDomains: !!userOnboardingData?.domains,
-      domainsLength: userOnboardingData?.domains?.length,
-      selectedDomain
-    });
-    if (userOnboardingData?.domains && userOnboardingData.domains.length > 0) {
-      const availableDomains = userOnboardingData.domains;
-      // Only set initial domain if none is selected
-      if (!selectedDomain || selectedDomain === "") {
-        console.log("Setting initial domain to:", availableDomains[0]);
-        setSelectedDomain(availableDomains[0]);
-      }
-    }
-  }, [userOnboardingData]);
+  // Domain validation is now handled in the initial load useEffect above
 
   // Function to join a project
   const joinProject = (project: any) => {
