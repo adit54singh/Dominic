@@ -18,7 +18,7 @@ import {
   Shield
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import RotatingProfileCards from "@/components/RotatingProfileCards";
+import ConnectSection from "@/components/ConnectSection";
 
 export default function Index() {
   const domains = [
