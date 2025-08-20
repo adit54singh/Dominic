@@ -54,7 +54,7 @@ export default function AnimatedDomains() {
 
       setTimeout(() => {
         setTechVisible(false);
-      }, 3500);
+      }, 2000);
     };
 
     const showRandomNonTechDomains = () => {
@@ -67,7 +67,7 @@ export default function AnimatedDomains() {
 
       setTimeout(() => {
         setNonTechVisible(false);
-      }, 3500);
+      }, 2000);
     };
 
     // Initial display
@@ -76,11 +76,11 @@ export default function AnimatedDomains() {
     // Stagger the non-tech domains to appear after tech domains
     const nonTechTimeout = setTimeout(() => {
       showRandomNonTechDomains();
-    }, 2000);
+    }, 1200);
 
-    // Set intervals for continuous animation with longer duration
-    const techInterval = setInterval(showRandomTechDomains, 12000);
-    const nonTechInterval = setInterval(showRandomNonTechDomains, 12000);
+    // Set intervals for continuous animation with faster refresh
+    const techInterval = setInterval(showRandomTechDomains, 6000);
+    const nonTechInterval = setInterval(showRandomNonTechDomains, 6000);
 
     return () => {
       clearTimeout(nonTechTimeout);
