@@ -476,10 +476,6 @@ export default function UserDashboard() {
                 Connect, collaborate, and build amazing projects with peers
               </p>
             </div>
-            <Button className="sm:w-auto transform transition-all duration-200 hover:scale-105">
-              <Edit className="w-4 h-4 mr-2" />
-              Edit Profile
-            </Button>
           </div>
 
           {/* Section 1: New Profile Header */}
@@ -518,10 +514,6 @@ export default function UserDashboard() {
                           Love building scalable solutions and mentoring upcoming developers in the community.
                         </p>
                       </div>
-                      <Button className="sm:w-auto mt-2">
-                        <Edit className="w-4 h-4 mr-2" />
-                        Edit Profile
-                      </Button>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
