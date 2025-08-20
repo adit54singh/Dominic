@@ -297,10 +297,29 @@ export default function UserProfile() {
                       <p className="text-lg text-gray-300 mb-3">{user.title}</p>
                       <p className="text-gray-400 leading-relaxed max-w-2xl">{user.bio}</p>
                     </div>
-                    <Button className="bg-primary hover:bg-primary/90">
-                      <Edit className="w-4 h-4 mr-2" />
-                      Edit Profile
-                    </Button>
+                    {isOtherUserProfile ? (
+                      <Button
+                        onClick={handleConnect}
+                        className={isConnected ? "bg-green-600 hover:bg-green-700" : "bg-primary hover:bg-primary/90"}
+                      >
+                        {isConnected ? (
+                          <>
+                            <CheckCircle className="w-4 h-4 mr-2" />
+                            Connected
+                          </>
+                        ) : (
+                          <>
+                            <Users className="w-4 h-4 mr-2" />
+                            Connect
+                          </>
+                        )}
+                      </Button>
+                    ) : (
+                      <Button className="bg-primary hover:bg-primary/90">
+                        <Edit className="w-4 h-4 mr-2" />
+                        Edit Profile
+                      </Button>
+                    )}
                   </div>
                   
                   <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400">
