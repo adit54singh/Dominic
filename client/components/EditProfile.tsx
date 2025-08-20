@@ -101,6 +101,7 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
     company: "",
     location: "",
     bio: "",
+    avatar: "",
     skills: [],
     domains: [],
     experience: "",
