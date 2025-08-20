@@ -848,10 +848,10 @@ export default function UserDashboard() {
                   </div>
 
                   {/* Profile Details with enhanced spacing */}
-                  <div className="flex-1 space-y-6">
+                  <div className="flex-1 space-y-6 ml-4">
                     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
                       <div className="space-y-4">
-                        <div className="flex items-center gap-3 mb-3">
+                        <div className="flex items-center gap-4 mb-3">
                           <h1 className="text-2xl sm:text-3xl font-bold">
                             {user.name}
                           </h1>
