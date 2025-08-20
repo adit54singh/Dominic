@@ -20,7 +20,7 @@ interface ProfileCardData {
   leetcodeRank: string;
   domains: string[];
   projectsCollaborated: number;
-  mentorshipHours: number;
+  rating: number;
   skills: string[];
 }
 
