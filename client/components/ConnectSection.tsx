@@ -110,7 +110,8 @@ const ExpandedUserCard = memo(
 
               {user.companies && (
                 <div className="text-sm text-muted-foreground mb-3">
-                  <span className="font-medium">Previous:</span> {user.companies.join(", ")}
+                  <span className="font-medium">Previous:</span>{" "}
+                  {user.companies.join(", ")}
                 </div>
               )}
             </div>
@@ -157,7 +158,10 @@ const ExpandedUserCard = memo(
               </h4>
               <div className="space-y-3">
                 {user.projects.map((project) => (
-                  <div key={project.id} className="bg-muted/30 rounded-lg p-3 space-y-2">
+                  <div
+                    key={project.id}
+                    className="bg-muted/30 rounded-lg p-3 space-y-2"
+                  >
                     <div className="flex items-start justify-between">
                       <h5 className="font-medium text-sm">{project.title}</h5>
                       <div className="flex items-center text-xs text-muted-foreground">
@@ -170,14 +174,19 @@ const ExpandedUserCard = memo(
                     </p>
                     <div className="flex flex-wrap gap-1">
                       {project.technologies.slice(0, 3).map((tech) => (
-                        <Badge key={tech} variant="outline" className="text-xs px-1 py-0">
+                        <Badge
+                          key={tech}
+                          variant="outline"
+                          className="text-xs px-1 py-0"
+                        >
                           {tech}
                         </Badge>
                       ))}
                     </div>
                     <div className="flex items-center justify-between">
                       <div className="text-xs text-muted-foreground">
-                        <span className="font-medium">Seeking:</span> {project.seekingRoles.join(", ")}
+                        <span className="font-medium">Seeking:</span>{" "}
+                        {project.seekingRoles.join(", ")}
                       </div>
                       <Button
                         size="sm"
@@ -342,296 +351,322 @@ UserCard.displayName = "UserCard";
 
 interface ConnectSectionProps {
   onActivity?: (activity: any) => void;
+  followedUsers?: Set<string>;
+  onFollowUser?: (userId: string, isFollowing: boolean) => void;
+  onViewUser?: (userId: string) => void;
 }
 
-const ConnectSection = memo(({ onActivity }: ConnectSectionProps) => {
-  const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
+const ConnectSection = memo(
+  ({
+    onActivity,
+    followedUsers = new Set(),
+    onFollowUser,
+    onViewUser,
+  }: ConnectSectionProps) => {
+    // Memoized user data to prevent unnecessary re-calculations
+    const users = useMemo<User[]>(
+      () => [
+        {
+          id: "1",
+          name: "Rajesh Kumar",
+          title: "Full Stack Developer",
+          location: "Bangalore, India",
+          avatar: "RK",
+          rating: 4.9,
+          studentsHelped: 247,
+          responseTime: "~2 hrs",
+          expertise: ["React", "Node.js", "MongoDB", "TypeScript", "AWS"],
+          bio: "Former Amazon SDE helping students break into FAANG. Specialized in system design and coding interviews.",
+          detailedBio:
+            "With 8+ years at Amazon and Microsoft, I've helped over 200 students land jobs at top tech companies. I specialize in system design, data structures, and behavioral interviews. My approach focuses on building confidence while mastering technical skills.",
+          yearsExperience: 8,
+          companies: ["Amazon", "Microsoft"],
+          isOnline: true,
+          projects: [
+            {
+              id: "p1",
+              title: "E-commerce Microservices",
+              description:
+                "Building a scalable e-commerce platform using microservices architecture with React, Node.js, and AWS.",
+              technologies: ["React", "Node.js", "AWS", "Docker", "MongoDB"],
+              seekingRoles: ["Frontend Dev", "Backend Dev"],
+              membersCount: 4,
+              deadline: "March 15, 2024",
+            },
+            {
+              id: "p2",
+              title: "Real-time Chat App",
+              description:
+                "A real-time messaging application with video calls, file sharing, and group chat features.",
+              technologies: ["React", "Socket.io", "WebRTC"],
+              seekingRoles: ["Frontend Dev", "UI/UX"],
+              membersCount: 2,
+            },
+          ],
+        },
+        {
+          id: "2",
+          name: "Priya Sharma",
+          title: "Data Scientist",
+          location: "Mumbai, India",
+          avatar: "PS",
+          rating: 4.8,
+          studentsHelped: 189,
+          responseTime: "~1 hr",
+          expertise: ["Python", "Machine Learning", "TensorFlow", "SQL"],
+          bio: "ML Engineer at Google. Passionate about teaching data science and helping students land their dream jobs.",
+          detailedBio:
+            "Senior Data Scientist at Google with expertise in machine learning, deep learning, and big data analytics. I love mentoring students transitioning into data science careers and have helped many land roles at FAANG companies.",
+          yearsExperience: 6,
+          companies: ["Google", "Flipkart"],
+          isOnline: false,
+          projects: [
+            {
+              id: "p3",
+              title: "Recommendation Engine",
+              description:
+                "Building a machine learning recommendation system for e-commerce using collaborative filtering and deep learning.",
+              technologies: ["Python", "TensorFlow", "Pandas", "AWS"],
+              seekingRoles: ["ML Engineer", "Data Analyst"],
+              membersCount: 3,
+            },
+          ],
+        },
+        {
+          id: "3",
+          name: "Arjun Patel",
+          title: "Mobile Developer",
+          location: "Pune, India",
+          avatar: "AP",
+          rating: 4.7,
+          studentsHelped: 156,
+          responseTime: "~3 hrs",
+          expertise: ["React Native", "Flutter", "iOS", "Android"],
+          bio: "Senior iOS developer with 5+ years experience. Love mentoring aspiring mobile developers.",
+          isOnline: true,
+        },
+        {
+          id: "4",
+          name: "Sneha Agarwal",
+          title: "UI/UX Designer",
+          location: "Delhi, India",
+          avatar: "SA",
+          rating: 4.9,
+          studentsHelped: 203,
+          responseTime: "~1 hr",
+          expertise: [
+            "Figma",
+            "Design Systems",
+            "User Research",
+            "Prototyping",
+          ],
+          bio: "Lead designer at Zomato. Helping students build beautiful and user-friendly interfaces.",
+          detailedBio:
+            "Lead Product Designer at Zomato with 5+ years of experience in creating user-centered designs. I specialize in design systems, user research, and mentoring aspiring designers to break into top product companies.",
+          yearsExperience: 5,
+          companies: ["Zomato", "Swiggy"],
+          isOnline: true,
+          projects: [
+            {
+              id: "p4",
+              title: "Design System Library",
+              description:
+                "Creating a comprehensive design system library with reusable components for web and mobile applications.",
+              technologies: ["Figma", "React", "Storybook", "Tokens"],
+              seekingRoles: ["UI Designer", "Frontend Dev"],
+              membersCount: 5,
+              deadline: "April 1, 2024",
+            },
+          ],
+        },
+        {
+          id: "5",
+          name: "Vikram Singh",
+          title: "DevOps Engineer",
+          location: "Hyderabad, India",
+          avatar: "VS",
+          rating: 4.6,
+          studentsHelped: 134,
+          responseTime: "~4 hrs",
+          expertise: ["Docker", "Kubernetes", "AWS", "CI/CD", "Terraform"],
+          bio: "DevOps expert at Microsoft. Passionate about cloud technologies and automation.",
+          isOnline: false,
+        },
+        {
+          id: "6",
+          name: "Ritu Mehta",
+          title: "Product Manager",
+          location: "Gurgaon, India",
+          avatar: "RM",
+          rating: 4.8,
+          studentsHelped: 178,
+          responseTime: "~2 hrs",
+          expertise: [
+            "Product Strategy",
+            "Analytics",
+            "Agile",
+            "User Experience",
+          ],
+          bio: "Senior PM at Flipkart. Guiding students on product thinking and career transitions.",
+          isOnline: true,
+        },
+      ],
+      [],
+    );
 
-  // Memoized user data to prevent unnecessary re-calculations
-  const users = useMemo<User[]>(
-    () => [
-      {
-        id: "1",
-        name: "Rajesh Kumar",
-        title: "Full Stack Developer",
-        location: "Bangalore, India",
-        avatar: "RK",
-        rating: 4.9,
-        studentsHelped: 247,
-        responseTime: "~2 hrs",
-        expertise: ["React", "Node.js", "MongoDB", "TypeScript", "AWS"],
-        bio: "Former Amazon SDE helping students break into FAANG. Specialized in system design and coding interviews.",
-        detailedBio: "With 8+ years at Amazon and Microsoft, I've helped over 200 students land jobs at top tech companies. I specialize in system design, data structures, and behavioral interviews. My approach focuses on building confidence while mastering technical skills.",
-        yearsExperience: 8,
-        companies: ["Amazon", "Microsoft"],
-        isOnline: true,
-        projects: [
-          {
-            id: "p1",
-            title: "E-commerce Microservices",
-            description: "Building a scalable e-commerce platform using microservices architecture with React, Node.js, and AWS.",
-            technologies: ["React", "Node.js", "AWS", "Docker", "MongoDB"],
-            seekingRoles: ["Frontend Dev", "Backend Dev"],
-            membersCount: 4,
-            deadline: "March 15, 2024"
-          },
-          {
-            id: "p2",
-            title: "Real-time Chat App",
-            description: "A real-time messaging application with video calls, file sharing, and group chat features.",
-            technologies: ["React", "Socket.io", "WebRTC"],
-            seekingRoles: ["Frontend Dev", "UI/UX"],
-            membersCount: 2
+    // Separate followed and unfollowed users
+    const followedMentors = useMemo(
+      () => users.filter((user) => followedUsers.has(user.id)),
+      [users, followedUsers],
+    );
+
+    const suggestedMentors = useMemo(
+      () => users.filter((user) => !followedUsers.has(user.id)),
+      [users, followedUsers],
+    );
+
+    const handleFollow = useCallback(
+      (userId: string) => {
+        const user = users.find((u) => u.id === userId);
+        const isCurrentlyFollowed = followedUsers.has(userId);
+
+        // Update parent state
+        if (onFollowUser) {
+          onFollowUser(userId, !isCurrentlyFollowed);
+        }
+
+        // Call onActivity after state update, not during
+        if (user && onActivity) {
+          if (isCurrentlyFollowed) {
+            // Add unfollow activity
+            onActivity({
+              type: "unfollow",
+              action: `Unfollowed ${user.name}`,
+              details: `No longer following ${user.title}`,
+            });
+          } else {
+            // Add follow activity
+            onActivity({
+              type: "follow",
+              action: `Started following ${user.name}`,
+              details: `Now following ${user.title} from ${user.location}`,
+            });
           }
-        ]
+        }
       },
-      {
-        id: "2",
-        name: "Priya Sharma",
-        title: "Data Scientist",
-        location: "Mumbai, India",
-        avatar: "PS",
-        rating: 4.8,
-        studentsHelped: 189,
-        responseTime: "~1 hr",
-        expertise: ["Python", "Machine Learning", "TensorFlow", "SQL"],
-        bio: "ML Engineer at Google. Passionate about teaching data science and helping students land their dream jobs.",
-        detailedBio: "Senior Data Scientist at Google with expertise in machine learning, deep learning, and big data analytics. I love mentoring students transitioning into data science careers and have helped many land roles at FAANG companies.",
-        yearsExperience: 6,
-        companies: ["Google", "Flipkart"],
-        isOnline: false,
-        projects: [
-          {
-            id: "p3",
-            title: "Recommendation Engine",
-            description: "Building a machine learning recommendation system for e-commerce using collaborative filtering and deep learning.",
-            technologies: ["Python", "TensorFlow", "Pandas", "AWS"],
-            seekingRoles: ["ML Engineer", "Data Analyst"],
-            membersCount: 3
-          }
-        ]
+      [users, onActivity, followedUsers, onFollowUser],
+    );
+
+    const handleMessage = useCallback((userId: string) => {
+      console.log("Message user:", userId);
+    }, []);
+
+    const handleView = useCallback(
+      (userId: string) => {
+        if (onViewUser) {
+          onViewUser(userId);
+        }
       },
-      {
-        id: "3",
-        name: "Arjun Patel",
-        title: "Mobile Developer",
-        location: "Pune, India",
-        avatar: "AP",
-        rating: 4.7,
-        studentsHelped: 156,
-        responseTime: "~3 hrs",
-        expertise: ["React Native", "Flutter", "iOS", "Android"],
-        bio: "Senior iOS developer with 5+ years experience. Love mentoring aspiring mobile developers.",
-        isOnline: true,
+      [onViewUser],
+    );
+
+    const handleJoinProject = useCallback(
+      (projectId: string, userId: string) => {
+        console.log("Join project:", projectId, "by user:", userId);
+        const user = users.find((u) => u.id === userId);
+        const project = user?.projects?.find((p) => p.id === projectId);
+
+        if (project && user && onActivity) {
+          onActivity({
+            type: "project_joined",
+            action: `Joined project: ${project.title}`,
+            details: `Started collaborating with ${user.name} on ${project.title}`,
+          });
+        }
       },
-      {
-        id: "4",
-        name: "Sneha Agarwal",
-        title: "UI/UX Designer",
-        location: "Delhi, India",
-        avatar: "SA",
-        rating: 4.9,
-        studentsHelped: 203,
-        responseTime: "~1 hr",
-        expertise: ["Figma", "Design Systems", "User Research", "Prototyping"],
-        bio: "Lead designer at Zomato. Helping students build beautiful and user-friendly interfaces.",
-        detailedBio: "Lead Product Designer at Zomato with 5+ years of experience in creating user-centered designs. I specialize in design systems, user research, and mentoring aspiring designers to break into top product companies.",
-        yearsExperience: 5,
-        companies: ["Zomato", "Swiggy"],
-        isOnline: true,
-        projects: [
-          {
-            id: "p4",
-            title: "Design System Library",
-            description: "Creating a comprehensive design system library with reusable components for web and mobile applications.",
-            technologies: ["Figma", "React", "Storybook", "Tokens"],
-            seekingRoles: ["UI Designer", "Frontend Dev"],
-            membersCount: 5,
-            deadline: "April 1, 2024"
-          }
-        ]
-      },
-      {
-        id: "5",
-        name: "Vikram Singh",
-        title: "DevOps Engineer",
-        location: "Hyderabad, India",
-        avatar: "VS",
-        rating: 4.6,
-        studentsHelped: 134,
-        responseTime: "~4 hrs",
-        expertise: ["Docker", "Kubernetes", "AWS", "CI/CD", "Terraform"],
-        bio: "DevOps expert at Microsoft. Passionate about cloud technologies and automation.",
-        isOnline: false,
-      },
-      {
-        id: "6",
-        name: "Ritu Mehta",
-        title: "Product Manager",
-        location: "Gurgaon, India",
-        avatar: "RM",
-        rating: 4.8,
-        studentsHelped: 178,
-        responseTime: "~2 hrs",
-        expertise: [
-          "Product Strategy",
-          "Analytics",
-          "Agile",
-          "User Experience",
-        ],
-        bio: "Senior PM at Flipkart. Guiding students on product thinking and career transitions.",
-        isOnline: true,
-      },
-    ],
-    [],
-  );
+      [users, onActivity],
+    );
 
-  // Separate followed and unfollowed users
-  const followedMentors = useMemo(() =>
-    users.filter(user => followedUsers.has(user.id)),
-    [users, followedUsers]
-  );
-
-  const suggestedMentors = useMemo(() =>
-    users.filter(user => !followedUsers.has(user.id)),
-    [users, followedUsers]
-  );
-
-  const handleFollow = useCallback((userId: string) => {
-    const user = users.find(u => u.id === userId);
-    const isCurrentlyFollowed = followedUsers.has(userId);
-
-    setFollowedUsers((prev) => {
-      const newFollowed = new Set(prev);
-      if (newFollowed.has(userId)) {
-        newFollowed.delete(userId);
-      } else {
-        newFollowed.add(userId);
-      }
-      return newFollowed;
-    });
-
-    // Call onActivity after state update, not during
-    if (user && onActivity) {
-      if (isCurrentlyFollowed) {
-        // Add unfollow activity
-        onActivity({
-          type: "unfollow",
-          action: `Unfollowed ${user.name}`,
-          details: `No longer following ${user.title}`,
-        });
-      } else {
-        // Add follow activity
-        onActivity({
-          type: "follow",
-          action: `Started following ${user.name}`,
-          details: `Now following ${user.title} from ${user.location}`,
-        });
-      }
-    }
-  }, [users, onActivity, followedUsers]);
-
-  const handleMessage = useCallback((userId: string) => {
-    console.log("Message user:", userId);
-  }, []);
-
-  const handleView = useCallback((userId: string) => {
-    console.log("View profile:", userId);
-  }, []);
-
-  const handleJoinProject = useCallback((projectId: string, userId: string) => {
-    console.log("Join project:", projectId, "by user:", userId);
-    const user = users.find(u => u.id === userId);
-    const project = user?.projects?.find(p => p.id === projectId);
-
-    if (project && user && onActivity) {
-      onActivity({
-        type: "project_joined",
-        action: `Joined project: ${project.title}`,
-        details: `Started collaborating with ${user.name} on ${project.title}`,
-      });
-    }
-  }, [users, onActivity]);
-
-  return (
-    <div className="space-y-8">
-      <div className="text-center">
-        <h3 className="text-2xl font-bold mb-2">Connect with Members</h3>
-        <p className="text-muted-foreground">
-          Learn from experienced professionals and collaborate on exciting projects
-        </p>
-      </div>
-
-      {/* Connected Members Section */}
-      {followedMentors.length > 0 && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h4 className="text-xl font-semibold text-primary">
-              Your Connected Members
-            </h4>
-            <Badge variant="secondary" className="bg-primary/10 text-primary">
-              {followedMentors.length} connected
-            </Badge>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            Members you're following with their detailed profiles and open projects
+    return (
+      <div className="space-y-8">
+        <div className="text-center">
+          <h3 className="text-2xl font-bold mb-2">Connect with Members</h3>
+          <p className="text-muted-foreground">
+            Learn from experienced professionals and collaborate on exciting
+            projects
           </p>
-          <div className="max-w-4xl mx-auto space-y-8">
-            {followedMentors.map((user) => (
-              <ExpandedUserCard
-                key={user.id}
-                user={user}
-                onFollow={handleFollow}
-                onMessage={handleMessage}
-                onView={handleView}
-                onJoinProject={handleJoinProject}
-              />
-            ))}
-          </div>
         </div>
-      )}
 
-      {/* Suggested Connections Section */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h4 className="text-xl font-semibold">
-            People You May Want to Connect With
-          </h4>
-          <Badge variant="outline">
-            {suggestedMentors.length} available
-          </Badge>
-        </div>
-        <p className="text-sm text-muted-foreground">
-          Discover experienced members who can help guide your career journey
-        </p>
-
-        {suggestedMentors.length > 0 ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {suggestedMentors.map((user) => (
-              <UserCard
-                key={user.id}
-                user={user}
-                onFollow={handleFollow}
-                onMessage={handleMessage}
-                onView={handleView}
-                isFollowed={false}
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12">
-            <div className="text-muted-foreground mb-2">
-              You're connected with all available mentors!
+        {/* Connected Members Section */}
+        {followedMentors.length > 0 && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h4 className="text-xl font-semibold text-primary">
+                Your Connected Members
+              </h4>
+              <Badge variant="secondary" className="bg-primary/10 text-primary">
+                {followedMentors.length} connected
+              </Badge>
             </div>
             <p className="text-sm text-muted-foreground">
-              Check back later for new mentor suggestions
+              Members you're following with their detailed profiles and open
+              projects
             </p>
+            <div className="max-w-4xl mx-auto space-y-8">
+              {followedMentors.map((user) => (
+                <ExpandedUserCard
+                  key={user.id}
+                  user={user}
+                  onFollow={handleFollow}
+                  onMessage={handleMessage}
+                  onView={handleView}
+                  onJoinProject={handleJoinProject}
+                />
+              ))}
+            </div>
           </div>
         )}
+
+        {/* Suggested Connections Section */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h4 className="text-xl font-semibold">
+              People You May Want to Connect With
+            </h4>
+            <Badge variant="outline">{suggestedMentors.length} available</Badge>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Discover experienced members who can help guide your career journey
+          </p>
+
+          {suggestedMentors.length > 0 ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {suggestedMentors.map((user) => (
+                <UserCard
+                  key={user.id}
+                  user={user}
+                  onFollow={handleFollow}
+                  onMessage={handleMessage}
+                  onView={handleView}
+                  isFollowed={false}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <div className="text-muted-foreground mb-2">
+                You're connected with all available mentors!
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Check back later for new mentor suggestions
+              </p>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
 
 ConnectSection.displayName = "ConnectSection";
 

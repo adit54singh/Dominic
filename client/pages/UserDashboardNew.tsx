@@ -27,6 +27,8 @@ import {
   GitBranch,
   Zap,
   Award,
+  Heart,
+  Share,
   Palette,
   Camera,
   Utensils,
@@ -56,6 +58,9 @@ export default function UserDashboard() {
   const [selectedDomain, setSelectedDomain] = useState("");
   const [domainSwitcherOpen, setDomainSwitcherOpen] = useState(false);
   const [viewingProfile, setViewingProfile] = useState<string | null>(null);
+  const [viewingUserProfile, setViewingUserProfile] = useState<string | null>(
+    null,
+  );
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userOnboardingData, setUserOnboardingData] = useState<any>(null);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -78,8 +83,8 @@ export default function UserDashboard() {
     if (savedData) {
       const data = JSON.parse(savedData);
       setUserOnboardingData(data);
-      // Set first domain as default selected domain
-      if (data.domains && data.domains.length > 0) {
+      // Set domain immediately during initial load to prevent later useEffect
+      if (data.domains && data.domains.length > 0 && !selectedDomain) {
         setSelectedDomain(data.domains[0]);
       }
     }
@@ -99,23 +104,41 @@ export default function UserDashboard() {
     if (savedUserActivity) {
       setUserActivity(JSON.parse(savedUserActivity));
     }
+
+    const savedFollowedUsers = localStorage.getItem("followedUsers");
+    if (savedFollowedUsers) {
+      setFollowedUsers(new Set(JSON.parse(savedFollowedUsers)));
+    }
   }, []);
 
-  // Save to localStorage when state changes
+  // Save to localStorage when state changes (debounced to prevent excessive saves)
   useEffect(() => {
-    localStorage.setItem("joinedProjects", JSON.stringify(joinedProjects));
+    if (joinedProjects.length > 0) {
+      localStorage.setItem("joinedProjects", JSON.stringify(joinedProjects));
+    }
   }, [joinedProjects]);
 
   useEffect(() => {
-    localStorage.setItem(
-      "joinedCommunities",
-      JSON.stringify(Array.from(joinedCommunities)),
-    );
+    if (joinedCommunities.size > 0) {
+      localStorage.setItem(
+        "joinedCommunities",
+        JSON.stringify(Array.from(joinedCommunities)),
+      );
+    }
   }, [joinedCommunities]);
 
   useEffect(() => {
-    localStorage.setItem("userActivity", JSON.stringify(userActivity));
+    if (userActivity.length > 0) {
+      localStorage.setItem("userActivity", JSON.stringify(userActivity));
+    }
   }, [userActivity]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "followedUsers",
+      JSON.stringify(Array.from(followedUsers)),
+    );
+  }, [followedUsers]);
 
   // Function to add activity - memoized with useCallback to prevent infinite re-renders
   const addActivity = useCallback((activity: any) => {
@@ -163,31 +186,16 @@ export default function UserDashboard() {
       }
       setDiscoverySessionStart(null);
     }
-  }, [activeTab, discoverySessionStart, addActivity]);
+  }, [activeTab, discoverySessionStart]);
 
-  // Real-time profile updates - watch for changes in userOnboardingData
-  useEffect(() => {
-    if (userOnboardingData) {
-      // Save updated data to localStorage for persistence
-      localStorage.setItem(
-        "userOnboardingData",
-        JSON.stringify(userOnboardingData),
-      );
+  // Save user onboarding data to localStorage when explicitly updated
+  const saveUserOnboardingData = useCallback((data: any) => {
+    if (data) {
+      localStorage.setItem("userOnboardingData", JSON.stringify(data));
     }
-  }, [userOnboardingData]);
+  }, []);
 
-  // Separate effect to handle domain validation - only when userOnboardingData changes
-  useEffect(() => {
-    if (userOnboardingData?.domains && userOnboardingData.domains.length > 0) {
-      const currentDomain = selectedDomain;
-      const availableDomains = userOnboardingData.domains;
-
-      // Only update if current domain is not in available domains
-      if (!availableDomains.includes(currentDomain)) {
-        setSelectedDomain(availableDomains[0]);
-      }
-    }
-  }, [userOnboardingData]);
+  // Domain validation is now handled in the initial load useEffect above
 
   // Function to join a project
   const joinProject = (project: any) => {
@@ -788,11 +796,13 @@ export default function UserDashboard() {
           }}
           onSave={(profile) => {
             // Update user onboarding data
-            setUserOnboardingData((prevData) => ({
-              ...prevData,
+            const updatedData = {
+              ...userOnboardingData,
               ...profile,
               userProjects: profile.projects,
-            }));
+            };
+            setUserOnboardingData(updatedData);
+            saveUserOnboardingData(updatedData);
 
             // Show success message and go back to profile
             addActivity({
@@ -853,10 +863,10 @@ export default function UserDashboard() {
                   </div>
 
                   {/* Profile Details with enhanced spacing */}
-                  <div className="flex-1 space-y-6">
+                  <div className="flex-1 space-y-6 ml-4">
                     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
                       <div className="space-y-4">
-                        <div className="flex items-center gap-3 mb-3">
+                        <div className="flex items-center gap-4 mb-3">
                           <h1 className="text-2xl sm:text-3xl font-bold">
                             {user.name}
                           </h1>
@@ -867,7 +877,9 @@ export default function UserDashboard() {
                               ? "12"
                               : getCurrentDomain().progress > 50
                                 ? "8"
-                                : "5"}
+                                : getCurrentDomain().progress > 20
+                                  ? "5"
+                                  : "1"}
                           </Badge>
                         </div>
                         <p className="text-lg text-muted-foreground mb-4">
@@ -1412,7 +1424,24 @@ export default function UserDashboard() {
             </div>
           </div>
 
-          <ConnectSection onActivity={addActivity} />
+          <ConnectSection
+            onActivity={addActivity}
+            followedUsers={followedUsers}
+            onFollowUser={(userId: string, isFollowing: boolean) => {
+              setFollowedUsers((prev) => {
+                const newSet = new Set(prev);
+                if (isFollowing) {
+                  newSet.add(userId);
+                } else {
+                  newSet.delete(userId);
+                }
+                return newSet;
+              });
+            }}
+            onViewUser={(userId: string) => {
+              setViewingUserProfile(userId);
+            }}
+          />
         </div>
       );
     } else if (activeTab === "discover") {

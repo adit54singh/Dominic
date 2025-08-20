@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -84,6 +84,12 @@ const getDifficultyColor = (difficulty: string) => {
   }
 };
 
+const formatNumber = (num: number): string => {
+  if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
+  if (num >= 1000) return `${(num / 1000).toFixed(1)}k`;
+  return num.toString();
+};
+
 export default function DiscoverFeed({
   selectedDomain,
   joinedProjects = [],
@@ -94,9 +100,9 @@ export default function DiscoverFeed({
   const [showComments, setShowComments] = useState<Set<string>>(new Set());
   const [newComment, setNewComment] = useState<Record<string, string>>({});
 
-  // Sample posts from verified users and mentors
-  const generatePosts = (): Post[] => {
-    const posts: Post[] = [
+  // Memoized posts generation to prevent unnecessary re-renders
+  const posts = useMemo((): Post[] => {
+    const allPosts: Post[] = [
       {
         id: "1",
         type: "reel",
@@ -234,277 +240,6 @@ export default function DiscoverFeed({
         domain: "web-dev",
       },
       {
-        id: "6",
-        type: "reel",
-        author: {
-          name: "Ananya Singh",
-          title: "Blockchain Developer at Polygon",
-          avatar: "AS",
-          verified: true,
-          company: "Polygon",
-          followers: "11.2k",
-        },
-        content: {
-          title: "Building the future of Web3 🌐",
-          description:
-            "Working on scaling solutions that will onboard the next billion users to Web3. The energy at Polygon is unmatched! Here's a sneak peek into our latest DeFi protocol.",
-          media: "reel_placeholder",
-          tags: ["Web3", "Blockchain", "DeFi", "Polygon"],
-          location: "Remote",
-          duration: "3:20",
-        },
-        engagement: {
-          likes: 3845,
-          comments: 234,
-          shares: 189,
-          views: 67890,
-        },
-        timestamp: "1 day ago",
-        domain: "web-dev",
-      },
-      {
-        id: "7",
-        type: "post",
-        author: {
-          name: "Rohan Joshi",
-          title: "Product Manager at Zomato",
-          avatar: "RJ",
-          verified: true,
-          company: "Zomato",
-          followers: "13.4k",
-        },
-        content: {
-          title: "From idea to 10M users: The Gold membership story 🏆",
-          description:
-            "How we identified the problem, validated the hypothesis, designed the experience, and scaled Zomato Gold to 10M+ subscribers. Sharing the complete product playbook with metrics, learnings, and failures.",
-          tags: ["Product Management", "Growth", "Zomato", "Case Study"],
-          location: "Gurgaon",
-        },
-        engagement: {
-          likes: 4567,
-          comments: 289,
-          shares: 567,
-        },
-        timestamp: "1 day ago",
-        domain: "business",
-      },
-      {
-        id: "8",
-        type: "carousel",
-        author: {
-          name: "Meera Krishnan",
-          title: "Security Engineer at Razorpay",
-          avatar: "MK",
-          verified: true,
-          company: "Razorpay",
-          followers: "7.8k",
-        },
-        content: {
-          title: "Prevented a $2M security breach: Here's how 🛡️",
-          description:
-            "Story time! How our security team detected and prevented a sophisticated attack that could have compromised millions of user accounts. The techniques, tools, and response strategies we used.",
-          tags: ["Cybersecurity", "Incident Response", "Fintech", "Security"],
-          location: "Bangalore",
-        },
-        engagement: {
-          likes: 3234,
-          comments: 145,
-          shares: 234,
-        },
-        timestamp: "2 days ago",
-        domain: "security",
-      },
-      // Tech Skills & Learning Content
-      {
-        id: "tech1",
-        type: "post",
-        author: {
-          name: "TechSkills Academy",
-          title: "Learning Platform",
-          avatar: "TS",
-          verified: true,
-          company: "EdTech",
-          followers: "45.2k",
-        },
-        content: {
-          title: "🚀 5 In-Demand Tech Skills to Learn in 2024",
-          description:
-            "Based on industry trends and job market analysis, here are the top 5 skills that will boost your career: 1. React & Next.js 2. TypeScript 3. AWS Cloud Services 4. Docker & Kubernetes 5. AI/ML Fundamentals. Which one are you focusing on?",
-          tags: ["Skills", "Learning", "Career", "Tech2024"],
-          location: "Online",
-        },
-        engagement: {
-          likes: 3456,
-          comments: 234,
-          shares: 567,
-        },
-        timestamp: "3 hours ago",
-        domain: "web-dev",
-      },
-      {
-        id: "hack1",
-        type: "reel",
-        author: {
-          name: "HackEvents India",
-          title: "Hackathon Organizer",
-          avatar: "HE",
-          verified: true,
-          company: "HackEvents",
-          followers: "23.8k",
-        },
-        content: {
-          title: "🏆 Major Hackathons Coming Up!",
-          description:
-            "Get ready for these amazing hackathons: 🔥 Smart India Hackathon 2024 (March 15-17) 💰 Prize: ₹15 Lakh 🚀 SIH Grand Finale (April 20-22) 💰 Prize: ₹25 Lakh 🌟 Microsoft Imagine Cup (May 10-12) 💰 Prize: $100k Register now!",
-          media: "hackathon_reel",
-          tags: ["Hackathon", "Competition", "Prizes", "Innovation"],
-          location: "Pan India",
-          duration: "1:30",
-        },
-        engagement: {
-          likes: 5678,
-          comments: 445,
-          shares: 789,
-          views: 67890,
-        },
-        timestamp: "5 hours ago",
-        domain: "web-dev",
-      },
-      {
-        id: "learn1",
-        type: "post",
-        author: {
-          name: "CodeWithHarry",
-          title: "YouTube Educator",
-          avatar: "CH",
-          verified: true,
-          company: "CodeWithHarry",
-          followers: "2.1M",
-        },
-        content: {
-          title: "🎯 Free Resources to Master Full Stack Development",
-          description:
-            "I've compiled the best free resources to become a full-stack developer: ✅ Frontend: FreeCodeCamp, MDN Docs, React Docs ✅ Backend: Node.js docs, Express tutorials ✅ Database: MongoDB University, PostgreSQL tutorial ✅ DevOps: Docker docs, AWS free tier All links in bio! 📚",
-          tags: ["Learning", "Resources", "FullStack", "Free"],
-          location: "Delhi",
-        },
-        engagement: {
-          likes: 8945,
-          comments: 678,
-          shares: 1234,
-        },
-        timestamp: "8 hours ago",
-        domain: "web-dev",
-      },
-      {
-        id: "ai1",
-        type: "carousel",
-        author: {
-          name: "AI Research Hub",
-          title: "Research Institution",
-          avatar: "AR",
-          verified: true,
-          company: "IIT Delhi",
-          followers: "78.3k",
-        },
-        content: {
-          title: "🤖 Latest AI Breakthroughs You Should Know",
-          description:
-            "Stay updated with cutting-edge AI research: 🔬 GPT-4 Turbo with vision capabilities 🧠 Google's Gemini multimodal AI 🎨 DALL-E 3 image generation 📊 AutoML for automated machine learning 🚀 Edge AI for mobile devices. The future is here!",
-          tags: ["AI", "Research", "Innovation", "Technology"],
-          location: "IIT Delhi",
-        },
-        engagement: {
-          likes: 4567,
-          comments: 234,
-          shares: 456,
-        },
-        timestamp: "12 hours ago",
-        domain: "data-science",
-      },
-      {
-        id: "mobile1",
-        type: "reel",
-        author: {
-          name: "Flutter Dev Community",
-          title: "Developer Community",
-          avatar: "FD",
-          verified: true,
-          company: "Flutter",
-          followers: "156k",
-        },
-        content: {
-          title: "⚡ Flutter 3.19 New Features Demo",
-          description:
-            "Check out the amazing new features in Flutter 3.19: 🎨 Impeller rendering engine 📱 Material 3 support 🚀 Performance improvements ⚡ Hot reload enhancements 🔧 New debugging tools. Time to upgrade your apps!",
-          media: "flutter_demo",
-          tags: ["Flutter", "Mobile", "Development", "Update"],
-          location: "Global",
-          duration: "2:45",
-        },
-        engagement: {
-          likes: 6789,
-          comments: 345,
-          shares: 567,
-          views: 89012,
-        },
-        timestamp: "1 day ago",
-        domain: "mobile-dev",
-      },
-      {
-        id: "interview1",
-        type: "post",
-        author: {
-          name: "InterviewBit",
-          title: "Interview Prep Platform",
-          avatar: "IB",
-          verified: true,
-          company: "Scaler",
-          followers: "234k",
-        },
-        content: {
-          title: "��� Top Interview Questions for 2024 Tech Interviews",
-          description:
-            "Prepare for your dream job with these frequently asked questions: 🔥 Data Structures & Algorithms 🌐 System Design concepts 💻 JavaScript/React deep dive 🛠️ Problem-solving approaches 📊 Behavioral questions Free practice tests available! Link in bio 🎯",
-          tags: ["Interview", "Jobs", "Preparation", "DSA"],
-          location: "Bangalore",
-        },
-        engagement: {
-          likes: 7234,
-          comments: 456,
-          shares: 890,
-        },
-        timestamp: "1 day ago",
-        domain: "web-dev",
-      },
-      {
-        id: "startup1",
-        type: "post",
-        author: {
-          name: "Startup India",
-          title: "Government Initiative",
-          avatar: "SI",
-          verified: true,
-          company: "Govt of India",
-          followers: "89.5k",
-        },
-        content: {
-          title: "🚀 Startup Funding Opportunities for Tech Entrepreneurs",
-          description:
-            "Amazing opportunities for tech startups: 💰 Seed Fund Scheme - Up to ₹20 Lakh 🏆 Startup India Pitch Fest 📈 SIDBI Fund of Funds 🌟 Atal Innovation Mission grants 📊 Tax benefits for 3 years Apply now and turn your idea into reality! 🎯",
-          tags: ["Startup", "Funding", "Entrepreneurship", "Government"],
-          location: "New Delhi",
-        },
-        engagement: {
-          likes: 3456,
-          comments: 234,
-          shares: 567,
-        },
-        timestamp: "2 days ago",
-        domain: "business",
-      },
-      // Collaborative Projects
-      {
         id: "p1",
         type: "project",
         author: {
@@ -613,127 +348,35 @@ export default function DiscoverFeed({
         timestamp: "1 day ago",
         domain: "web-dev",
       },
-      // Additional users and projects
-      {
-        id: "p4",
-        type: "project",
-        author: {
-          name: "Vikash Kumar",
-          title: "DevOps Engineer",
-          avatar: "VK",
-          verified: false,
-          company: "Tech Startup",
-          followers: "2.8k",
-        },
-        content: {
-          title: "CloudOps - Infrastructure as Code Platform",
-          description:
-            "Building a comprehensive IaC platform to help startups manage their cloud infrastructure efficiently. Features include auto-scaling, cost optimization, and security compliance.",
-          tags: ["DevOps", "Cloud", "Infrastructure", "Automation"],
-        },
-        project: {
-          techStack: ["Terraform", "AWS", "Kubernetes", "Go"],
-          teamSize: 4,
-          duration: "5 months",
-          difficulty: "Advanced",
-          lookingFor: [
-            "Backend Developer",
-            "Cloud Architect",
-            "Security Expert",
-          ],
-          repository: "github.com/cloudops/platform",
-          openPositions: 3,
-        },
-        engagement: {
-          likes: 267,
-          comments: 45,
-          shares: 38,
-          collaborators: 14,
-        },
-        timestamp: "8 hours ago",
-        domain: "web-dev",
-      },
-      {
-        id: "p5",
-        type: "project",
-        author: {
-          name: "Neha Agarwal",
-          title: "Product Designer",
-          avatar: "NA",
-          verified: false,
-          company: "Design Studio",
-          followers: "1.9k",
-        },
-        content: {
-          title: "AccessiDesign - Accessibility Testing Tool",
-          description:
-            "Creating a comprehensive accessibility testing tool for designers and developers. Helps identify and fix accessibility issues early in the design process.",
-          tags: ["Accessibility", "Design Tools", "UX", "Inclusion"],
-        },
-        project: {
-          techStack: ["React", "TypeScript", "Electron", "Node.js"],
-          teamSize: 3,
-          duration: "4 months",
-          difficulty: "Intermediate",
-          lookingFor: ["Frontend Developer", "Accessibility Expert"],
-          repository: "github.com/accessidesign/tool",
-          openPositions: 2,
-        },
-        engagement: {
-          likes: 198,
-          comments: 32,
-          shares: 29,
-          collaborators: 9,
-        },
-        timestamp: "14 hours ago",
-        domain: "design",
-      },
-      {
-        id: "14",
-        type: "post",
-        author: {
-          name: "Rohit Mehta",
-          title: "Blockchain Developer at ConsenSys",
-          avatar: "RM",
-          verified: true,
-          company: "ConsenSys",
-          followers: "11.4k",
-        },
-        content: {
-          title:
-            "Web3 is eating the world: Why every developer should learn blockchain 🌐",
-          description:
-            "The shift to Web3 is inevitable. Here's why traditional developers should start learning blockchain development now, what technologies to focus on, and how to get started with your first smart contract.",
-          tags: ["Web3", "Blockchain", "Career Advice", "Smart Contracts"],
-          location: "Remote",
-        },
-        engagement: {
-          likes: 4234,
-          comments: 287,
-          shares: 345,
-        },
-        timestamp: "9 hours ago",
-        domain: "web-dev",
-      },
     ];
 
-    // Filter by domain
-    return posts.filter(
-      (post) =>
-        selectedDomain === "all" ||
-        post.domain === selectedDomain ||
-        (selectedDomain === "web-dev" &&
-          ["web-dev", "design", "security"].includes(post.domain)) ||
-        (selectedDomain === "mobile-dev" &&
-          ["mobile-dev", "design"].includes(post.domain)) ||
-        (selectedDomain === "data-science" &&
-          ["data-science", "business"].includes(post.domain)),
-    );
-  };
+    // Filter by domain efficiently
+    if (selectedDomain === "all") {
+      return allPosts;
+    }
 
-  const posts = generatePosts();
+    return allPosts.filter((post) => {
+      if (post.domain === selectedDomain) return true;
 
-  const handleLike = (postId: string) => {
+      // Cross-domain compatibility
+      if (
+        selectedDomain === "web-dev" &&
+        ["design", "security"].includes(post.domain)
+      ) {
+        return true;
+      }
+      if (selectedDomain === "mobile-dev" && post.domain === "design") {
+        return true;
+      }
+      if (selectedDomain === "data-science" && post.domain === "business") {
+        return true;
+      }
+
+      return false;
+    });
+  }, [selectedDomain]);
+
+  const handleLike = useCallback((postId: string) => {
     setLikedPosts((prev) => {
       const newLiked = new Set(prev);
       if (newLiked.has(postId)) {
@@ -743,9 +386,9 @@ export default function DiscoverFeed({
       }
       return newLiked;
     });
-  };
+  }, []);
 
-  const handleSave = (postId: string) => {
+  const handleSave = useCallback((postId: string) => {
     setSavedPosts((prev) => {
       const newSaved = new Set(prev);
       if (newSaved.has(postId)) {
@@ -755,9 +398,9 @@ export default function DiscoverFeed({
       }
       return newSaved;
     });
-  };
+  }, []);
 
-  const handleToggleComments = (postId: string) => {
+  const handleToggleComments = useCallback((postId: string) => {
     setShowComments((prev) => {
       const newShow = new Set(prev);
       if (newShow.has(postId)) {
@@ -767,33 +410,79 @@ export default function DiscoverFeed({
       }
       return newShow;
     });
-  };
+  }, []);
 
-  const handleAddComment = (postId: string) => {
-    const comment = newComment[postId];
-    if (comment && comment.trim()) {
-      // Here you would normally send to backend
-      console.log("Adding comment:", comment, "to post:", postId);
-      setNewComment((prev) => ({ ...prev, [postId]: "" }));
-    }
-  };
+  const handleAddComment = useCallback(
+    (postId: string) => {
+      const comment = newComment[postId];
+      if (comment && comment.trim()) {
+        console.log("Adding comment:", comment, "to post:", postId);
+        setNewComment((prev) => ({ ...prev, [postId]: "" }));
+      }
+    },
+    [newComment],
+  );
 
-  const handleCommentChange = (postId: string, value: string) => {
+  const handleCommentChange = useCallback((postId: string, value: string) => {
     setNewComment((prev) => ({ ...prev, [postId]: value }));
-  };
+  }, []);
 
-  const formatNumber = (num: number): string => {
-    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
-    if (num >= 1000) return `${(num / 1000).toFixed(1)}k`;
-    return num.toString();
-  };
+  const handleJoinProject = useCallback(
+    (post: Post) => {
+      if (!onJoinProject || !post.project) return;
+
+      const projectData = {
+        id: post.id,
+        title: post.content.title,
+        description: post.content.description,
+        techStack: post.project.techStack,
+        teamSize: post.project.teamSize,
+        duration: post.project.duration,
+        difficulty: post.project.difficulty,
+        author: post.author,
+        dueDate: new Date(
+          Date.now() + Math.random() * 90 * 24 * 60 * 60 * 1000,
+        ).toISOString(),
+        progress: 0,
+      };
+
+      onJoinProject(projectData);
+    },
+    [onJoinProject],
+  );
+
+  const isProjectJoined = useCallback(
+    (postTitle: string) => {
+      return joinedProjects.some((jp) => jp.title === postTitle);
+    },
+    [joinedProjects],
+  );
+
+  if (!posts.length) {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <Card className="border-0 shadow-sm bg-background/80 backdrop-blur-sm">
+          <CardContent className="p-8 text-center">
+            <div className="text-muted-foreground">
+              <TrendingUp className="w-12 h-12 mx-auto mb-4 opacity-50" />
+              <h3 className="text-lg font-semibold mb-2">No posts available</h3>
+              <p className="text-sm">
+                Check back later for more content in the {selectedDomain}{" "}
+                domain.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       {posts.map((post) => (
         <Card
           key={post.id}
-          className="border-0 shadow-sm bg-background/80 backdrop-blur-sm overflow-hidden"
+          className="border-0 shadow-sm bg-background/80 backdrop-blur-sm overflow-hidden hover:shadow-lg transition-all duration-300"
         >
           {/* Post Header */}
           <div className="p-4 pb-3">
@@ -830,7 +519,7 @@ export default function DiscoverFeed({
 
           {/* Post Content */}
           <CardContent className="p-0">
-            {/* Media Content */}
+            {/* Reel Content */}
             {post.type === "reel" && (
               <div className="relative bg-slate-900 aspect-[9/16] max-h-[500px] flex items-center justify-center">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20"></div>
@@ -858,6 +547,7 @@ export default function DiscoverFeed({
               </div>
             )}
 
+            {/* Post Content */}
             {post.type === "post" && (
               <div className="px-4 pb-3">
                 <h3 className="font-semibold text-lg mb-2">
@@ -875,6 +565,7 @@ export default function DiscoverFeed({
               </div>
             )}
 
+            {/* Carousel Content */}
             {post.type === "carousel" && (
               <div className="px-4 pb-3">
                 <div className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg p-4 mb-3">
@@ -894,6 +585,7 @@ export default function DiscoverFeed({
               </div>
             )}
 
+            {/* Project Content */}
             {post.type === "project" && post.project && (
               <div className="px-4 pb-3">
                 <div className="bg-gradient-to-r from-primary/5 to-accent/5 rounded-lg p-4 border border-primary/20 mb-4">
@@ -1005,13 +697,13 @@ export default function DiscoverFeed({
                     variant="ghost"
                     size="sm"
                     onClick={() => handleLike(post.id)}
-                    className="p-0 h-auto"
+                    className="p-0 h-auto hover:scale-105 transition-transform"
                   >
                     <Heart
-                      className={`w-5 h-5 mr-1 ${
+                      className={`w-5 h-5 mr-1 transition-colors ${
                         likedPosts.has(post.id)
                           ? "fill-red-500 text-red-500"
-                          : ""
+                          : "hover:text-red-500"
                       }`}
                     />
                     <span className="text-sm">
@@ -1019,15 +711,24 @@ export default function DiscoverFeed({
                     </span>
                   </Button>
 
-                  <Button variant="ghost" size="sm" className="p-0 h-auto">
-                    <MessageCircle className="w-5 h-5 mr-1" />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleToggleComments(post.id)}
+                    className="p-0 h-auto hover:scale-105 transition-transform"
+                  >
+                    <MessageCircle className="w-5 h-5 mr-1 hover:text-blue-500 transition-colors" />
                     <span className="text-sm">
                       {formatNumber(post.engagement.comments)}
                     </span>
                   </Button>
 
-                  <Button variant="ghost" size="sm" className="p-0 h-auto">
-                    <Share className="w-5 h-5 mr-1" />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="p-0 h-auto hover:scale-105 transition-transform"
+                  >
+                    <Share className="w-5 h-5 mr-1 hover:text-green-500 transition-colors" />
                     <span className="text-sm">
                       {formatNumber(post.engagement.shares)}
                     </span>
@@ -1045,32 +746,11 @@ export default function DiscoverFeed({
                   {post.type === "project" && onJoinProject && (
                     <Button
                       size="sm"
-                      className="bg-primary text-xs"
-                      disabled={joinedProjects.some(
-                        (jp) => jp.title === post.content.title,
-                      )}
-                      onClick={() =>
-                        onJoinProject({
-                          id: post.id,
-                          title: post.content.title,
-                          description: post.content.description,
-                          techStack: post.project?.techStack || [],
-                          teamSize: post.project?.teamSize || 1,
-                          duration: post.project?.duration || "Unknown",
-                          difficulty:
-                            post.project?.difficulty || "Intermediate",
-                          author: post.author,
-                          dueDate: new Date(
-                            Date.now() +
-                              Math.random() * 90 * 24 * 60 * 60 * 1000,
-                          ).toISOString(),
-                          progress: 0,
-                        })
-                      }
+                      className="bg-primary hover:bg-primary/90 text-xs transition-all duration-200"
+                      disabled={isProjectJoined(post.content.title)}
+                      onClick={() => handleJoinProject(post)}
                     >
-                      {joinedProjects.some(
-                        (jp) => jp.title === post.content.title,
-                      )
+                      {isProjectJoined(post.content.title)
                         ? "Joined"
                         : "Join Project"}
                     </Button>
@@ -1079,11 +759,13 @@ export default function DiscoverFeed({
                     variant="ghost"
                     size="sm"
                     onClick={() => handleSave(post.id)}
-                    className="p-0 h-auto"
+                    className="p-0 h-auto hover:scale-105 transition-transform"
                   >
                     <Bookmark
-                      className={`w-5 h-5 ${
-                        savedPosts.has(post.id) ? "fill-current" : ""
+                      className={`w-5 h-5 transition-colors ${
+                        savedPosts.has(post.id)
+                          ? "fill-current text-primary"
+                          : "hover:text-primary"
                       }`}
                     />
                   </Button>
@@ -1094,7 +776,6 @@ export default function DiscoverFeed({
             {/* Enhanced Engagement Summary */}
             <div className="px-4 pb-4 border-t pt-3">
               <div className="space-y-2">
-                {/* Total Engagement */}
                 <div className="flex items-center justify-between text-xs">
                   <div className="flex items-center space-x-4">
                     <span className="flex items-center space-x-1 text-red-500">
@@ -1117,11 +798,9 @@ export default function DiscoverFeed({
                         </span>
                       </span>
                     )}
-                    \n{" "}
                   </div>
                 </div>
 
-                {/* Author & Context Info */}
                 <div className="flex items-center justify-between text-xs text-muted-foreground">
                   <div className="flex items-center space-x-3">
                     <span className="flex items-center space-x-1">
@@ -1146,7 +825,10 @@ export default function DiscoverFeed({
 
       {/* Load More */}
       <div className="text-center py-8">
-        <Button variant="outline" className="w-full">
+        <Button
+          variant="outline"
+          className="w-full hover:bg-primary/10 transition-colors"
+        >
           Load More Posts
         </Button>
       </div>
