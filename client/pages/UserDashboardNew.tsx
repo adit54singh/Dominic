@@ -76,6 +76,7 @@ export default function UserDashboard() {
 
   // Load user onboarding data from localStorage
   useEffect(() => {
+    console.log("Loading initial data from localStorage");
     const savedData = localStorage.getItem("userOnboardingData");
     if (savedData) {
       const data = JSON.parse(savedData);
