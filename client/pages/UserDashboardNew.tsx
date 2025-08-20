@@ -107,6 +107,21 @@ export default function UserDashboard() {
     localStorage.setItem('userActivity', JSON.stringify(userActivity));
   }, [userActivity]);
 
+  // Real-time profile updates - watch for changes in userOnboardingData
+  useEffect(() => {
+    if (userOnboardingData) {
+      // Update selected domain if current one is no longer available
+      if (userOnboardingData.domains && userOnboardingData.domains.length > 0) {
+        if (!userOnboardingData.domains.includes(selectedDomain)) {
+          setSelectedDomain(userOnboardingData.domains[0]);
+        }
+      }
+
+      // Save updated data to localStorage for persistence
+      localStorage.setItem('userOnboardingData', JSON.stringify(userOnboardingData));
+    }
+  }, [userOnboardingData, selectedDomain]);
+
   // Function to add activity
   const addActivity = (activity: any) => {
     const newActivity = {
