@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ChevronLeft, ChevronRight, Star, Briefcase, Users } from "lucide-react";
+import { Star, Briefcase, Users, MapPin, Clock, UserPlus, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { generateSampleProfiles } from "./ProfileCard";
 
 interface ConnectUser {
@@ -17,13 +17,17 @@ interface ConnectUser {
   connections: number;
   skills: string[];
   domain: string;
+  experience: string;
+  location: string;
+  bio: string;
+  projectsCollaborated: number;
 }
 
-// Generate 10 dummy profiles for connect section
+// Generate 10 detailed profiles for connect section
 const generateConnectProfiles = (): ConnectUser[] => {
   const sampleProfiles = generateSampleProfiles();
   
-  // Create 10 profiles with some additional ones
+  // Create 10 profiles with additional details
   const connectProfiles: ConnectUser[] = [
     ...sampleProfiles.slice(0, 8).map((profile, index) => ({
       id: profile.id,
@@ -33,8 +37,12 @@ const generateConnectProfiles = (): ConnectUser[] => {
       avatar: profile.avatar,
       rating: profile.rating,
       connections: Math.floor(Math.random() * 500) + 100,
-      skills: profile.skills.slice(0, 3),
-      domain: profile.domains[0]
+      skills: profile.skills,
+      domain: profile.domains[0],
+      experience: profile.experience,
+      location: ["Mumbai, India", "Delhi, India", "Bangalore, India", "Pune, India", "Chennai, India"][Math.floor(Math.random() * 5)],
+      bio: `Passionate ${profile.domains[0].toLowerCase()} enthusiast with ${profile.experience} of experience. Love building scalable applications and collaborating with talented developers.`,
+      projectsCollaborated: profile.projectsCollaborated
     })),
     // Add 2 more unique profiles
     {
@@ -45,8 +53,12 @@ const generateConnectProfiles = (): ConnectUser[] => {
       avatar: "KR",
       rating: 4.7,
       connections: 320,
-      skills: ["Product Strategy", "Analytics", "Design"],
-      domain: "Product Management"
+      skills: ["Product Strategy", "Analytics", "Design Thinking", "Agile"],
+      domain: "Product Management",
+      experience: "3 Years",
+      location: "Hyderabad, India",
+      bio: "Strategic product manager with expertise in building user-centric products and leading cross-functional teams.",
+      projectsCollaborated: 18
     },
     {
       id: "10", 
@@ -56,81 +68,32 @@ const generateConnectProfiles = (): ConnectUser[] => {
       avatar: "RG",
       rating: 4.5,
       connections: 280,
-      skills: ["Marketing", "Analytics", "Growth"],
-      domain: "Growth & Marketing"
+      skills: ["Marketing", "Analytics", "Growth Strategy", "SEO"],
+      domain: "Growth & Marketing",
+      experience: "2 Years",
+      location: "Gurgaon, India",
+      bio: "Growth-focused marketer with experience in scaling startups and driving user acquisition through data-driven strategies.",
+      projectsCollaborated: 12
     }
   ];
   
   return connectProfiles;
 };
 
-// Generate small profile cards for horizontal scrolling sections
-const generateScrollableProfiles = (): ConnectUser[] => {
-  const names = [
-    { name: "Maya Shah", title: "UX Designer", company: "Creative Studio" },
-    { name: "Dev Patel", title: "Backend Engineer", company: "Cloud Systems" },
-    { name: "Sanya Jain", title: "Data Analyst", company: "Analytics Pro" },
-    { name: "Ishaan Kumar", title: "Frontend Dev", company: "UI Masters" },
-    { name: "Tanya Singh", title: "Product Designer", company: "Design Hub" },
-    { name: "Arun Sharma", title: "DevOps Engineer", company: "Tech Infrastructure" }
-  ];
-  
-  return names.map((profile, index) => ({
-    id: `scroll-${index + 1}`,
-    name: profile.name,
-    title: profile.title,
-    company: profile.company,
-    avatar: profile.name.split(' ').map(n => n[0]).join(''),
-    rating: Number((Math.random() * 1.5 + 3.5).toFixed(1)),
-    connections: Math.floor(Math.random() * 400) + 50,
-    skills: ["React", "Node.js", "Python", "Design", "Analytics"].slice(0, Math.floor(Math.random() * 3) + 2),
-    domain: ["Tech", "Design", "Product"][Math.floor(Math.random() * 3)]
-  }));
-};
-
 export default function ConnectSection() {
   const connectProfiles = generateConnectProfiles();
-  const scrollableProfiles = generateScrollableProfiles();
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = 280;
-      const currentScroll = scrollContainerRef.current.scrollLeft;
-      const targetScroll = direction === 'left' 
-        ? currentScroll - scrollAmount 
-        : currentScroll + scrollAmount;
-      
-      scrollContainerRef.current.scrollTo({
-        left: targetScroll,
-        behavior: 'smooth'
-      });
-    }
-  };
+  const [connectedUsers, setConnectedUsers] = useState<Set<string>>(new Set());
 
-  // Split main profiles into chunks with horizontal scrolling sections
-  const renderProfiles = () => {
-    const result = [];
-    
-    for (let i = 0; i < connectProfiles.length; i++) {
-      // Add main profile
-      result.push(
-        <div key={connectProfiles[i].id} className="flex justify-center">
-          <ProfileCard profile={connectProfiles[i]} />
-        </div>
-      );
-      
-      // Add horizontal scrolling section after every 2 profiles
-      if ((i + 1) % 2 === 0 && i < connectProfiles.length - 1) {
-        result.push(
-          <div key={`scroll-section-${i}`} className="my-8">
-            <HorizontalScrollSection profiles={scrollableProfiles.slice((i/2) * 3, (i/2 + 1) * 3)} />
-          </div>
-        );
+  const handleConnect = (userId: string) => {
+    setConnectedUsers(prev => {
+      const newConnected = new Set(prev);
+      if (newConnected.has(userId)) {
+        newConnected.delete(userId);
+      } else {
+        newConnected.add(userId);
       }
-    }
-    
-    return result;
+      return newConnected;
+    });
   };
 
   return (
@@ -142,175 +105,137 @@ export default function ConnectSection() {
         </p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-        {renderProfiles()}
-      </div>
-    </div>
-  );
-}
-
-// Main profile card component
-function ProfileCard({ profile }: { profile: ConnectUser }) {
-  return (
-    <Card className="w-full max-w-sm bg-background border hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-      <CardContent className="p-6 text-center space-y-4">
-        {/* Avatar */}
-        <Avatar className="w-16 h-16 mx-auto border-2 border-primary/20">
-          <AvatarFallback className="bg-primary text-white text-lg font-semibold">
-            {profile.avatar}
-          </AvatarFallback>
-        </Avatar>
-        
-        {/* Profile Info */}
-        <div>
-          <h4 className="text-lg font-semibold">{profile.name}</h4>
-          <p className="text-sm text-muted-foreground">{profile.title}</p>
-          <div className="flex items-center justify-center space-x-1 mt-1">
-            <Briefcase className="w-3 h-3 text-muted-foreground" />
-            <span className="text-xs text-muted-foreground">{profile.company}</span>
-          </div>
-        </div>
-        
-        {/* Stats */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="text-center">
-            <div className="flex items-center justify-center space-x-1">
-              <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-              <span className="font-semibold text-sm">{profile.rating}</span>
-            </div>
-            <span className="text-xs text-muted-foreground">Rating</span>
-          </div>
-          <div className="text-center">
-            <div className="flex items-center justify-center space-x-1">
-              <Users className="w-4 h-4 text-blue-400" />
-              <span className="font-semibold text-sm">{profile.connections}</span>
-            </div>
-            <span className="text-xs text-muted-foreground">Connections</span>
-          </div>
-        </div>
-        
-        {/* Domain */}
-        <Badge className="bg-primary/10 text-primary border-primary/20 text-xs">
-          {profile.domain}
-        </Badge>
-        
-        {/* Skills */}
-        <div className="space-y-2">
-          <div className="flex flex-wrap gap-1 justify-center">
-            {profile.skills.slice(0, 2).map((skill, index) => (
-              <Badge key={index} variant="outline" className="text-xs">
-                {skill}
-              </Badge>
-            ))}
-            {profile.skills.length > 2 && (
-              <Badge variant="outline" className="text-xs">
-                +{profile.skills.length - 2}
-              </Badge>
-            )}
-          </div>
-        </div>
-        
-        {/* View Profile Button */}
-        <Link to={`/profile/${profile.id}`}>
-          <Button variant="outline" size="sm" className="w-full">
-            View Profile
-          </Button>
-        </Link>
-      </CardContent>
-    </Card>
-  );
-}
-
-// Horizontal scrolling section component
-function HorizontalScrollSection({ profiles }: { profiles: ConnectUser[] }) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollRef.current) {
-      const scrollAmount = 240;
-      const currentScroll = scrollRef.current.scrollLeft;
-      const targetScroll = direction === 'left' 
-        ? currentScroll - scrollAmount 
-        : currentScroll + scrollAmount;
-      
-      scrollRef.current.scrollTo({
-        left: targetScroll,
-        behavior: 'smooth'
-      });
-    }
-  };
-
-  return (
-    <div className="relative">
-      <div className="flex items-center justify-between mb-4">
-        <h4 className="text-lg font-semibold text-muted-foreground">Quick Connect</h4>
-        <div className="flex space-x-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => scroll('left')}
-            className="p-2"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => scroll('right')}
-            className="p-2"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </Button>
-        </div>
-      </div>
-      
-      <div 
-        ref={scrollRef}
-        className="flex space-x-4 overflow-x-auto scrollbar-hide scroll-smooth"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-      >
-        {profiles.map((profile) => (
-          <div key={profile.id} className="flex-shrink-0 w-56">
-            <SmallProfileCard profile={profile} />
-          </div>
+      {/* Vertical scrollable list of profiles */}
+      <div className="space-y-4 max-w-4xl mx-auto">
+        {connectProfiles.map((profile) => (
+          <DetailedProfileCard 
+            key={profile.id} 
+            profile={profile} 
+            isConnected={connectedUsers.has(profile.id)}
+            onConnect={() => handleConnect(profile.id)}
+          />
         ))}
       </div>
     </div>
   );
 }
 
-// Small profile card for horizontal scrolling
-function SmallProfileCard({ profile }: { profile: ConnectUser }) {
+// Detailed profile card component
+function DetailedProfileCard({ 
+  profile, 
+  isConnected, 
+  onConnect 
+}: { 
+  profile: ConnectUser; 
+  isConnected: boolean; 
+  onConnect: () => void;
+}) {
   return (
-    <Card className="bg-background border hover:shadow-md transition-all duration-300">
-      <CardContent className="p-4 text-center space-y-3">
-        <Avatar className="w-12 h-12 mx-auto">
-          <AvatarFallback className="bg-primary text-white text-sm font-semibold">
-            {profile.avatar}
-          </AvatarFallback>
-        </Avatar>
-        
-        <div>
-          <h5 className="font-medium text-sm">{profile.name}</h5>
-          <p className="text-xs text-muted-foreground">{profile.title}</p>
-        </div>
-        
-        <div className="flex justify-center space-x-3 text-xs">
-          <div className="flex items-center space-x-1">
-            <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-            <span>{profile.rating}</span>
+    <Card className="w-full bg-background border hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+      <CardContent className="p-6">
+        <div className="flex flex-col md:flex-row gap-6">
+          {/* Left side - Avatar and basic info */}
+          <div className="flex flex-col items-center md:items-start space-y-3">
+            <Avatar className="w-20 h-20 border-2 border-primary/20">
+              <AvatarFallback className="bg-primary text-white text-xl font-semibold">
+                {profile.avatar}
+              </AvatarFallback>
+            </Avatar>
+            
+            {/* Rating and connections */}
+            <div className="flex gap-4 text-sm">
+              <div className="flex items-center space-x-1">
+                <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                <span className="font-medium">{profile.rating}</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <Users className="w-4 h-4 text-blue-400" />
+                <span className="font-medium">{profile.connections}</span>
+              </div>
+            </div>
           </div>
-          <div className="flex items-center space-x-1">
-            <Users className="w-3 h-3 text-blue-400" />
-            <span>{profile.connections}</span>
+
+          {/* Right side - Profile details */}
+          <div className="flex-1 space-y-4">
+            {/* Name and title */}
+            <div>
+              <h4 className="text-xl font-bold">{profile.name}</h4>
+              <p className="text-muted-foreground">{profile.title}</p>
+              <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+                <div className="flex items-center space-x-1">
+                  <Briefcase className="w-4 h-4" />
+                  <span>{profile.company}</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <MapPin className="w-4 h-4" />
+                  <span>{profile.location}</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Clock className="w-4 h-4" />
+                  <span>{profile.experience} experience</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Bio */}
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {profile.bio}
+            </p>
+
+            {/* Domain and Projects */}
+            <div className="flex flex-wrap gap-3">
+              <Badge className="bg-primary/10 text-primary border-primary/20">
+                {profile.domain}
+              </Badge>
+              <Badge variant="outline" className="text-xs">
+                {profile.projectsCollaborated} Projects Collaborated
+              </Badge>
+            </div>
+
+            {/* Skills */}
+            <div>
+              <p className="text-sm font-medium text-muted-foreground mb-2">Skills:</p>
+              <div className="flex flex-wrap gap-2">
+                {profile.skills.slice(0, 4).map((skill, index) => (
+                  <Badge key={index} variant="secondary" className="text-xs">
+                    {skill}
+                  </Badge>
+                ))}
+                {profile.skills.length > 4 && (
+                  <Badge variant="secondary" className="text-xs">
+                    +{profile.skills.length - 4} more
+                  </Badge>
+                )}
+              </div>
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex gap-3 pt-2">
+              <Link to={`/profile/${profile.id}`} className="flex-1">
+                <Button variant="outline" size="sm" className="w-full">
+                  View Profile
+                </Button>
+              </Link>
+              <Button 
+                onClick={onConnect}
+                size="sm" 
+                className={`flex-1 ${isConnected ? 'bg-green-600 hover:bg-green-700' : 'bg-primary hover:bg-primary/90'}`}
+              >
+                {isConnected ? (
+                  <>
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    Connected
+                  </>
+                ) : (
+                  <>
+                    <UserPlus className="w-4 h-4 mr-2" />
+                    Connect
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
         </div>
-        
-        <Link to={`/profile/${profile.id}`}>
-          <Button variant="outline" size="sm" className="w-full text-xs">
-            View Profile
-          </Button>
-        </Link>
       </CardContent>
     </Card>
   );
