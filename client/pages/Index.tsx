@@ -24,6 +24,8 @@ import AnimatedDomains from "@/components/AnimatedDomains";
 import { useState } from "react";
 
 export default function Index() {
+  const [showDomainsAnimation, setShowDomainsAnimation] = useState(false);
+
   const domains = [
     {
       name: "Software Development",
