@@ -565,23 +565,51 @@ export default function UserProfile() {
                     {[
                       {
                         id: 1,
+                        action: "Priya Sharma connected with you",
+                        time: "30 minutes ago",
+                        type: "connection",
+                        icon: "👋",
+                      },
+                      {
+                        id: 2,
+                        action: "Rahul Kumar liked your profile",
+                        time: "1 hour ago",
+                        type: "like",
+                        icon: "❤️",
+                      },
+                      {
+                        id: 3,
                         action: "Completed React Advanced Patterns",
                         time: "2 hours ago",
                         type: "completed",
                       },
                       {
-                        id: 2,
+                        id: 4,
+                        action: "Anjali Patel wants to collaborate",
+                        time: "4 hours ago",
+                        type: "collaboration",
+                        icon: "🤝",
+                      },
+                      {
+                        id: 5,
                         action: "Started TypeScript Deep Dive",
                         time: "5 hours ago",
                         type: "started",
                       },
                       {
-                        id: 3,
+                        id: 6,
+                        action: "3 new people viewed your profile",
+                        time: "6 hours ago",
+                        type: "views",
+                        icon: "👀",
+                      },
+                      {
+                        id: 7,
                         action: "Mentored 3 junior developers",
                         time: "1 day ago",
                         type: "mentor",
                       },
-                    ].map((activity) => (
+                    ].slice(0, 5).map((activity) => (
                       <div
                         key={activity.id}
                         className="flex items-center gap-3 p-3 bg-gray-700/50 rounded-lg transition-colors hover:bg-gray-700/70"
