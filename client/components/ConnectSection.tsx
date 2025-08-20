@@ -153,7 +153,7 @@ export default function ConnectSection() {
         </div>
 
         <div className="space-y-4 max-w-4xl mx-auto">
-          {connectProfiles.slice(3).map((profile) => (
+          {connectProfiles.slice(3, 6).map((profile) => (
             <DetailedProfileCard
               key={profile.id}
               profile={profile}
