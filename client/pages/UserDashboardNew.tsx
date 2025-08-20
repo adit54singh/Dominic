@@ -1056,27 +1056,39 @@ export default function UserDashboard() {
                     </div>
                   </div>
 
-                  {/* Activity Progress */}
+                  {/* Enhanced Activity Progress */}
                   <div>
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-sm text-muted-foreground">
                         Activity Level
                       </span>
-                      <span className="text-sm font-bold text-green-500">
-                        {userActivity.length === 0
-                          ? "Getting Started"
-                          : userActivity.length < 5
-                            ? "Active"
-                            : "Very Active"}
+                      <span className={`text-sm font-bold ${calculateActivityLevel().color}`}>
+                        {calculateActivityLevel().label}
                       </span>
                     </div>
                     <div className="w-full bg-muted rounded-full h-2">
                       <div
                         className="bg-gradient-to-r from-primary to-primary/60 h-2 rounded-full transition-all duration-1000"
                         style={{
-                          width: `${Math.min((userActivity.length / 10) * 100, 100)}%`,
+                          width: `${calculateActivityLevel().percentage}%`,
                         }}
                       ></div>
+                    </div>
+
+                    {/* Activity Breakdown */}
+                    <div className="mt-3 space-y-1 text-xs text-muted-foreground">
+                      <div className="flex justify-between">
+                        <span>Discovery time:</span>
+                        <span>{Math.floor(discoveryTimeSpent)} minutes</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Projects completed:</span>
+                        <span>{projectsCompleted}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Overall score:</span>
+                        <span>{calculateActivityLevel().percentage}/100</span>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
