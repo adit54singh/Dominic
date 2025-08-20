@@ -537,11 +537,25 @@ export default function UserDashboard() {
                   {/* Profile Photo */}
                   <div className="relative group">
                     <Avatar className="w-24 h-24 border-4 border-border">
-                      <AvatarFallback className="bg-primary text-white text-2xl font-bold">
-                        {user.avatar}
-                      </AvatarFallback>
+                      {userOnboardingData?.avatar ? (
+                        <img
+                          src={userOnboardingData.avatar}
+                          alt="Profile"
+                          className="w-full h-full object-cover rounded-full"
+                        />
+                      ) : (
+                        <AvatarFallback className="bg-primary text-white text-2xl font-bold">
+                          {user.avatar}
+                        </AvatarFallback>
+                      )}
                     </Avatar>
-                    <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                    <div
+                      className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                      onClick={() => {
+                        setActiveTab("edit-profile");
+                        setActiveVerticalNav("edit-profile");
+                      }}
+                    >
                       <Edit className="w-5 h-5 text-white" />
                     </div>
                   </div>
