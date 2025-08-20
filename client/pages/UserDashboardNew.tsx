@@ -1300,7 +1300,7 @@ export default function UserDashboard() {
             </div>
           </div>
 
-          <ConnectSection />
+          <ConnectSection onActivity={addActivity} />
         </div>
       );
     } else if (activeTab === "discover") {
