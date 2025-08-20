@@ -340,7 +340,11 @@ const UserCard = memo(
 
 UserCard.displayName = "UserCard";
 
-const ConnectSection = memo(() => {
+interface ConnectSectionProps {
+  onActivity?: (activity: any) => void;
+}
+
+const ConnectSection = memo(({ onActivity }: ConnectSectionProps) => {
   const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
 
   // Memoized user data to prevent unnecessary re-calculations
@@ -496,14 +500,32 @@ const ConnectSection = memo(() => {
   const handleFollow = useCallback((userId: string) => {
     setFollowedUsers((prev) => {
       const newFollowed = new Set(prev);
+      const user = users.find(u => u.id === userId);
+
       if (newFollowed.has(userId)) {
         newFollowed.delete(userId);
+        // Add unfollow activity
+        if (user && onActivity) {
+          onActivity({
+            type: "unfollow",
+            action: `Unfollowed ${user.name}`,
+            details: `No longer following ${user.title}`,
+          });
+        }
       } else {
         newFollowed.add(userId);
+        // Add follow activity
+        if (user && onActivity) {
+          onActivity({
+            type: "follow",
+            action: `Started following ${user.name}`,
+            details: `Now following ${user.title} from ${user.location}`,
+          });
+        }
       }
       return newFollowed;
     });
-  }, []);
+  }, [users, onActivity]);
 
   const handleMessage = useCallback((userId: string) => {
     console.log("Message user:", userId);
@@ -515,8 +537,17 @@ const ConnectSection = memo(() => {
 
   const handleJoinProject = useCallback((projectId: string, userId: string) => {
     console.log("Join project:", projectId, "by user:", userId);
-    // Here you would implement the actual project joining logic
-  }, []);
+    const user = users.find(u => u.id === userId);
+    const project = user?.projects?.find(p => p.id === projectId);
+
+    if (project && user && onActivity) {
+      onActivity({
+        type: "project_joined",
+        action: `Joined project: ${project.title}`,
+        details: `Started collaborating with ${user.name} on ${project.title}`,
+      });
+    }
+  }, [users, onActivity]);
 
   return (
     <div className="space-y-8">
