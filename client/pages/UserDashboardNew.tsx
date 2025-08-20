@@ -80,10 +80,6 @@ export default function UserDashboard() {
     if (savedData) {
       const data = JSON.parse(savedData);
       setUserOnboardingData(data);
-      // Set first domain as default selected domain
-      if (data.domains && data.domains.length > 0) {
-        setSelectedDomain(data.domains[0]);
-      }
     }
 
     // Load saved joined projects, communities, and activity
