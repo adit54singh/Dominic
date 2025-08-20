@@ -1418,7 +1418,21 @@ export default function UserDashboard() {
             </div>
           </div>
 
-          <ConnectSection onActivity={addActivity} />
+          <ConnectSection
+            onActivity={addActivity}
+            followedUsers={followedUsers}
+            onFollowUser={(userId: string, isFollowing: boolean) => {
+              setFollowedUsers(prev => {
+                const newSet = new Set(prev);
+                if (isFollowing) {
+                  newSet.add(userId);
+                } else {
+                  newSet.delete(userId);
+                }
+                return newSet;
+              });
+            }}
+          />
         </div>
       );
     } else if (activeTab === "discover") {
