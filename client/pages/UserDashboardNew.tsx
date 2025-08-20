@@ -174,12 +174,16 @@ export default function UserDashboard() {
     });
   };
 
-  // Mock user data
+  // User data - updated from userOnboardingData when available
   const user = {
-    name: "Aditya Singh",
-    email: "aditya@example.com",
-    avatar: "AS",
-    joinedDate: "Jan 2024"
+    name: userOnboardingData?.name || "Aditya Singh",
+    email: userOnboardingData?.email || "aditya@example.com",
+    avatar: userOnboardingData?.avatar || userOnboardingData?.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase() || "AS",
+    joinedDate: "Jan 2024",
+    title: userOnboardingData?.title || "",
+    company: userOnboardingData?.company || "Tech Startup",
+    location: userOnboardingData?.location || "Mumbai, India",
+    bio: userOnboardingData?.bio || ""
   };
 
   // Define domain mappings
