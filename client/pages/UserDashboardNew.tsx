@@ -130,6 +130,10 @@ export default function UserDashboard() {
     }
   }, [userActivity]);
 
+  useEffect(() => {
+    localStorage.setItem("followedUsers", JSON.stringify(Array.from(followedUsers)));
+  }, [followedUsers]);
+
   // Function to add activity - memoized with useCallback to prevent infinite re-renders
   const addActivity = useCallback((activity: any) => {
     const newActivity = {
