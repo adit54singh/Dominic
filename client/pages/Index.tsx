@@ -20,35 +20,10 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import ConnectSection from "@/components/ConnectSection";
-import AnimatedDomains from "@/components/AnimatedDomains";
 import NavBar from "@/components/NavBar";
 import { useState, useEffect } from "react";
 
 export default function Index() {
-  const [showDomainsAnimation, setShowDomainsAnimation] = useState(false);
-
-  // Handle escape key to close domains animation
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && showDomainsAnimation) {
-        setShowDomainsAnimation(false);
-      }
-    };
-
-    if (showDomainsAnimation) {
-      document.addEventListener("keydown", handleEscape);
-      // Prevent body scroll when overlay is open
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-
-    return () => {
-      document.removeEventListener("keydown", handleEscape);
-      document.body.style.overflow = "unset";
-    };
-  }, [showDomainsAnimation]);
-
   const domains = [
     {
       name: "Software Development",
@@ -125,7 +100,7 @@ export default function Index() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5">
       {/* Navigation */}
-      <NavBar onDomainsClick={() => setShowDomainsAnimation(true)} />
+      <NavBar />
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 text-center animate-in slide-up duration-700">
@@ -184,7 +159,7 @@ export default function Index() {
           {features.map((feature, index) => (
             <Card
               key={index}
-              className="text-center border-0 bg-background/50 backdrop-blur-sm hover:shadow-lg transition-all duration-300"
+              className="text-center border-0 bg-background/80 hover:shadow-lg transition-all duration-200 will-change-transform"
             >
               <CardHeader>
                 <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
@@ -215,7 +190,7 @@ export default function Index() {
           {domains.map((domain, index) => (
             <Card
               key={index}
-              className="group cursor-pointer border-0 bg-background/50 backdrop-blur-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              className="group cursor-pointer border-0 bg-background/80 hover:shadow-xl transition-all duration-200 hover:-translate-y-1 will-change-transform"
             >
               <CardContent className="p-6">
                 <div className="flex items-center space-x-4">
@@ -240,9 +215,11 @@ export default function Index() {
           ))}
         </div>
         <div className="text-center mt-8">
-          <Button variant="outline" size="lg">
-            View All Domains
-          </Button>
+          <Link to="/domains">
+            <Button variant="outline" size="lg">
+              View All Domains
+            </Button>
+          </Link>
         </div>
       </section>
 
@@ -255,7 +232,7 @@ export default function Index() {
             future of tech
           </p>
         </div>
-        <div className="animate-in scale-in duration-500 delay-400">
+        <div className="animate-in duration-300 delay-300">
           <ConnectSection />
         </div>
       </section>
@@ -280,7 +257,7 @@ export default function Index() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t bg-background/50 backdrop-blur-sm">
+      <footer className="border-t bg-background/90">
         <div className="container mx-auto px-4 py-12">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
@@ -328,34 +305,6 @@ export default function Index() {
           </div>
         </div>
       </footer>
-
-      {/* Domains Animation Overlay */}
-      {showDomainsAnimation && (
-        <div className="fixed inset-0 z-40 bg-background/95 backdrop-blur-sm">
-          {/* Navbar stays visible */}
-          <div className="sticky top-0 z-50">
-            <NavBar onDomainsClick={() => setShowDomainsAnimation(false)} />
-          </div>
-
-          {/* Close button */}
-          <div className="absolute top-20 right-4 z-50">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowDomainsAnimation(false)}
-              className="bg-background/80 backdrop-blur-sm border-primary/20 hover:bg-primary/10"
-            >
-              <X className="w-4 h-4 mr-2" />
-              Close (ESC)
-            </Button>
-          </div>
-
-          {/* Scrollable content */}
-          <div className="relative overflow-y-auto max-h-screen">
-            <AnimatedDomains />
-          </div>
-        </div>
-      )}
     </div>
   );
 }
