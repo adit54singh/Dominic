@@ -180,16 +180,6 @@ export default function UserDashboard() {
     }
   }, [userOnboardingData, selectedDomain]);
 
-  // Function to add activity
-  const addActivity = (activity: any) => {
-    const newActivity = {
-      ...activity,
-      timestamp: new Date().toISOString(),
-      id: Date.now().toString(),
-    };
-    setUserActivity((prev) => [newActivity, ...prev].slice(0, 10)); // Keep only last 10 activities
-  };
-
   // Function to join a project
   const joinProject = (project: any) => {
     const joinedProject = {
