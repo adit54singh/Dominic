@@ -612,25 +612,48 @@ export default function UserProfile() {
                     ].slice(0, 5).map((activity) => (
                       <div
                         key={activity.id}
-                        className="flex items-center gap-3 p-3 bg-gray-700/50 rounded-lg transition-colors hover:bg-gray-700/70"
+                        className={`flex items-center gap-3 p-3 rounded-lg transition-colors hover:bg-gray-700/70 ${
+                          activity.type === "connection" || activity.type === "like" || activity.type === "collaboration" || activity.type === "views"
+                            ? "bg-primary/10 border border-primary/20"
+                            : "bg-gray-700/50"
+                        }`}
                       >
-                        <div
-                          className={`w-2 h-2 rounded-full ${
-                            activity.type === "completed"
-                              ? "bg-green-400"
-                              : activity.type === "started"
-                                ? "bg-blue-400"
-                                : "bg-orange-400"
-                          }`}
-                        />
+                        {activity.icon ? (
+                          <div className="text-lg">{activity.icon}</div>
+                        ) : (
+                          <div
+                            className={`w-2 h-2 rounded-full ${
+                              activity.type === "completed"
+                                ? "bg-green-400"
+                                : activity.type === "started"
+                                  ? "bg-blue-400"
+                                  : activity.type === "connection"
+                                    ? "bg-purple-400"
+                                    : activity.type === "like"
+                                      ? "bg-red-400"
+                                      : activity.type === "collaboration"
+                                        ? "bg-yellow-400"
+                                        : activity.type === "views"
+                                          ? "bg-cyan-400"
+                                          : "bg-orange-400"
+                            }`}
+                          />
+                        )}
                         <div className="flex-1">
-                          <div className="text-sm font-medium">
+                          <div className={`text-sm font-medium ${
+                            activity.type === "connection" || activity.type === "like" || activity.type === "collaboration" || activity.type === "views"
+                              ? "text-primary"
+                              : ""
+                          }`}>
                             {activity.action}
                           </div>
                           <div className="text-xs text-gray-400">
                             {activity.time}
                           </div>
                         </div>
+                        {(activity.type === "connection" || activity.type === "like" || activity.type === "collaboration" || activity.type === "views") && (
+                          <Bell className="w-4 h-4 text-primary" />
+                        )}
                       </div>
                     ))}
                   </div>
