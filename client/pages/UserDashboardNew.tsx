@@ -103,20 +103,26 @@ export default function UserDashboard() {
     }
   }, []);
 
-  // Save to localStorage when state changes
+  // Save to localStorage when state changes (debounced to prevent excessive saves)
   useEffect(() => {
-    localStorage.setItem("joinedProjects", JSON.stringify(joinedProjects));
+    if (joinedProjects.length > 0) {
+      localStorage.setItem("joinedProjects", JSON.stringify(joinedProjects));
+    }
   }, [joinedProjects]);
 
   useEffect(() => {
-    localStorage.setItem(
-      "joinedCommunities",
-      JSON.stringify(Array.from(joinedCommunities)),
-    );
+    if (joinedCommunities.size > 0) {
+      localStorage.setItem(
+        "joinedCommunities",
+        JSON.stringify(Array.from(joinedCommunities)),
+      );
+    }
   }, [joinedCommunities]);
 
   useEffect(() => {
-    localStorage.setItem("userActivity", JSON.stringify(userActivity));
+    if (userActivity.length > 0) {
+      localStorage.setItem("userActivity", JSON.stringify(userActivity));
+    }
   }, [userActivity]);
 
   // Function to add activity - memoized with useCallback to prevent infinite re-renders
