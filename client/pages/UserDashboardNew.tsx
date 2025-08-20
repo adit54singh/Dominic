@@ -167,16 +167,12 @@ export default function UserDashboard() {
     }
   }, [activeTab, discoverySessionStart]);
 
-  // Real-time profile updates - watch for changes in userOnboardingData
-  useEffect(() => {
-    if (userOnboardingData) {
-      // Save updated data to localStorage for persistence
-      localStorage.setItem(
-        "userOnboardingData",
-        JSON.stringify(userOnboardingData),
-      );
+  // Save user onboarding data to localStorage when explicitly updated
+  const saveUserOnboardingData = useCallback((data: any) => {
+    if (data) {
+      localStorage.setItem("userOnboardingData", JSON.stringify(data));
     }
-  }, [userOnboardingData]);
+  }, []);
 
   // Separate effect to handle domain validation - only when userOnboardingData changes
   useEffect(() => {
@@ -789,11 +785,13 @@ export default function UserDashboard() {
           }}
           onSave={(profile) => {
             // Update user onboarding data
-            setUserOnboardingData((prevData) => ({
-              ...prevData,
+            const updatedData = {
+              ...userOnboardingData,
               ...profile,
               userProjects: profile.projects,
-            }));
+            };
+            setUserOnboardingData(updatedData);
+            saveUserOnboardingData(updatedData);
 
             // Show success message and go back to profile
             addActivity({
