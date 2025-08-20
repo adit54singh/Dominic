@@ -173,14 +173,18 @@ export default function UserDashboard() {
     }
   }, [userOnboardingData]);
 
-  // Separate effect to handle domain validation to prevent infinite loops
+  // Separate effect to handle domain validation - only when userOnboardingData changes
   useEffect(() => {
     if (userOnboardingData?.domains && userOnboardingData.domains.length > 0) {
-      if (!userOnboardingData.domains.includes(selectedDomain)) {
-        setSelectedDomain(userOnboardingData.domains[0]);
+      const currentDomain = selectedDomain;
+      const availableDomains = userOnboardingData.domains;
+
+      // Only update if current domain is not in available domains
+      if (!availableDomains.includes(currentDomain)) {
+        setSelectedDomain(availableDomains[0]);
       }
     }
-  }, [userOnboardingData?.domains, selectedDomain]);
+  }, [userOnboardingData]);
 
   // Function to join a project
   const joinProject = (project: any) => {
@@ -2414,7 +2418,7 @@ export default function UserDashboard() {
                                   ? `${userOnboardingData.experience} level`
                                   : ""}
                                 {userOnboardingData.leetcodeRank &&
-                                  ` • LeetCode: ${userOnboardingData.leetcodeRank}`}
+                                  ` ��� LeetCode: ${userOnboardingData.leetcodeRank}`}
                                 {userOnboardingData.gfgRank &&
                                   ` • GFG: ${userOnboardingData.gfgRank}`}
                               </div>
