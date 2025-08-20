@@ -22,7 +22,7 @@ import { Link } from "react-router-dom";
 import ConnectSection from "@/components/ConnectSection";
 import AnimatedDomains from "@/components/AnimatedDomains";
 import NavBar from "@/components/NavBar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Index() {
   const [showDomainsAnimation, setShowDomainsAnimation] = useState(false);
