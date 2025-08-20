@@ -45,10 +45,10 @@ interface ProjectPost {
 }
 
 interface FollowingProjectsFeedProps {
-  selectedDomain: string;
-  followedUsers: Set<string>;
-  joinedProjects: Array<any>;
-  onJoinProject: (project: any) => void;
+  selectedDomain?: string;
+  followedUsers?: Set<string>;
+  joinedProjects?: Array<any>;
+  onJoinProject?: (project: any) => void;
 }
 
 export default function FollowingProjectsFeed({
