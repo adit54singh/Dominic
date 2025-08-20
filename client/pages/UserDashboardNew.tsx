@@ -298,7 +298,7 @@ export default function UserDashboard() {
       leetcodeRank: userOnboardingData?.leetcodeRank || userOnboardingData?.gfgRank || '#--',
       domains: [currentDomain.name],
       projectsCollaborated: currentDomain.projectsCompleted,
-      mentorshipHours: currentDomain.mentorshipHours,
+      rating: 4.8, // Default rating for user profile
       skills: userOnboardingData?.skills?.slice(0, 3) || ['JavaScript', 'React', 'Node.js']
     };
   };
