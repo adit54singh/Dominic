@@ -38,9 +38,18 @@ import FollowingProjectsFeed from "@/components/FollowingProjectsFeed";
 import { generateSampleProfiles } from "@/components/ProfileCard";
 
 export default function UserProfile() {
+  const { userId } = useParams();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userOnboardingData, setUserOnboardingData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isConnected, setIsConnected] = useState(false);
+
+  // Check if this is another user's profile (has userId param)
+  const isOtherUserProfile = !!userId;
+
+  // Generate sample profiles for other users
+  const sampleProfiles = generateSampleProfiles();
+  const targetProfile = userId ? sampleProfiles.find(p => p.id === userId) : null;
 
   // Load user onboarding data from localStorage
   useEffect(() => {
