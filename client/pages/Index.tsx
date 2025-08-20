@@ -346,6 +346,23 @@ export default function Index() {
           </div>
         </div>
       </footer>
+
+      {/* Domains Animation Overlay */}
+      {showDomainsAnimation && (
+        <div className="fixed inset-0 z-50 bg-background">
+          <div className="absolute top-4 right-4 z-60">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowDomainsAnimation(false)}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <X className="w-4 h-4" />
+            </Button>
+          </div>
+          <AnimatedDomains />
+        </div>
+      )}
     </div>
   );
 }
