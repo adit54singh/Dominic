@@ -1,12 +1,13 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
-  Briefcase, 
+import {
+  Briefcase,
   Code,
   Users,
   BookOpen,
   Trophy,
-  Zap
+  Zap,
+  Star,
 } from "lucide-react";
 
 interface ProfileCardData {
@@ -19,7 +20,7 @@ interface ProfileCardData {
   leetcodeRank: string;
   domains: string[];
   projectsCollaborated: number;
-  mentorshipHours: number;
+  rating: number;
   skills: string[];
 }
 
@@ -28,9 +29,14 @@ interface ProfileCardProps {
   className?: string;
 }
 
-export default function ProfileCard({ profile, className = "" }: ProfileCardProps) {
+export default function ProfileCard({
+  profile,
+  className = "",
+}: ProfileCardProps) {
   return (
-    <Card className={`w-full max-w-sm bg-slate-800/95 border-slate-700/50 text-white backdrop-blur-sm ${className}`}>
+    <Card
+      className={`w-full max-w-sm bg-slate-800/95 border-slate-700/50 text-white backdrop-blur-sm ${className}`}
+    >
       <CardContent className="p-6 space-y-6">
         {/* Profile Header */}
         <div className="text-center space-y-3">
@@ -56,15 +62,19 @@ export default function ProfileCard({ profile, className = "" }: ProfileCardProp
               <Briefcase className="w-4 h-4 text-slate-400" />
               <span className="text-xs text-slate-400">Experience</span>
             </div>
-            <div className="text-lg font-semibold text-white">{profile.experience}</div>
+            <div className="text-lg font-semibold text-white">
+              {profile.experience}
+            </div>
           </div>
-          
+
           <div className="bg-slate-900/50 rounded-lg p-3 border border-slate-700/30">
             <div className="flex items-center space-x-2 mb-1">
               <Code className="w-4 h-4 text-slate-400" />
               <span className="text-xs text-slate-400">LeetCode</span>
             </div>
-            <div className="text-lg font-semibold text-cyan-400">{profile.leetcodeRank}</div>
+            <div className="text-lg font-semibold text-cyan-400">
+              {profile.leetcodeRank}
+            </div>
           </div>
         </div>
 
@@ -76,8 +86,8 @@ export default function ProfileCard({ profile, className = "" }: ProfileCardProp
           </div>
           <div className="flex flex-wrap gap-1.5">
             {profile.domains.map((domain, index) => (
-              <Badge 
-                key={index} 
+              <Badge
+                key={index}
                 className="bg-cyan-500/20 text-cyan-400 border-cyan-500/30 text-xs px-2 py-1"
               >
                 {domain}
@@ -94,12 +104,21 @@ export default function ProfileCard({ profile, className = "" }: ProfileCardProp
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-slate-900/30 rounded-lg p-3 text-center">
-              <div className="text-xl font-bold text-white">{profile.projectsCollaborated}</div>
-              <div className="text-xs text-slate-400">Projects Collaborated</div>
+              <div className="text-xl font-bold text-white">
+                {profile.projectsCollaborated}
+              </div>
+              <div className="text-xs text-slate-400">
+                Projects Collaborated
+              </div>
             </div>
             <div className="bg-slate-900/30 rounded-lg p-3 text-center">
-              <div className="text-xl font-bold text-white">{profile.mentorshipHours}</div>
-              <div className="text-xs text-slate-400">Mentorship Hours</div>
+              <div className="flex items-center justify-center space-x-1 mb-1">
+                <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                <div className="text-xl font-bold text-white">
+                  {(profile.rating || 0).toFixed(1)}
+                </div>
+              </div>
+              <div className="text-xs text-slate-400">Average Rating</div>
             </div>
           </div>
         </div>
@@ -112,8 +131,8 @@ export default function ProfileCard({ profile, className = "" }: ProfileCardProp
           </div>
           <div className="flex flex-wrap gap-1.5">
             {profile.skills.map((skill, index) => (
-              <Badge 
-                key={index} 
+              <Badge
+                key={index}
                 variant="secondary"
                 className="bg-slate-700/50 text-slate-300 border-slate-600/30 text-xs px-2 py-1"
               >
@@ -137,10 +156,10 @@ export const generateSampleProfiles = (): ProfileCardData[] => [
     avatar: "AD",
     experience: "3 Years",
     leetcodeRank: "#8,102",
-    domains: ["Web3 & DeFi"],
+    domains: ["Blockchain & Web3"],
     projectsCollaborated: 15,
-    mentorshipHours: 60,
-    skills: ["Solidity", "Ethers.js", "Hardhat"]
+    rating: 4.8,
+    skills: ["Solidity", "Ethers.js", "Hardhat"],
   },
   {
     id: "2",
@@ -150,10 +169,10 @@ export const generateSampleProfiles = (): ProfileCardData[] => [
     avatar: "RS",
     experience: "2 Years",
     leetcodeRank: "#12,453",
-    domains: ["Web Dev", "Mobile Dev"],
+    domains: ["Web Development"],
     projectsCollaborated: 23,
-    mentorshipHours: 45,
-    skills: ["React", "Node.js", "TypeScript"]
+    rating: 4.6,
+    skills: ["React", "Node.js", "TypeScript"],
   },
   {
     id: "3",
@@ -163,10 +182,10 @@ export const generateSampleProfiles = (): ProfileCardData[] => [
     avatar: "PG",
     experience: "4 Years",
     leetcodeRank: "#5,789",
-    domains: ["Data Science", "ML/AI"],
+    domains: ["Data Science & AI"],
     projectsCollaborated: 31,
-    mentorshipHours: 120,
-    skills: ["Python", "TensorFlow", "PyTorch"]
+    rating: 4.9,
+    skills: ["Python", "TensorFlow", "PyTorch"],
   },
   {
     id: "4",
@@ -176,10 +195,10 @@ export const generateSampleProfiles = (): ProfileCardData[] => [
     avatar: "AP",
     experience: "3 Years",
     leetcodeRank: "#15,234",
-    domains: ["DevOps", "Cloud Computing"],
+    domains: ["DevOps & Infrastructure"],
     projectsCollaborated: 18,
-    mentorshipHours: 75,
-    skills: ["AWS", "Docker", "Kubernetes"]
+    rating: 4.7,
+    skills: ["AWS", "Docker", "Kubernetes"],
   },
   {
     id: "5",
@@ -189,10 +208,10 @@ export const generateSampleProfiles = (): ProfileCardData[] => [
     avatar: "SK",
     experience: "2 Years",
     leetcodeRank: "#25,671",
-    domains: ["Design", "Content Creation"],
+    domains: ["UI/UX Design"],
     projectsCollaborated: 27,
-    mentorshipHours: 55,
-    skills: ["Figma", "Photoshop", "Prototyping"]
+    rating: 4.5,
+    skills: ["Figma", "Photoshop", "Prototyping"],
   },
   {
     id: "6",
@@ -202,23 +221,23 @@ export const generateSampleProfiles = (): ProfileCardData[] => [
     avatar: "KR",
     experience: "3 Years",
     leetcodeRank: "#9,876",
-    domains: ["Mobile Dev", "Fintech"],
+    domains: ["Mobile Development"],
     projectsCollaborated: 20,
-    mentorshipHours: 90,
-    skills: ["Flutter", "React Native", "Swift"]
+    rating: 4.8,
+    skills: ["Flutter", "React Native", "Swift"],
   },
   {
     id: "7",
     name: "Ananya Singh",
-    title: "Product Manager",
-    company: "EdTech Platform",
+    title: "Cloud Architect",
+    company: "Tech Platform",
     avatar: "AS",
     experience: "4 Years",
     leetcodeRank: "#18,543",
-    domains: ["Product Management", "EdTech"],
+    domains: ["Cloud Computing"],
     projectsCollaborated: 35,
-    mentorshipHours: 110,
-    skills: ["Strategy", "Analytics", "Leadership"]
+    rating: 4.9,
+    skills: ["AWS", "Azure", "Terraform"],
   },
   {
     id: "8",
@@ -228,9 +247,9 @@ export const generateSampleProfiles = (): ProfileCardData[] => [
     avatar: "VA",
     experience: "3 Years",
     leetcodeRank: "#11,234",
-    domains: ["Cybersecurity", "Ethical Hacking"],
+    domains: ["Cybersecurity"],
     projectsCollaborated: 16,
-    mentorshipHours: 65,
-    skills: ["Penetration Testing", "SIEM", "Forensics"]
-  }
+    rating: 4.6,
+    skills: ["Penetration Testing", "SIEM", "Forensics"],
+  },
 ];
