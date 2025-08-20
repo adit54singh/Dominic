@@ -561,8 +561,7 @@ export default function UserDashboard() {
                           {generateProfileForDomain().title} | {getCurrentDomain().name} Specialist | Community Mentor
                         </p>
                         <p className="text-muted-foreground leading-relaxed max-w-2xl mb-4">
-                          Passionate about {getCurrentDomain().name.toLowerCase()} with expertise in modern technologies.
-                          Love building scalable solutions and mentoring upcoming developers in the community.
+                          {user.bio || `Passionate about ${getCurrentDomain().name.toLowerCase()} with expertise in modern technologies. Love building scalable solutions and mentoring upcoming developers in the community.`}
                         </p>
                       </div>
                     </div>
