@@ -533,8 +533,10 @@ const ConnectSection = memo(({ onActivity, followedUsers = new Set(), onFollowUs
   }, []);
 
   const handleView = useCallback((userId: string) => {
-    console.log("View profile:", userId);
-  }, []);
+    if (onViewUser) {
+      onViewUser(userId);
+    }
+  }, [onViewUser]);
 
   const handleJoinProject = useCallback((projectId: string, userId: string) => {
     console.log("Join project:", projectId, "by user:", userId);
