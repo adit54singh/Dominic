@@ -66,7 +66,8 @@ export default function UserDashboard() {
   );
   const [userActivity, setUserActivity] = useState<Array<any>>([]);
   const [discoveryTimeSpent, setDiscoveryTimeSpent] = useState(0); // in minutes
-  const [discoverySessionStart, setDiscoverySessionStart] = useState<Date | null>(null);
+  const [discoverySessionStart, setDiscoverySessionStart] =
+    useState<Date | null>(null);
   const [projectsCompleted, setProjectsCompleted] = useState(0);
   const [viewingCommunity, setViewingCommunity] = useState<string | null>(null);
   const [communityPosts, setCommunityPosts] = useState<Array<any>>([]);
@@ -145,13 +146,15 @@ export default function UserDashboard() {
 
   // Track time spent in discovery section
   useEffect(() => {
-    if (activeTab === 'discover') {
+    if (activeTab === "discover") {
       setDiscoverySessionStart(new Date());
-    } else if (discoverySessionStart && activeTab !== 'discover') {
+    } else if (discoverySessionStart && activeTab !== "discover") {
       const sessionEnd = new Date();
-      const sessionTime = Math.floor((sessionEnd.getTime() - discoverySessionStart.getTime()) / 60000); // minutes
+      const sessionTime = Math.floor(
+        (sessionEnd.getTime() - discoverySessionStart.getTime()) / 60000,
+      ); // minutes
       if (sessionTime > 0) {
-        setDiscoveryTimeSpent(prev => prev + sessionTime);
+        setDiscoveryTimeSpent((prev) => prev + sessionTime);
         addActivity({
           type: "discovery_time",
           action: `Spent ${sessionTime} minutes in Discovery`,
@@ -204,7 +207,7 @@ export default function UserDashboard() {
 
   // Function to complete a project
   const completeProject = (projectId: string) => {
-    setProjectsCompleted(prev => {
+    setProjectsCompleted((prev) => {
       const newCount = prev + 1;
       localStorage.setItem("projectsCompleted", newCount.toString());
       return newCount;
@@ -223,19 +226,32 @@ export default function UserDashboard() {
     const followingScore = followedUsers.size * 2; // 2 points per person followed
     const communityScore = joinedCommunities.size * 5; // 5 points per community
 
-    const totalScore = discoveryScore + projectScore + followingScore + communityScore;
+    const totalScore =
+      discoveryScore + projectScore + followingScore + communityScore;
     const activityPercentage = Math.min(Math.round(totalScore), 100);
 
     return {
       percentage: activityPercentage,
-      label: activityPercentage >= 80 ? "Very Active" :
-             activityPercentage >= 60 ? "Active" :
-             activityPercentage >= 40 ? "Moderate" :
-             activityPercentage >= 20 ? "Getting Started" : "New",
-      color: activityPercentage >= 80 ? "text-green-500" :
-             activityPercentage >= 60 ? "text-blue-500" :
-             activityPercentage >= 40 ? "text-yellow-500" :
-             activityPercentage >= 20 ? "text-orange-500" : "text-gray-500"
+      label:
+        activityPercentage >= 80
+          ? "Very Active"
+          : activityPercentage >= 60
+            ? "Active"
+            : activityPercentage >= 40
+              ? "Moderate"
+              : activityPercentage >= 20
+                ? "Getting Started"
+                : "New",
+      color:
+        activityPercentage >= 80
+          ? "text-green-500"
+          : activityPercentage >= 60
+            ? "text-blue-500"
+            : activityPercentage >= 40
+              ? "text-yellow-500"
+              : activityPercentage >= 20
+                ? "text-orange-500"
+                : "text-gray-500",
     };
   };
 
@@ -1068,7 +1084,9 @@ export default function UserDashboard() {
                       <span className="text-sm text-muted-foreground">
                         Activity Level
                       </span>
-                      <span className={`text-sm font-bold ${calculateActivityLevel().color}`}>
+                      <span
+                        className={`text-sm font-bold ${calculateActivityLevel().color}`}
+                      >
                         {calculateActivityLevel().label}
                       </span>
                     </div>
