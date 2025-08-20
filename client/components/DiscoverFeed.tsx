@@ -79,6 +79,8 @@ const getDifficultyColor = (difficulty: string) => {
 export default function DiscoverFeed({ selectedDomain, joinedProjects = [], onJoinProject }: DiscoverFeedProps) {
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
   const [savedPosts, setSavedPosts] = useState<Set<string>>(new Set());
+  const [showComments, setShowComments] = useState<Set<string>>(new Set());
+  const [newComment, setNewComment] = useState<Record<string, string>>({});
 
   // Sample posts from verified users and mentors
   const generatePosts = (): Post[] => {
@@ -291,6 +293,188 @@ export default function DiscoverFeed({ selectedDomain, joinedProjects = [], onJo
         },
         timestamp: "2 days ago",
         domain: "security"
+      },
+      // Tech Skills & Learning Content
+      {
+        id: "tech1",
+        type: "post",
+        author: {
+          name: "TechSkills Academy",
+          title: "Learning Platform",
+          avatar: "TS",
+          verified: true,
+          company: "EdTech",
+          followers: "45.2k"
+        },
+        content: {
+          title: "🚀 5 In-Demand Tech Skills to Learn in 2024",
+          description: "Based on industry trends and job market analysis, here are the top 5 skills that will boost your career: 1. React & Next.js 2. TypeScript 3. AWS Cloud Services 4. Docker & Kubernetes 5. AI/ML Fundamentals. Which one are you focusing on?",
+          tags: ["Skills", "Learning", "Career", "Tech2024"],
+          location: "Online"
+        },
+        engagement: {
+          likes: 3456,
+          comments: 234,
+          shares: 567
+        },
+        timestamp: "3 hours ago",
+        domain: "web-dev"
+      },
+      {
+        id: "hack1",
+        type: "reel",
+        author: {
+          name: "HackEvents India",
+          title: "Hackathon Organizer",
+          avatar: "HE",
+          verified: true,
+          company: "HackEvents",
+          followers: "23.8k"
+        },
+        content: {
+          title: "🏆 Major Hackathons Coming Up!",
+          description: "Get ready for these amazing hackathons: 🔥 Smart India Hackathon 2024 (March 15-17) 💰 Prize: ₹15 Lakh 🚀 SIH Grand Finale (April 20-22) 💰 Prize: ₹25 Lakh 🌟 Microsoft Imagine Cup (May 10-12) 💰 Prize: $100k Register now!",
+          media: "hackathon_reel",
+          tags: ["Hackathon", "Competition", "Prizes", "Innovation"],
+          location: "Pan India",
+          duration: "1:30"
+        },
+        engagement: {
+          likes: 5678,
+          comments: 445,
+          shares: 789,
+          views: 67890
+        },
+        timestamp: "5 hours ago",
+        domain: "web-dev"
+      },
+      {
+        id: "learn1",
+        type: "post",
+        author: {
+          name: "CodeWithHarry",
+          title: "YouTube Educator",
+          avatar: "CH",
+          verified: true,
+          company: "CodeWithHarry",
+          followers: "2.1M"
+        },
+        content: {
+          title: "🎯 Free Resources to Master Full Stack Development",
+          description: "I've compiled the best free resources to become a full-stack developer: ✅ Frontend: FreeCodeCamp, MDN Docs, React Docs ✅ Backend: Node.js docs, Express tutorials ✅ Database: MongoDB University, PostgreSQL tutorial ✅ DevOps: Docker docs, AWS free tier All links in bio! 📚",
+          tags: ["Learning", "Resources", "FullStack", "Free"],
+          location: "Delhi"
+        },
+        engagement: {
+          likes: 8945,
+          comments: 678,
+          shares: 1234
+        },
+        timestamp: "8 hours ago",
+        domain: "web-dev"
+      },
+      {
+        id: "ai1",
+        type: "carousel",
+        author: {
+          name: "AI Research Hub",
+          title: "Research Institution",
+          avatar: "AR",
+          verified: true,
+          company: "IIT Delhi",
+          followers: "78.3k"
+        },
+        content: {
+          title: "🤖 Latest AI Breakthroughs You Should Know",
+          description: "Stay updated with cutting-edge AI research: 🔬 GPT-4 Turbo with vision capabilities 🧠 Google's Gemini multimodal AI 🎨 DALL-E 3 image generation 📊 AutoML for automated machine learning 🚀 Edge AI for mobile devices. The future is here!",
+          tags: ["AI", "Research", "Innovation", "Technology"],
+          location: "IIT Delhi"
+        },
+        engagement: {
+          likes: 4567,
+          comments: 234,
+          shares: 456
+        },
+        timestamp: "12 hours ago",
+        domain: "data-science"
+      },
+      {
+        id: "mobile1",
+        type: "reel",
+        author: {
+          name: "Flutter Dev Community",
+          title: "Developer Community",
+          avatar: "FD",
+          verified: true,
+          company: "Flutter",
+          followers: "156k"
+        },
+        content: {
+          title: "⚡ Flutter 3.19 New Features Demo",
+          description: "Check out the amazing new features in Flutter 3.19: 🎨 Impeller rendering engine 📱 Material 3 support 🚀 Performance improvements ⚡ Hot reload enhancements 🔧 New debugging tools. Time to upgrade your apps!",
+          media: "flutter_demo",
+          tags: ["Flutter", "Mobile", "Development", "Update"],
+          location: "Global",
+          duration: "2:45"
+        },
+        engagement: {
+          likes: 6789,
+          comments: 345,
+          shares: 567,
+          views: 89012
+        },
+        timestamp: "1 day ago",
+        domain: "mobile-dev"
+      },
+      {
+        id: "interview1",
+        type: "post",
+        author: {
+          name: "InterviewBit",
+          title: "Interview Prep Platform",
+          avatar: "IB",
+          verified: true,
+          company: "Scaler",
+          followers: "234k"
+        },
+        content: {
+          title: "��� Top Interview Questions for 2024 Tech Interviews",
+          description: "Prepare for your dream job with these frequently asked questions: 🔥 Data Structures & Algorithms 🌐 System Design concepts 💻 JavaScript/React deep dive 🛠️ Problem-solving approaches 📊 Behavioral questions Free practice tests available! Link in bio 🎯",
+          tags: ["Interview", "Jobs", "Preparation", "DSA"],
+          location: "Bangalore"
+        },
+        engagement: {
+          likes: 7234,
+          comments: 456,
+          shares: 890
+        },
+        timestamp: "1 day ago",
+        domain: "web-dev"
+      },
+      {
+        id: "startup1",
+        type: "post",
+        author: {
+          name: "Startup India",
+          title: "Government Initiative",
+          avatar: "SI",
+          verified: true,
+          company: "Govt of India",
+          followers: "89.5k"
+        },
+        content: {
+          title: "🚀 Startup Funding Opportunities for Tech Entrepreneurs",
+          description: "Amazing opportunities for tech startups: 💰 Seed Fund Scheme - Up to ₹20 Lakh 🏆 Startup India Pitch Fest 📈 SIDBI Fund of Funds 🌟 Atal Innovation Mission grants 📊 Tax benefits for 3 years Apply now and turn your idea into reality! 🎯",
+          tags: ["Startup", "Funding", "Entrepreneurship", "Government"],
+          location: "New Delhi"
+        },
+        engagement: {
+          likes: 3456,
+          comments: 234,
+          shares: 567
+        },
+        timestamp: "2 days ago",
+        domain: "business"
       },
       // Collaborative Projects
       {
@@ -525,6 +709,31 @@ export default function DiscoverFeed({ selectedDomain, joinedProjects = [], onJo
       }
       return newSaved;
     });
+  };
+
+  const handleToggleComments = (postId: string) => {
+    setShowComments(prev => {
+      const newShow = new Set(prev);
+      if (newShow.has(postId)) {
+        newShow.delete(postId);
+      } else {
+        newShow.add(postId);
+      }
+      return newShow;
+    });
+  };
+
+  const handleAddComment = (postId: string) => {
+    const comment = newComment[postId];
+    if (comment && comment.trim()) {
+      // Here you would normally send to backend
+      console.log('Adding comment:', comment, 'to post:', postId);
+      setNewComment(prev => ({ ...prev, [postId]: '' }));
+    }
+  };
+
+  const handleCommentChange = (postId: string, value: string) => {
+    setNewComment(prev => ({ ...prev, [postId]: value }));
   };
 
   const formatNumber = (num: number): string => {
