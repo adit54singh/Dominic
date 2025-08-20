@@ -502,15 +502,10 @@ const ConnectSection = memo(({ onActivity, followedUsers = new Set(), onFollowUs
     const user = users.find(u => u.id === userId);
     const isCurrentlyFollowed = followedUsers.has(userId);
 
-    setFollowedUsers((prev) => {
-      const newFollowed = new Set(prev);
-      if (newFollowed.has(userId)) {
-        newFollowed.delete(userId);
-      } else {
-        newFollowed.add(userId);
-      }
-      return newFollowed;
-    });
+    // Update parent state
+    if (onFollowUser) {
+      onFollowUser(userId, !isCurrentlyFollowed);
+    }
 
     // Call onActivity after state update, not during
     if (user && onActivity) {
@@ -530,7 +525,7 @@ const ConnectSection = memo(({ onActivity, followedUsers = new Set(), onFollowUs
         });
       }
     }
-  }, [users, onActivity, followedUsers]);
+  }, [users, onActivity, followedUsers, onFollowUser]);
 
   const handleMessage = useCallback((userId: string) => {
     console.log("Message user:", userId);
