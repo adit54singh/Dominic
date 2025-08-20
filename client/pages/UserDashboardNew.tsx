@@ -677,7 +677,7 @@ export default function UserDashboard() {
         "Blockchain developer specializing in Ethereum and Solidity. Built 5+ DeFi protocols with $50M+ TVL. Active contributor to open-source Web3 projects.",
       achievements: [
         "⛓️ Built DeFi protocol with $50M TVL",
-        "��� ETHIndia hackathon winner",
+        "🏆 ETHIndia hackathon winner",
         "📝 Published 10+ smart contracts",
       ],
       communities: [
@@ -1432,6 +1432,9 @@ export default function UserDashboard() {
                 }
                 return newSet;
               });
+            }}
+            onViewUser={(userId: string) => {
+              setViewingUserProfile(userId);
             }}
           />
         </div>
