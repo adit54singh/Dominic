@@ -565,46 +565,110 @@ export default function UserProfile() {
                     {[
                       {
                         id: 1,
+                        action: "Priya Sharma connected with you",
+                        time: "30 minutes ago",
+                        type: "connection",
+                        icon: "👋",
+                      },
+                      {
+                        id: 2,
+                        action: "Rahul Kumar liked your profile",
+                        time: "1 hour ago",
+                        type: "like",
+                        icon: "❤️",
+                      },
+                      {
+                        id: 3,
                         action: "Completed React Advanced Patterns",
                         time: "2 hours ago",
                         type: "completed",
                       },
                       {
-                        id: 2,
+                        id: 4,
+                        action: "Anjali Patel wants to collaborate",
+                        time: "4 hours ago",
+                        type: "collaboration",
+                        icon: "🤝",
+                      },
+                      {
+                        id: 5,
                         action: "Started TypeScript Deep Dive",
                         time: "5 hours ago",
                         type: "started",
                       },
                       {
-                        id: 3,
+                        id: 6,
+                        action: "3 new people viewed your profile",
+                        time: "6 hours ago",
+                        type: "views",
+                        icon: "👀",
+                      },
+                      {
+                        id: 7,
                         action: "Mentored 3 junior developers",
                         time: "1 day ago",
                         type: "mentor",
                       },
-                    ].map((activity) => (
-                      <div
-                        key={activity.id}
-                        className="flex items-center gap-3 p-3 bg-gray-700/50 rounded-lg transition-colors hover:bg-gray-700/70"
-                      >
+                    ]
+                      .slice(0, 5)
+                      .map((activity) => (
                         <div
-                          className={`w-2 h-2 rounded-full ${
-                            activity.type === "completed"
-                              ? "bg-green-400"
-                              : activity.type === "started"
-                                ? "bg-blue-400"
-                                : "bg-orange-400"
+                          key={activity.id}
+                          className={`flex items-center gap-3 p-3 rounded-lg transition-colors hover:bg-gray-700/70 ${
+                            activity.type === "connection" ||
+                            activity.type === "like" ||
+                            activity.type === "collaboration" ||
+                            activity.type === "views"
+                              ? "bg-primary/10 border border-primary/20"
+                              : "bg-gray-700/50"
                           }`}
-                        />
-                        <div className="flex-1">
-                          <div className="text-sm font-medium">
-                            {activity.action}
+                        >
+                          {activity.icon ? (
+                            <div className="text-lg">{activity.icon}</div>
+                          ) : (
+                            <div
+                              className={`w-2 h-2 rounded-full ${
+                                activity.type === "completed"
+                                  ? "bg-green-400"
+                                  : activity.type === "started"
+                                    ? "bg-blue-400"
+                                    : activity.type === "connection"
+                                      ? "bg-purple-400"
+                                      : activity.type === "like"
+                                        ? "bg-red-400"
+                                        : activity.type === "collaboration"
+                                          ? "bg-yellow-400"
+                                          : activity.type === "views"
+                                            ? "bg-cyan-400"
+                                            : "bg-orange-400"
+                              }`}
+                            />
+                          )}
+                          <div className="flex-1">
+                            <div
+                              className={`text-sm font-medium ${
+                                activity.type === "connection" ||
+                                activity.type === "like" ||
+                                activity.type === "collaboration" ||
+                                activity.type === "views"
+                                  ? "text-primary"
+                                  : ""
+                              }`}
+                            >
+                              {activity.action}
+                            </div>
+                            <div className="text-xs text-gray-400">
+                              {activity.time}
+                            </div>
                           </div>
-                          <div className="text-xs text-gray-400">
-                            {activity.time}
-                          </div>
+                          {(activity.type === "connection" ||
+                            activity.type === "like" ||
+                            activity.type === "collaboration" ||
+                            activity.type === "views") && (
+                            <Bell className="w-4 h-4 text-primary" />
+                          )}
                         </div>
-                      </div>
-                    ))}
+                      ))}
                   </div>
                 </div>
               </CardContent>

@@ -110,30 +110,156 @@ export default function ConnectSection() {
     });
   };
 
+  // Get featured profiles (top 3 by rating)
+  const featuredProfiles = connectProfiles
+    .sort((a, b) => b.rating - a.rating)
+    .slice(0, 3);
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold mb-2">
+        <h3 className="text-3xl font-bold mb-4">
           Connect with Talented Developers
         </h3>
-        <p className="text-muted-foreground">
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           Expand your network and collaborate with skilled professionals in your
           field
         </p>
       </div>
 
-      {/* Vertical scrollable list of profiles */}
-      <div className="space-y-4 max-w-4xl mx-auto">
-        {connectProfiles.map((profile) => (
-          <DetailedProfileCard
-            key={profile.id}
-            profile={profile}
-            isConnected={connectedUsers.has(profile.id)}
-            onConnect={() => handleConnect(profile.id)}
-          />
-        ))}
+      {/* Featured Profiles - Top 3 in a grid */}
+      <div className="mb-12">
+        <div className="text-center mb-6">
+          <Badge className="bg-primary/10 text-primary border-primary/20 text-sm px-4 py-2">
+            ⭐ Featured Profiles
+          </Badge>
+        </div>
+        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {featuredProfiles.map((profile) => (
+            <FeaturedProfileCard
+              key={profile.id}
+              profile={profile}
+              isConnected={connectedUsers.has(profile.id)}
+              onConnect={() => handleConnect(profile.id)}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* All Profiles Section */}
+      <div className="space-y-6">
+        <div className="text-center">
+          <h4 className="text-xl font-semibold mb-2">
+            More Amazing Developers
+          </h4>
+          <p className="text-muted-foreground">
+            Discover more talented individuals in our community
+          </p>
+        </div>
+
+        <div className="space-y-4 max-w-4xl mx-auto">
+          {connectProfiles.slice(3, 6).map((profile) => (
+            <DetailedProfileCard
+              key={profile.id}
+              profile={profile}
+              isConnected={connectedUsers.has(profile.id)}
+              onConnect={() => handleConnect(profile.id)}
+            />
+          ))}
+        </div>
       </div>
     </div>
+  );
+}
+
+// Featured profile card component for top 3 profiles
+function FeaturedProfileCard({
+  profile,
+  isConnected,
+  onConnect,
+}: {
+  profile: ConnectUser;
+  isConnected: boolean;
+  onConnect: () => void;
+}) {
+  return (
+    <Card className="group bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 hover:scale-105">
+      <CardContent className="p-6 text-center">
+        {/* Avatar with featured styling */}
+        <div className="relative mb-4">
+          <Avatar className="w-24 h-24 mx-auto border-4 border-primary/20 shadow-lg">
+            <AvatarFallback className="bg-primary text-white text-2xl font-bold">
+              {profile.avatar}
+            </AvatarFallback>
+          </Avatar>
+          <div className="absolute -top-2 -right-2">
+            <Badge className="bg-yellow-400 text-yellow-900 text-xs px-2 py-1">
+              ⭐ TOP
+            </Badge>
+          </div>
+        </div>
+
+        {/* Name and title */}
+        <h4 className="text-xl font-bold mb-2">{profile.name}</h4>
+        <p className="text-muted-foreground mb-3">{profile.title}</p>
+
+        {/* Rating and connections */}
+        <div className="flex justify-center gap-6 mb-4">
+          <div className="flex items-center space-x-1">
+            <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+            <span className="font-bold text-primary">{profile.rating}</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <Users className="w-4 h-4 text-blue-400" />
+            <span className="font-bold text-blue-600">
+              {profile.connections}
+            </span>
+          </div>
+        </div>
+
+        {/* Domain badge */}
+        <Badge className="bg-primary/10 text-primary border-primary/20 mb-4">
+          {profile.domain}
+        </Badge>
+
+        {/* Top skills */}
+        <div className="mb-4">
+          <div className="flex flex-wrap justify-center gap-1">
+            {profile.skills.slice(0, 3).map((skill, index) => (
+              <Badge key={index} variant="secondary" className="text-xs">
+                {skill}
+              </Badge>
+            ))}
+          </div>
+        </div>
+
+        {/* Action buttons */}
+        <div className="flex gap-2">
+          <Link to={`/profile/${profile.id}`} className="flex-1">
+            <Button variant="outline" size="sm" className="w-full">
+              View Profile
+            </Button>
+          </Link>
+          <Button
+            onClick={onConnect}
+            size="sm"
+            className={`flex-1 ${isConnected ? "bg-green-600 hover:bg-green-700" : "bg-primary hover:bg-primary/90"}`}
+          >
+            {isConnected ? (
+              <>
+                <CheckCircle className="w-4 h-4 mr-1" />
+                Connected
+              </>
+            ) : (
+              <>
+                <UserPlus className="w-4 h-4 mr-1" />
+                Connect
+              </>
+            )}
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
