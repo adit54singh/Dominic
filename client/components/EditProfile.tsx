@@ -237,19 +237,53 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
     }));
   };
 
+  const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size must be less than 5MB');
+      return;
+    }
+
+    setUploadingPhoto(true);
+
+    try {
+      // Convert to base64 for demo purposes (in real app, upload to cloud storage)
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const result = e.target?.result as string;
+        setProfile(prev => ({ ...prev, avatar: result }));
+        setUploadingPhoto(false);
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Error uploading photo:', error);
+      alert('Error uploading photo. Please try again.');
+      setUploadingPhoto(false);
+    }
+  };
+
   const handleSave = async () => {
     setIsLoading(true);
-    
+
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     // Save to localStorage (in real app, this would be an API call)
     const updatedData = {
       ...profile,
       userProjects: profile.projects
     };
     localStorage.setItem('userOnboardingData', JSON.stringify(updatedData));
-    
+
     setIsLoading(false);
     onSave(profile);
   };
