@@ -20,9 +20,11 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import ConnectSection from "@/components/ConnectSection";
-import AnimatedDomains from "@/components/AnimatedDomains";
 import NavBar from "@/components/NavBar";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense, lazy } from "react";
+
+// Lazy load heavy components
+const AnimatedDomains = lazy(() => import("@/components/AnimatedDomains"));
 
 export default function Index() {
   const [showDomainsAnimation, setShowDomainsAnimation] = useState(false);
@@ -184,7 +186,7 @@ export default function Index() {
           {features.map((feature, index) => (
             <Card
               key={index}
-              className="text-center border-0 bg-background/50 backdrop-blur-sm hover:shadow-lg transition-all duration-300"
+              className="text-center border-0 bg-background/80 hover:shadow-lg transition-all duration-200 will-change-transform"
             >
               <CardHeader>
                 <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
@@ -215,7 +217,7 @@ export default function Index() {
           {domains.map((domain, index) => (
             <Card
               key={index}
-              className="group cursor-pointer border-0 bg-background/50 backdrop-blur-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              className="group cursor-pointer border-0 bg-background/80 hover:shadow-xl transition-all duration-200 hover:-translate-y-1 will-change-transform"
             >
               <CardContent className="p-6">
                 <div className="flex items-center space-x-4">
@@ -255,7 +257,7 @@ export default function Index() {
             future of tech
           </p>
         </div>
-        <div className="animate-in scale-in duration-500 delay-400">
+        <div className="animate-in duration-300 delay-300">
           <ConnectSection />
         </div>
       </section>
@@ -280,7 +282,7 @@ export default function Index() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t bg-background/50 backdrop-blur-sm">
+      <footer className="border-t bg-background/90">
         <div className="container mx-auto px-4 py-12">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
@@ -331,7 +333,7 @@ export default function Index() {
 
       {/* Domains Animation Overlay */}
       {showDomainsAnimation && (
-        <div className="fixed inset-0 z-40 bg-background/95 backdrop-blur-sm">
+        <div className="fixed inset-0 z-40 bg-background/98">
           {/* Navbar stays visible */}
           <div className="sticky top-0 z-50">
             <NavBar onDomainsClick={() => setShowDomainsAnimation(false)} />
@@ -343,7 +345,7 @@ export default function Index() {
               variant="outline"
               size="sm"
               onClick={() => setShowDomainsAnimation(false)}
-              className="bg-background/80 backdrop-blur-sm border-primary/20 hover:bg-primary/10"
+              className="bg-background/90 border-primary/20 hover:bg-primary/10"
             >
               <X className="w-4 h-4 mr-2" />
               Close (ESC)
@@ -352,7 +354,16 @@ export default function Index() {
 
           {/* Scrollable content */}
           <div className="relative overflow-y-auto max-h-screen">
-            <AnimatedDomains />
+            <Suspense fallback={
+              <div className="min-h-[80vh] flex items-center justify-center">
+                <div className="flex flex-col items-center space-y-4">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  <p className="text-muted-foreground text-sm">Loading domains...</p>
+                </div>
+              </div>
+            }>
+              <AnimatedDomains />
+            </Suspense>
           </div>
         </div>
       )}
