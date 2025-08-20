@@ -187,7 +187,7 @@ export default function AnimatedDomains() {
                       }}
                       whileHover={{
                         scale: 1.02,
-                        transition: { duration: 0.2 },
+                        transition: { duration: 0.15 },
                       }}
                       className="group bg-background/90 backdrop-blur-lg border border-primary/30 rounded-2xl p-8 shadow-2xl hover:shadow-primary/20 transition-all duration-300"
                       style={{
@@ -280,7 +280,7 @@ export default function AnimatedDomains() {
                       }}
                       whileHover={{
                         scale: 1.03,
-                        transition: { duration: 0.2 },
+                        transition: { duration: 0.15 },
                       }}
                       className="group bg-gradient-to-br from-accent/20 to-orange-500/20 backdrop-blur-lg border border-accent/40 rounded-2xl p-8 shadow-2xl hover:shadow-accent/20 transition-all duration-300 relative overflow-hidden"
                     >
@@ -313,15 +313,15 @@ export default function AnimatedDomains() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
+          transition={{ delay: 0.8 }}
           className="text-center mt-20"
         >
           <motion.p
             animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity }}
+            transition={{ duration: 1.5, repeat: Infinity }}
             className="text-muted-foreground text-lg"
           >
-            Domains refresh every few seconds... ✨
+            Domains refresh faster... ✨
           </motion.p>
         </motion.div>
       </div>
