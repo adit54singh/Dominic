@@ -569,7 +569,7 @@ export default function UserDashboard() {
                     <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
                       <div className="flex items-center gap-2">
                         <MapPin className="w-4 h-4" />
-                        Mumbai, India
+                        {user.location}
                       </div>
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
