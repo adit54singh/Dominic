@@ -76,11 +76,14 @@ export default function UserDashboard() {
 
   // Load user onboarding data from localStorage
   useEffect(() => {
-    console.log("Loading initial data from localStorage");
     const savedData = localStorage.getItem("userOnboardingData");
     if (savedData) {
       const data = JSON.parse(savedData);
       setUserOnboardingData(data);
+      // Set domain immediately during initial load to prevent later useEffect
+      if (data.domains && data.domains.length > 0 && !selectedDomain) {
+        setSelectedDomain(data.domains[0]);
+      }
     }
 
     // Load saved joined projects, communities, and activity
