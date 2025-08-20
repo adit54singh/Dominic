@@ -342,6 +342,8 @@ UserCard.displayName = "UserCard";
 
 interface ConnectSectionProps {
   onActivity?: (activity: any) => void;
+  followedUsers?: Set<string>;
+  onFollowUser?: (userId: string, isFollowing: boolean) => void;
 }
 
 const ConnectSection = memo(({ onActivity }: ConnectSectionProps) => {
