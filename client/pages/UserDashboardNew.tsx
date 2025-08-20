@@ -1755,6 +1755,18 @@ export default function UserDashboard() {
 
                       <button
                         onClick={() => {
+                          setActiveTab("edit-profile");
+                          setActiveVerticalNav("edit-profile");
+                          setUserDropdownOpen(false);
+                        }}
+                        className="w-full flex items-center space-x-3 px-3 py-2 text-left hover:bg-primary/10 rounded-lg transition-colors duration-200"
+                      >
+                        <Edit className="w-4 h-4 text-primary" />
+                        <span className="text-sm">Edit Profile</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
                           setActiveTab("settings");
                           setUserDropdownOpen(false);
                         }}
