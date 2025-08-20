@@ -196,8 +196,8 @@ export default function Index() {
             Connect with talented students and professionals who are shaping the future of tech
           </p>
         </div>
-        <div className="flex justify-center animate-in scale-in duration-500 delay-400">
-          <RotatingProfileCards />
+        <div className="animate-in scale-in duration-500 delay-400">
+          <ConnectSection />
         </div>
       </section>
 
