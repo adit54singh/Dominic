@@ -163,7 +163,7 @@ export default function UserDashboard() {
       }
       setDiscoverySessionStart(null);
     }
-  }, [activeTab, discoverySessionStart, addActivity]);
+  }, [activeTab, discoverySessionStart]);
 
   // Real-time profile updates - watch for changes in userOnboardingData
   useEffect(() => {
