@@ -45,7 +45,14 @@ interface UserProfileViewProps {
 }
 
 export default function UserProfileView({ profile, onClose }: UserProfileViewProps) {
+  const [isConnected, setIsConnected] = useState(false);
+
   if (!profile) return null;
+
+  const handleConnect = () => {
+    setIsConnected(!isConnected);
+    // In a real app, this would make an API call to connect/disconnect
+  };
 
   const additionalInfo = {
     joinedDate: "January 2023",
