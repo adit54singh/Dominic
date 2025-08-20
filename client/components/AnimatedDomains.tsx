@@ -155,7 +155,7 @@ export default function AnimatedDomains() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.8 }}
+                  transition={{ duration: 0.4 }}
                   className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 w-full max-w-7xl mx-auto"
                 >
                   {currentTechDomains.map((domain, index) => (
@@ -171,8 +171,8 @@ export default function AnimatedDomains() {
                         y: 0,
                         scale: 1,
                         transition: {
-                          delay: index * 0.1,
-                          duration: 0.5,
+                          delay: index * 0.05,
+                          duration: 0.3,
                           ease: "easeOut",
                         },
                       }}
@@ -181,8 +181,8 @@ export default function AnimatedDomains() {
                         y: -20,
                         scale: 0.95,
                         transition: {
-                          delay: (currentTechDomains.length - index - 1) * 0.05,
-                          duration: 0.3,
+                          delay: (currentTechDomains.length - index - 1) * 0.02,
+                          duration: 0.2,
                         },
                       }}
                       whileHover={{
@@ -207,8 +207,8 @@ export default function AnimatedDomains() {
                           initial={{ width: "0%" }}
                           animate={{ width: `${60 + Math.random() * 40}%` }}
                           transition={{
-                            delay: index * 0.15 + 0.5,
-                            duration: 1,
+                            delay: index * 0.05 + 0.2,
+                            duration: 0.6,
                           }}
                         />
                       </div>
