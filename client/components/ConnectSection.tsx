@@ -344,6 +344,7 @@ interface ConnectSectionProps {
   onActivity?: (activity: any) => void;
   followedUsers?: Set<string>;
   onFollowUser?: (userId: string, isFollowing: boolean) => void;
+  onViewUser?: (userId: string) => void;
 }
 
 const ConnectSection = memo(({ onActivity, followedUsers = new Set(), onFollowUser }: ConnectSectionProps) => {
