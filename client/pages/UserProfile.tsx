@@ -539,7 +539,12 @@ export default function UserProfile() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="max-h-[500px] overflow-y-auto custom-scrollbar">
-                <FollowingProjectsFeed selectedDomain="design" />
+                <FollowingProjectsFeed
+                  selectedDomain="design"
+                  followedUsers={new Set<string>(["1", "2", "3"])}
+                  joinedProjects={[]}
+                  onJoinProject={() => {}}
+                />
               </CardContent>
             </Card>
 
