@@ -102,10 +102,10 @@ export default function AnimatedDomains() {
               opacity: [0.3, 0.6, 0.3],
             }}
             transition={{
-              duration: 4 + Math.random() * 2,
+              duration: 2 + Math.random() * 1,
               repeat: Infinity,
               ease: "easeInOut",
-              delay: i * 0.5,
+              delay: i * 0.2,
             }}
             style={{
               left: `${20 + (i * 10)}%`,
@@ -120,7 +120,7 @@ export default function AnimatedDomains() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
           className="text-center mb-16 max-w-5xl mx-auto"
         >
           <h1 className="text-6xl md:text-8xl font-bold mb-8 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent leading-tight">
@@ -131,7 +131,7 @@ export default function AnimatedDomains() {
           </p>
           <motion.div
             animate={{ scale: [1, 1.05, 1] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
             className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full"
           />
         </motion.div>
@@ -141,7 +141,7 @@ export default function AnimatedDomains() {
           <motion.h2
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.5 }}
+            transition={{ delay: 0.2 }}
             className="text-3xl md:text-4xl font-bold text-center mb-12 text-primary"
           >
             Tech Domains
