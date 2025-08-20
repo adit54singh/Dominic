@@ -289,8 +289,8 @@ export default function UserDashboard() {
     return {
       id: 'user',
       name: user.name,
-      title: getUserTitle(),
-      company: 'Tech Startup',
+      title: user.title || getUserTitle(),
+      company: user.company,
       avatar: user.avatar,
       experience: userOnboardingData?.experience === 'beginner' ? '< 1 Year' :
                   userOnboardingData?.experience === 'intermediate' ? '1-3 Years' :
