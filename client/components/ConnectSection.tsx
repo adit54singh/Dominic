@@ -541,7 +541,7 @@ const ConnectSection = memo(() => {
           <p className="text-sm text-muted-foreground">
             Members you're following with their detailed profiles and open projects
           </p>
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div className="max-w-4xl mx-auto space-y-8">
             {followedMentors.map((user) => (
               <ExpandedUserCard
                 key={user.id}
