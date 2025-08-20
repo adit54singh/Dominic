@@ -346,8 +346,7 @@ interface ConnectSectionProps {
   onFollowUser?: (userId: string, isFollowing: boolean) => void;
 }
 
-const ConnectSection = memo(({ onActivity }: ConnectSectionProps) => {
-  const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
+const ConnectSection = memo(({ onActivity, followedUsers = new Set(), onFollowUser }: ConnectSectionProps) => {
 
   // Memoized user data to prevent unnecessary re-calculations
   const users = useMemo<User[]>(
