@@ -85,7 +85,7 @@ export default function AnimatedDomains() {
   }, []);
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-primary/15 via-background to-accent/15 relative overflow-hidden">
+    <div className="min-h-screen w-full bg-gradient-to-br from-primary/10 via-transparent to-accent/10 relative">
       {/* Animated background particles */}
       <div className="absolute inset-0">
         {Array.from({ length: 20 }).map((_, i) => (
