@@ -786,23 +786,45 @@ export default function DiscoverFeed({ selectedDomain, joinedProjects = [], onJo
               </div>
             </div>
 
-            {/* Engagement Summary */}
+            {/* Enhanced Engagement Summary */}
             <div className="px-4 pb-4 border-t pt-3">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <div className="flex items-center space-x-3">
+              <div className="space-y-2">
+                {/* Total Engagement */}
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center space-x-4">
+                    <span className="flex items-center space-x-1 text-red-500">
+                      <Heart className="w-3 h-3" />
+                      <span className="font-medium">{formatNumber(post.engagement.likes)} likes</span>
+                    </span>
+                    <span className="flex items-center space-x-1 text-blue-500">
+                      <MessageCircle className="w-3 h-3" />
+                      <span className="font-medium">{formatNumber(post.engagement.comments)} comments</span>
+                    </span>
+                    {post.engagement.views && (
+                      <span className="flex items-center space-x-1 text-green-500">
+                        <Eye className="w-3 h-3" />
+                        <span className="font-medium">{formatNumber(post.engagement.views)} views</span>
+                      </span>
+                    )}\n                  </div>
+                </div>
+
+                {/* Author & Context Info */}
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <div className="flex items-center space-x-3">
+                    <span className="flex items-center space-x-1">
+                      <TrendingUp className="w-3 h-3" />
+                      <span>Trending in {post.domain}</span>
+                    </span>
+                    <span className="flex items-center space-x-1">
+                      <Users className="w-3 h-3" />
+                      <span>{post.author.followers} followers</span>
+                    </span>
+                  </div>
                   <span className="flex items-center space-x-1">
-                    <TrendingUp className="w-3 h-3" />
-                    <span>Trending in {post.domain}</span>
-                  </span>
-                  <span className="flex items-center space-x-1">
-                    <Users className="w-3 h-3" />
-                    <span>{post.author.followers} followers</span>
+                    <Clock className="w-3 h-3" />
+                    <span>{post.timestamp}</span>
                   </span>
                 </div>
-                <span className="flex items-center space-x-1">
-                  <Clock className="w-3 h-3" />
-                  <span>{post.timestamp}</span>
-                </span>
               </div>
             </div>
           </CardContent>
