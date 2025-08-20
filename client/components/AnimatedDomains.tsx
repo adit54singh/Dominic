@@ -225,7 +225,7 @@ export default function AnimatedDomains() {
           <motion.h2
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 1 }}
+            transition={{ delay: 0.4 }}
             className="text-3xl md:text-4xl font-bold text-center mb-6 bg-gradient-to-r from-accent to-orange-500 bg-clip-text text-transparent"
           >
             Upcoming Non-Tech Domains
@@ -234,7 +234,7 @@ export default function AnimatedDomains() {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.2 }}
+            transition={{ delay: 0.6 }}
             className="text-center text-muted-foreground mb-12 text-lg"
           >
             ✨ Coming Soon - Creative fields where passion meets learning
@@ -248,7 +248,7 @@ export default function AnimatedDomains() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.8 }}
+                  transition={{ duration: 0.4 }}
                   className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 w-full max-w-6xl mx-auto"
                 >
                   {currentNonTechDomains.map((domain, index) => (
@@ -264,8 +264,8 @@ export default function AnimatedDomains() {
                         x: 0,
                         scale: 1,
                         transition: {
-                          delay: index * 0.15,
-                          duration: 0.6,
+                          delay: index * 0.08,
+                          duration: 0.4,
                           ease: "easeOut",
                         },
                       }}
@@ -274,8 +274,8 @@ export default function AnimatedDomains() {
                         scale: 0.9,
                         transition: {
                           delay:
-                            (currentNonTechDomains.length - index - 1) * 0.05,
-                          duration: 0.4,
+                            (currentNonTechDomains.length - index - 1) * 0.03,
+                          duration: 0.25,
                         },
                       }}
                       whileHover={{
