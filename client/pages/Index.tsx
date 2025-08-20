@@ -111,12 +111,12 @@ export default function Index() {
             <span className="text-xl font-bold">Dominic</span>
           </div>
           <div className="hidden md:flex items-center space-x-6">
-            <Link
-              to="/domains"
-              className="text-muted-foreground hover:text-foreground"
+            <button
+              onClick={() => setShowDomainsAnimation(true)}
+              className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Domains
-            </Link>
+            </button>
             <Link
               to="/mentors"
               className="text-muted-foreground hover:text-foreground"
