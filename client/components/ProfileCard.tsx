@@ -154,9 +154,9 @@ export const generateSampleProfiles = (): ProfileCardData[] => [
     avatar: "RS",
     experience: "2 Years",
     leetcodeRank: "#12,453",
-    domains: ["Web Dev", "Mobile Dev"],
+    domains: ["Web Development"],
     projectsCollaborated: 23,
-    mentorshipHours: 45,
+    rating: 4.6,
     skills: ["React", "Node.js", "TypeScript"]
   },
   {
@@ -167,9 +167,9 @@ export const generateSampleProfiles = (): ProfileCardData[] => [
     avatar: "PG",
     experience: "4 Years",
     leetcodeRank: "#5,789",
-    domains: ["Data Science", "ML/AI"],
+    domains: ["Data Science & AI"],
     projectsCollaborated: 31,
-    mentorshipHours: 120,
+    rating: 4.9,
     skills: ["Python", "TensorFlow", "PyTorch"]
   },
   {
@@ -180,9 +180,9 @@ export const generateSampleProfiles = (): ProfileCardData[] => [
     avatar: "AP",
     experience: "3 Years",
     leetcodeRank: "#15,234",
-    domains: ["DevOps", "Cloud Computing"],
+    domains: ["DevOps & Infrastructure"],
     projectsCollaborated: 18,
-    mentorshipHours: 75,
+    rating: 4.7,
     skills: ["AWS", "Docker", "Kubernetes"]
   },
   {
@@ -193,9 +193,9 @@ export const generateSampleProfiles = (): ProfileCardData[] => [
     avatar: "SK",
     experience: "2 Years",
     leetcodeRank: "#25,671",
-    domains: ["Design", "Content Creation"],
+    domains: ["UI/UX Design"],
     projectsCollaborated: 27,
-    mentorshipHours: 55,
+    rating: 4.5,
     skills: ["Figma", "Photoshop", "Prototyping"]
   },
   {
@@ -206,23 +206,23 @@ export const generateSampleProfiles = (): ProfileCardData[] => [
     avatar: "KR",
     experience: "3 Years",
     leetcodeRank: "#9,876",
-    domains: ["Mobile Dev", "Fintech"],
+    domains: ["Mobile Development"],
     projectsCollaborated: 20,
-    mentorshipHours: 90,
+    rating: 4.8,
     skills: ["Flutter", "React Native", "Swift"]
   },
   {
     id: "7",
     name: "Ananya Singh",
-    title: "Product Manager",
-    company: "EdTech Platform",
+    title: "Cloud Architect",
+    company: "Tech Platform",
     avatar: "AS",
     experience: "4 Years",
     leetcodeRank: "#18,543",
-    domains: ["Product Management", "EdTech"],
+    domains: ["Cloud Computing"],
     projectsCollaborated: 35,
-    mentorshipHours: 110,
-    skills: ["Strategy", "Analytics", "Leadership"]
+    rating: 4.9,
+    skills: ["AWS", "Azure", "Terraform"]
   },
   {
     id: "8",
@@ -232,9 +232,9 @@ export const generateSampleProfiles = (): ProfileCardData[] => [
     avatar: "VA",
     experience: "3 Years",
     leetcodeRank: "#11,234",
-    domains: ["Cybersecurity", "Ethical Hacking"],
+    domains: ["Cybersecurity"],
     projectsCollaborated: 16,
-    mentorshipHours: 65,
+    rating: 4.6,
     skills: ["Penetration Testing", "SIEM", "Forensics"]
   }
 ];
