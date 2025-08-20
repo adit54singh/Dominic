@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function AnimatedDomains() {
-  const domains = [
+  const techDomains = [
     "Software Development",
-    "Data Science & Analytics", 
+    "Data Science & Analytics",
     "UI/UX Design",
     "Digital Marketing",
     "Content Creation",
@@ -13,111 +13,314 @@ export default function AnimatedDomains() {
     "Mobile App Development",
     "Cloud Computing",
     "Blockchain Technology",
-    "Photography & Video",
-    "Music Production",
-    "Cooking & Food",
-    "Travel & Adventure",
-    "Fitness & Wellness"
+    "Web Development",
+    "Game Development",
+    "DevOps Engineering",
+    "Product Management",
+    "Technical Writing"
   ];
 
-  const [currentDomains, setCurrentDomains] = useState<string[]>([]);
-  const [isVisible, setIsVisible] = useState(true);
+  const upcomingNonTechDomains = [
+    "Fashion Designing",
+    "Travel & Tourism",
+    "Fine Arts & Painting",
+    "Music Production",
+    "Photography",
+    "Interior Design",
+    "Culinary Arts",
+    "Event Planning",
+    "Creative Writing",
+    "Dance & Choreography",
+    "Theater & Drama",
+    "Jewelry Design",
+    "Graphic Arts",
+    "Film Making",
+    "Sustainable Living"
+  ];
+
+  const [currentTechDomains, setCurrentTechDomains] = useState<string[]>([]);
+  const [currentNonTechDomains, setCurrentNonTechDomains] = useState<string[]>([]);
+  const [techVisible, setTechVisible] = useState(true);
+  const [nonTechVisible, setNonTechVisible] = useState(false);
 
   useEffect(() => {
-    const showRandomDomains = () => {
-      // Get 4-5 random domains
-      const shuffled = [...domains].sort(() => 0.5 - Math.random());
-      const selected = shuffled.slice(0, Math.floor(Math.random() * 2) + 4); // 4-5 domains
-      setCurrentDomains(selected);
-      setIsVisible(true);
-      
-      // Hide after 3 seconds
+    const showRandomTechDomains = () => {
+      const shuffled = [...techDomains].sort(() => 0.5 - Math.random());
+      const selected = shuffled.slice(0, Math.floor(Math.random() * 3) + 5); // 5-7 domains
+      setCurrentTechDomains(selected);
+      setTechVisible(true);
+
       setTimeout(() => {
-        setIsVisible(false);
-      }, 3000);
+        setTechVisible(false);
+      }, 3500);
     };
 
-    // Show initial set
-    showRandomDomains();
-    
-    // Repeat every 4 seconds
-    const interval = setInterval(showRandomDomains, 4000);
-    
-    return () => clearInterval(interval);
+    const showRandomNonTechDomains = () => {
+      const shuffled = [...upcomingNonTechDomains].sort(() => 0.5 - Math.random());
+      const selected = shuffled.slice(0, Math.floor(Math.random() * 2) + 4); // 4-5 domains
+      setCurrentNonTechDomains(selected);
+      setNonTechVisible(true);
+
+      setTimeout(() => {
+        setNonTechVisible(false);
+      }, 3500);
+    };
+
+    // Initial display
+    showRandomTechDomains();
+
+    // Stagger the non-tech domains to appear after tech domains
+    setTimeout(() => {
+      showRandomNonTechDomains();
+    }, 2000);
+
+    // Set intervals for continuous animation
+    const techInterval = setInterval(showRandomTechDomains, 8000);
+    const nonTechInterval = setInterval(showRandomNonTechDomains, 8000);
+
+    return () => {
+      clearInterval(techInterval);
+      clearInterval(nonTechInterval);
+    };
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-accent/10 flex items-center justify-center">
-      <div className="text-center max-w-4xl mx-auto px-4">
+    <div className="min-h-screen w-full bg-gradient-to-br from-primary/15 via-background to-accent/15 relative overflow-hidden">
+      {/* Animated background particles */}
+      <div className="absolute inset-0">
+        {Array.from({ length: 20 }).map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-primary/20 rounded-full"
+            animate={{
+              x: [0, Math.random() * 100 - 50],
+              y: [0, Math.random() * 100 - 50],
+              opacity: [0.2, 0.6, 0.2],
+            }}
+            transition={{
+              duration: Math.random() * 10 + 5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+          />
+        ))}
+      </div>
+
+      <div className="relative z-10 pt-24 pb-12 px-6">
+        {/* Header Section */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-12"
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-center mb-16 max-w-5xl mx-auto"
         >
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          <h1 className="text-6xl md:text-8xl font-bold mb-8 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent leading-tight">
             Learning Domains
           </h1>
-          <p className="text-xl text-muted-foreground mb-8">
-            Discover the fields where our community excels
+          <p className="text-2xl md:text-3xl text-muted-foreground mb-6 font-light">
+            Discover endless possibilities in tech and beyond
           </p>
-        </motion.div>
-        
-        <div className="relative h-96 flex flex-col items-center justify-center">
-          <AnimatePresence mode="wait">
-            {isVisible && (
-              <motion.div
-                key={currentDomains.join()}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ 
-                  duration: 0.5,
-                  staggerChildren: 0.1 
-                }}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-4xl"
-              >
-                {currentDomains.map((domain, index) => (
-                  <motion.div
-                    key={`${domain}-${index}`}
-                    initial={{ opacity: 0, y: 30, scale: 0.9 }}
-                    animate={{ 
-                      opacity: 1, 
-                      y: 0, 
-                      scale: 1,
-                      transition: { delay: index * 0.1 }
-                    }}
-                    exit={{ 
-                      opacity: 0, 
-                      y: -30, 
-                      scale: 0.9,
-                      transition: { delay: (currentDomains.length - index - 1) * 0.05 }
-                    }}
-                    className="bg-background/80 backdrop-blur-sm border border-primary/20 rounded-lg p-6 shadow-lg"
-                  >
-                    <div className="text-lg font-semibold text-primary mb-2">
-                      {domain}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Join {Math.floor(Math.random() * 3000) + 500}+ learners
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
-          
           <motion.div
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full"
+          />
+        </motion.div>
+
+        {/* Tech Domains Section */}
+        <div className="mb-20">
+          <motion.h2
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.5 }}
+            className="text-3xl md:text-4xl font-bold text-center mb-12 text-primary"
+          >
+            Tech Domains
+          </motion.h2>
+
+          <div className="relative min-h-[400px] flex items-center justify-center">
+            <AnimatePresence mode="wait">
+              {techVisible && currentTechDomains.length > 0 && (
+                <motion.div
+                  key={`tech-${currentTechDomains.join()}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.8 }}
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 w-full max-w-7xl mx-auto"
+                >
+                  {currentTechDomains.map((domain, index) => (
+                    <motion.div
+                      key={`${domain}-${index}`}
+                      initial={{
+                        opacity: 0,
+                        y: 60,
+                        rotateY: -15,
+                        scale: 0.8
+                      }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                        rotateY: 0,
+                        scale: 1,
+                        transition: {
+                          delay: index * 0.15,
+                          duration: 0.8,
+                          ease: [0.22, 1, 0.36, 1]
+                        }
+                      }}
+                      exit={{
+                        opacity: 0,
+                        y: -40,
+                        scale: 0.9,
+                        transition: {
+                          delay: (currentTechDomains.length - index - 1) * 0.08,
+                          duration: 0.5
+                        }
+                      }}
+                      whileHover={{
+                        scale: 1.05,
+                        rotateY: 5,
+                        transition: { duration: 0.3 }
+                      }}
+                      className="group bg-background/90 backdrop-blur-lg border border-primary/30 rounded-2xl p-8 shadow-2xl hover:shadow-primary/20 transition-all duration-300"
+                      style={{
+                        background: "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)"
+                      }}
+                    >
+                      <div className="text-xl font-bold text-primary mb-3 group-hover:text-accent transition-colors">
+                        {domain}
+                      </div>
+                      <div className="text-sm text-muted-foreground mb-4">
+                        {Math.floor(Math.random() * 3000) + 500}+ learners
+                      </div>
+                      <div className="w-full h-1 bg-gradient-to-r from-primary/20 to-accent/20 rounded-full overflow-hidden">
+                        <motion.div
+                          className="h-full bg-gradient-to-r from-primary to-accent"
+                          initial={{ width: "0%" }}
+                          animate={{ width: `${60 + Math.random() * 40}%` }}
+                          transition={{ delay: index * 0.15 + 0.5, duration: 1 }}
+                        />
+                      </div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Upcoming Non-Tech Domains Section */}
+        <div>
+          <motion.h2
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 1 }}
+            className="text-3xl md:text-4xl font-bold text-center mb-6 bg-gradient-to-r from-accent to-orange-500 bg-clip-text text-transparent"
+          >
+            Upcoming Non-Tech Domains
+          </motion.h2>
+
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
-            className="absolute bottom-0 text-center"
+            transition={{ delay: 1.2 }}
+            className="text-center text-muted-foreground mb-12 text-lg"
           >
-            <p className="text-muted-foreground text-sm">
-              New domains appear every few seconds...
-            </p>
-          </motion.div>
+            ✨ Coming Soon - Creative fields where passion meets learning
+          </motion.p>
+
+          <div className="relative min-h-[400px] flex items-center justify-center">
+            <AnimatePresence mode="wait">
+              {nonTechVisible && currentNonTechDomains.length > 0 && (
+                <motion.div
+                  key={`nontech-${currentNonTechDomains.join()}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.8 }}
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 w-full max-w-6xl mx-auto"
+                >
+                  {currentNonTechDomains.map((domain, index) => (
+                    <motion.div
+                      key={`${domain}-${index}`}
+                      initial={{
+                        opacity: 0,
+                        x: index % 2 === 0 ? -60 : 60,
+                        rotateZ: index % 2 === 0 ? -10 : 10,
+                        scale: 0.7
+                      }}
+                      animate={{
+                        opacity: 1,
+                        x: 0,
+                        rotateZ: 0,
+                        scale: 1,
+                        transition: {
+                          delay: index * 0.2,
+                          duration: 0.9,
+                          ease: [0.23, 1, 0.32, 1]
+                        }
+                      }}
+                      exit={{
+                        opacity: 0,
+                        scale: 0.8,
+                        rotateZ: index % 2 === 0 ? 10 : -10,
+                        transition: {
+                          delay: (currentNonTechDomains.length - index - 1) * 0.1,
+                          duration: 0.6
+                        }
+                      }}
+                      whileHover={{
+                        scale: 1.08,
+                        rotateZ: 2,
+                        transition: { duration: 0.3 }
+                      }}
+                      className="group bg-gradient-to-br from-accent/20 to-orange-500/20 backdrop-blur-lg border border-accent/40 rounded-2xl p-8 shadow-2xl hover:shadow-accent/20 transition-all duration-300 relative overflow-hidden"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="relative z-10">
+                        <div className="text-xl font-bold text-accent mb-3 group-hover:text-orange-400 transition-colors">
+                          {domain}
+                        </div>
+                        <div className="text-sm text-muted-foreground mb-4">
+                          Coming soon...
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-xs bg-accent/20 text-accent px-3 py-1 rounded-full">
+                            New
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            🎨 Creative
+                          </span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
+
+        {/* Footer indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2 }}
+          className="text-center mt-20"
+        >
+          <motion.p
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="text-muted-foreground text-lg"
+          >
+            Domains refresh every few seconds... ✨
+          </motion.p>
+        </motion.div>
       </div>
     </div>
   );
