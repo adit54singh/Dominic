@@ -179,15 +179,14 @@ export default function UserDashboard() {
   // Separate effect to handle domain validation - only when userOnboardingData changes
   useEffect(() => {
     if (userOnboardingData?.domains && userOnboardingData.domains.length > 0) {
-      const currentDomain = selectedDomain;
       const availableDomains = userOnboardingData.domains;
 
-      // Only update if current domain is not in available domains
-      if (!availableDomains.includes(currentDomain)) {
+      // Only update if current domain is not in available domains or is empty
+      if (!selectedDomain || !availableDomains.includes(selectedDomain)) {
         setSelectedDomain(availableDomains[0]);
       }
     }
-  }, [userOnboardingData, selectedDomain]);
+  }, [userOnboardingData]);
 
   // Function to join a project
   const joinProject = (project: any) => {
