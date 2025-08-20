@@ -2,7 +2,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Star, Briefcase, Users, MapPin, Clock, UserPlus, CheckCircle } from "lucide-react";
+import {
+  Star,
+  Briefcase,
+  Users,
+  MapPin,
+  Clock,
+  UserPlus,
+  CheckCircle,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { generateSampleProfiles } from "./ProfileCard";
@@ -26,7 +34,7 @@ interface ConnectUser {
 // Generate 10 detailed profiles for connect section
 const generateConnectProfiles = (): ConnectUser[] => {
   const sampleProfiles = generateSampleProfiles();
-  
+
   // Create 10 profiles with additional details
   const connectProfiles: ConnectUser[] = [
     ...sampleProfiles.slice(0, 8).map((profile, index) => ({
@@ -40,9 +48,15 @@ const generateConnectProfiles = (): ConnectUser[] => {
       skills: profile.skills,
       domain: profile.domains[0],
       experience: profile.experience,
-      location: ["Mumbai, India", "Delhi, India", "Bangalore, India", "Pune, India", "Chennai, India"][Math.floor(Math.random() * 5)],
+      location: [
+        "Mumbai, India",
+        "Delhi, India",
+        "Bangalore, India",
+        "Pune, India",
+        "Chennai, India",
+      ][Math.floor(Math.random() * 5)],
       bio: `Passionate ${profile.domains[0].toLowerCase()} enthusiast with ${profile.experience} of experience. Love building scalable applications and collaborating with talented developers.`,
-      projectsCollaborated: profile.projectsCollaborated
+      projectsCollaborated: profile.projectsCollaborated,
     })),
     // Add 2 more unique profiles
     {
@@ -58,10 +72,10 @@ const generateConnectProfiles = (): ConnectUser[] => {
       experience: "3 Years",
       location: "Hyderabad, India",
       bio: "Strategic product manager with expertise in building user-centric products and leading cross-functional teams.",
-      projectsCollaborated: 18
+      projectsCollaborated: 18,
     },
     {
-      id: "10", 
+      id: "10",
       name: "Rohan Gupta",
       title: "Growth Hacker",
       company: "Scale Ventures",
@@ -73,10 +87,10 @@ const generateConnectProfiles = (): ConnectUser[] => {
       experience: "2 Years",
       location: "Gurgaon, India",
       bio: "Growth-focused marketer with experience in scaling startups and driving user acquisition through data-driven strategies.",
-      projectsCollaborated: 12
-    }
+      projectsCollaborated: 12,
+    },
   ];
-  
+
   return connectProfiles;
 };
 
@@ -85,7 +99,7 @@ export default function ConnectSection() {
   const [connectedUsers, setConnectedUsers] = useState<Set<string>>(new Set());
 
   const handleConnect = (userId: string) => {
-    setConnectedUsers(prev => {
+    setConnectedUsers((prev) => {
       const newConnected = new Set(prev);
       if (newConnected.has(userId)) {
         newConnected.delete(userId);
@@ -99,18 +113,21 @@ export default function ConnectSection() {
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold mb-2">Connect with Talented Developers</h3>
+        <h3 className="text-2xl font-bold mb-2">
+          Connect with Talented Developers
+        </h3>
         <p className="text-muted-foreground">
-          Expand your network and collaborate with skilled professionals in your field
+          Expand your network and collaborate with skilled professionals in your
+          field
         </p>
       </div>
-      
+
       {/* Vertical scrollable list of profiles */}
       <div className="space-y-4 max-w-4xl mx-auto">
         {connectProfiles.map((profile) => (
-          <DetailedProfileCard 
-            key={profile.id} 
-            profile={profile} 
+          <DetailedProfileCard
+            key={profile.id}
+            profile={profile}
             isConnected={connectedUsers.has(profile.id)}
             onConnect={() => handleConnect(profile.id)}
           />
@@ -121,13 +138,13 @@ export default function ConnectSection() {
 }
 
 // Detailed profile card component
-function DetailedProfileCard({ 
-  profile, 
-  isConnected, 
-  onConnect 
-}: { 
-  profile: ConnectUser; 
-  isConnected: boolean; 
+function DetailedProfileCard({
+  profile,
+  isConnected,
+  onConnect,
+}: {
+  profile: ConnectUser;
+  isConnected: boolean;
   onConnect: () => void;
 }) {
   return (
@@ -141,7 +158,7 @@ function DetailedProfileCard({
                 {profile.avatar}
               </AvatarFallback>
             </Avatar>
-            
+
             {/* Rating and connections */}
             <div className="flex gap-4 text-sm">
               <div className="flex items-center space-x-1">
@@ -194,7 +211,9 @@ function DetailedProfileCard({
 
             {/* Skills */}
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-2">Skills:</p>
+              <p className="text-sm font-medium text-muted-foreground mb-2">
+                Skills:
+              </p>
               <div className="flex flex-wrap gap-2">
                 {profile.skills.slice(0, 4).map((skill, index) => (
                   <Badge key={index} variant="secondary" className="text-xs">
@@ -216,10 +235,10 @@ function DetailedProfileCard({
                   View Profile
                 </Button>
               </Link>
-              <Button 
+              <Button
                 onClick={onConnect}
-                size="sm" 
-                className={`flex-1 ${isConnected ? 'bg-green-600 hover:bg-green-700' : 'bg-primary hover:bg-primary/90'}`}
+                size="sm"
+                className={`flex-1 ${isConnected ? "bg-green-600 hover:bg-green-700" : "bg-primary hover:bg-primary/90"}`}
               >
                 {isConnected ? (
                   <>

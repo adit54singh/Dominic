@@ -21,7 +21,7 @@ import {
   Award,
   Briefcase,
   BookOpen,
-  Target
+  Target,
 } from "lucide-react";
 
 interface UserProfile {
@@ -32,7 +32,9 @@ interface UserProfile {
   avatar: string;
   bio: string;
   achievements: string[];
-  communities: Array<{ name: string; role: string; members: string; }> | string[];
+  communities:
+    | Array<{ name: string; role: string; members: string }>
+    | string[];
   projects: number;
   connections: number;
   skills: string[];
@@ -44,7 +46,10 @@ interface UserProfileViewProps {
   onClose: () => void;
 }
 
-export default function UserProfileView({ profile, onClose }: UserProfileViewProps) {
+export default function UserProfileView({
+  profile,
+  onClose,
+}: UserProfileViewProps) {
   const [isConnected, setIsConnected] = useState(false);
 
   if (!profile) return null;
@@ -60,31 +65,31 @@ export default function UserProfileView({ profile, onClose }: UserProfileViewPro
       "E-commerce Platform with React & Node.js",
       "Mobile Banking App - Flutter",
       "AI-powered Recommendation System",
-      "Real-time Chat Application"
+      "Real-time Chat Application",
     ],
     endorsements: [
       { skill: "React.js", count: 23 },
       { skill: "Node.js", count: 18 },
       { skill: "JavaScript", count: 31 },
-      { skill: "System Design", count: 12 }
+      { skill: "System Design", count: 12 },
     ],
     testimonials: [
       {
         author: "Sarah Chen",
         role: "Product Manager at Microsoft",
-        text: "Exceptional developer with great communication skills. Delivered our project ahead of schedule!"
+        text: "Exceptional developer with great communication skills. Delivered our project ahead of schedule!",
       },
       {
         author: "Amit Kumar",
         role: "Tech Lead at Flipkart",
-        text: "Brilliant problem solver and team player. Would definitely collaborate again."
-      }
+        text: "Brilliant problem solver and team player. Would definitely collaborate again.",
+      },
     ],
     socialLinks: {
       linkedin: "linkedin.com/in/profile",
       github: "github.com/profile",
-      portfolio: "portfolio.com"
-    }
+      portfolio: "portfolio.com",
+    },
   };
 
   return (
@@ -108,7 +113,7 @@ export default function UserProfileView({ profile, onClose }: UserProfileViewPro
                 </AvatarFallback>
               </Avatar>
             </div>
-            
+
             <div className="flex-1 space-y-4">
               <div>
                 <h3 className="text-3xl font-bold">{profile.name}</h3>
@@ -129,24 +134,30 @@ export default function UserProfileView({ profile, onClose }: UserProfileViewPro
                 <div className="flex items-center space-x-2 bg-muted/50 px-3 py-1 rounded-lg">
                   <Briefcase className="w-4 h-4 text-primary" />
                   <span className="font-semibold">{profile.projects}</span>
-                  <span className="text-sm text-muted-foreground">Projects</span>
+                  <span className="text-sm text-muted-foreground">
+                    Projects
+                  </span>
                 </div>
                 <div className="flex items-center space-x-2 bg-muted/50 px-3 py-1 rounded-lg">
                   <Users className="w-4 h-4 text-primary" />
                   <span className="font-semibold">{profile.connections}</span>
-                  <span className="text-sm text-muted-foreground">Connections</span>
+                  <span className="text-sm text-muted-foreground">
+                    Connections
+                  </span>
                 </div>
                 <div className="flex items-center space-x-2 bg-muted/50 px-3 py-1 rounded-lg">
                   <Trophy className="w-4 h-4 text-primary" />
                   <span className="font-semibold">{profile.experience}</span>
-                  <span className="text-sm text-muted-foreground">Experience</span>
+                  <span className="text-sm text-muted-foreground">
+                    Experience
+                  </span>
                 </div>
               </div>
 
               <div className="flex flex-wrap gap-3">
                 <Button
                   onClick={handleConnect}
-                  className={`flex items-center space-x-2 ${isConnected ? 'bg-green-600 hover:bg-green-700' : ''}`}
+                  className={`flex items-center space-x-2 ${isConnected ? "bg-green-600 hover:bg-green-700" : ""}`}
                   variant={isConnected ? "default" : "default"}
                 >
                   {isConnected ? (
@@ -161,11 +172,17 @@ export default function UserProfileView({ profile, onClose }: UserProfileViewPro
                     </>
                   )}
                 </Button>
-                <Button variant="outline" className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  className="flex items-center space-x-2"
+                >
                   <MessageCircle className="w-4 h-4" />
                   <span>Message</span>
                 </Button>
-                <Button variant="outline" className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  className="flex items-center space-x-2"
+                >
                   <Mail className="w-4 h-4" />
                   <span>Email</span>
                 </Button>
@@ -182,7 +199,9 @@ export default function UserProfileView({ profile, onClose }: UserProfileViewPro
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground leading-relaxed">{profile.bio}</p>
+              <p className="text-muted-foreground leading-relaxed">
+                {profile.bio}
+              </p>
             </CardContent>
           </Card>
 
@@ -197,7 +216,10 @@ export default function UserProfileView({ profile, onClose }: UserProfileViewPro
               </CardHeader>
               <CardContent className="space-y-4">
                 {additionalInfo.endorsements.map((endorsement, index) => (
-                  <div key={index} className="flex justify-between items-center">
+                  <div
+                    key={index}
+                    className="flex justify-between items-center"
+                  >
                     <Badge variant="secondary" className="text-sm">
                       {endorsement.skill}
                     </Badge>
@@ -224,7 +246,10 @@ export default function UserProfileView({ profile, onClose }: UserProfileViewPro
               </CardHeader>
               <CardContent className="space-y-3">
                 {profile.achievements.map((achievement, index) => (
-                  <div key={index} className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+                  <div
+                    key={index}
+                    className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg"
+                  >
                     <span className="text-sm text-yellow-700 dark:text-yellow-400">
                       {achievement}
                     </span>
@@ -244,12 +269,16 @@ export default function UserProfileView({ profile, onClose }: UserProfileViewPro
             </CardHeader>
             <CardContent className="space-y-4">
               {additionalInfo.completedProjects.map((project, index) => (
-                <div key={index} className="p-4 border rounded-lg hover:bg-muted/50 transition-colors">
+                <div
+                  key={index}
+                  className="p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                >
                   <div className="flex justify-between items-start">
                     <div>
                       <h4 className="font-semibold">{project}</h4>
                       <p className="text-sm text-muted-foreground mt-1">
-                        Collaborative project • {Math.floor(Math.random() * 6) + 2} months ago
+                        Collaborative project •{" "}
+                        {Math.floor(Math.random() * 6) + 2} months ago
                       </p>
                     </div>
                     <Button variant="ghost" size="sm">
@@ -273,18 +302,29 @@ export default function UserProfileView({ profile, onClose }: UserProfileViewPro
               <div className="space-y-3">
                 {profile.communities.map((community, index) => {
                   // Handle both old string format and new object format
-                  if (typeof community === 'string') {
+                  if (typeof community === "string") {
                     return (
-                      <Badge key={index} variant="outline" className="cursor-pointer hover:bg-primary hover:text-primary-foreground mr-2 mb-2">
+                      <Badge
+                        key={index}
+                        variant="outline"
+                        className="cursor-pointer hover:bg-primary hover:text-primary-foreground mr-2 mb-2"
+                      >
                         {community}
                       </Badge>
                     );
                   } else {
                     return (
-                      <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-3 bg-muted/30 rounded-lg"
+                      >
                         <div>
-                          <div className="font-medium text-sm">{community.name}</div>
-                          <div className="text-xs text-muted-foreground">{community.role}</div>
+                          <div className="font-medium text-sm">
+                            {community.name}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {community.role}
+                          </div>
                         </div>
                         <Badge variant="outline" className="text-xs">
                           {community.members} members
@@ -311,11 +351,18 @@ export default function UserProfileView({ profile, onClose }: UserProfileViewPro
                   <p className="text-sm italic mb-3">"{testimonial.text}"</p>
                   <div className="flex items-center space-x-2">
                     <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-xs">
-                      {testimonial.author.split(' ').map(n => n[0]).join('')}
+                      {testimonial.author
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
                     </div>
                     <div>
-                      <div className="font-semibold text-sm">{testimonial.author}</div>
-                      <div className="text-xs text-muted-foreground">{testimonial.role}</div>
+                      <div className="font-semibold text-sm">
+                        {testimonial.author}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {testimonial.role}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -330,15 +377,27 @@ export default function UserProfileView({ profile, onClose }: UserProfileViewPro
             </CardHeader>
             <CardContent>
               <div className="flex space-x-4">
-                <Button variant="outline" size="sm" className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center space-x-2"
+                >
                   <Linkedin className="w-4 h-4" />
                   <span>LinkedIn</span>
                 </Button>
-                <Button variant="outline" size="sm" className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center space-x-2"
+                >
                   <Github className="w-4 h-4" />
                   <span>GitHub</span>
                 </Button>
-                <Button variant="outline" size="sm" className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center space-x-2"
+                >
                   <ExternalLink className="w-4 h-4" />
                   <span>Portfolio</span>
                 </Button>
