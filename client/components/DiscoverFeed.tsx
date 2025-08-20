@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
 import {
   Heart,
   MessageCircle,
@@ -19,7 +20,10 @@ import {
   GitFork,
   Calendar,
   Target,
-  ExternalLink
+  ExternalLink,
+  Send,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
 
 interface Post {
