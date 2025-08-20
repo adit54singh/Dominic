@@ -187,7 +187,7 @@ export default function UserDashboard() {
         setSelectedDomain(availableDomains[0]);
       }
     }
-  }, [userOnboardingData]);
+  }, [userOnboardingData, selectedDomain]);
 
   // Function to join a project
   const joinProject = (project: any) => {
