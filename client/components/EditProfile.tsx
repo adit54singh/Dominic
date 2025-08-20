@@ -20,7 +20,7 @@ import {
   Plus,
   X,
   ExternalLink,
-  CheckCircle
+  CheckCircle,
 } from "lucide-react";
 
 interface UserProfile {
@@ -69,15 +69,40 @@ const techDomains = [
   { id: "iot", name: "IoT & Embedded Systems" },
   { id: "robotics", name: "Robotics & Automation" },
   { id: "ar-vr", name: "AR/VR Development" },
-  { id: "quantum-computing", name: "Quantum Computing" }
+  { id: "quantum-computing", name: "Quantum Computing" },
 ];
 
 const techSkillsOptions = [
-  "JavaScript", "Python", "Java", "C++", "React", "Node.js", "Django", "Flask",
-  "Machine Learning", "Data Analysis", "UI/UX Design", "Mobile Development",
-  "DevOps", "Cloud Computing", "Cybersecurity", "Blockchain", "Flutter", "Swift",
-  "Kotlin", "TypeScript", "MongoDB", "PostgreSQL", "AWS", "Docker", "Kubernetes",
-  "TensorFlow", "PyTorch", "Figma", "Unity", "Unreal Engine"
+  "JavaScript",
+  "Python",
+  "Java",
+  "C++",
+  "React",
+  "Node.js",
+  "Django",
+  "Flask",
+  "Machine Learning",
+  "Data Analysis",
+  "UI/UX Design",
+  "Mobile Development",
+  "DevOps",
+  "Cloud Computing",
+  "Cybersecurity",
+  "Blockchain",
+  "Flutter",
+  "Swift",
+  "Kotlin",
+  "TypeScript",
+  "MongoDB",
+  "PostgreSQL",
+  "AWS",
+  "Docker",
+  "Kubernetes",
+  "TensorFlow",
+  "PyTorch",
+  "Figma",
+  "Unity",
+  "Unreal Engine",
 ];
 
 const goalsOptions = [
@@ -90,7 +115,7 @@ const goalsOptions = [
   "Find study partners",
   "Get mentorship",
   "Build professional network",
-  "Contribute to open source"
+  "Contribute to open source",
 ];
 
 export default function EditProfile({ onBack, onSave }: EditProfileProps) {
@@ -114,7 +139,7 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
     hackathonId: "",
     goals: [],
     customGoal: "",
-    projects: []
+    projects: [],
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -122,13 +147,13 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
   const [newProject, setNewProject] = useState({
     name: "",
     title: "",
-    skillsUsed: []
+    skillsUsed: [],
   });
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
   // Load user data from localStorage on mount
   useEffect(() => {
-    const savedData = localStorage.getItem('userOnboardingData');
+    const savedData = localStorage.getItem("userOnboardingData");
     if (savedData) {
       const data = JSON.parse(savedData);
       setProfile({
@@ -137,7 +162,14 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
         title: data.title || getUserTitle(data),
         company: data.company || "Tech Startup",
         location: data.location || "Mumbai, India",
-        bio: data.bio || `Passionate about ${data.domains?.map((d: string) => techDomains.find(td => td.id === d)?.name || d).join(", ").toLowerCase()} with expertise in modern technologies. Love building scalable solutions and mentoring upcoming developers in the community.`,
+        bio:
+          data.bio ||
+          `Passionate about ${data.domains
+            ?.map(
+              (d: string) => techDomains.find((td) => td.id === d)?.name || d,
+            )
+            .join(", ")
+            .toLowerCase()} with expertise in modern technologies. Love building scalable solutions and mentoring upcoming developers in the community.`,
         avatar: data.avatar || "",
         skills: data.skills || [],
         domains: data.domains || [],
@@ -151,105 +183,115 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
         hackathonId: data.hackathonId || "",
         goals: data.goals || [],
         customGoal: data.customGoal || "",
-        projects: data.userProjects || []
+        projects: data.userProjects || [],
       });
     }
   }, []);
 
   const getUserTitle = (data: any) => {
-    if (data.domains?.includes('software-dev') || data.domains?.includes('web-dev')) {
-      return data.experience === 'advanced' ? 'Senior Software Engineer' :
-             data.experience === 'intermediate' ? 'Software Engineer' : 'Junior Developer';
+    if (
+      data.domains?.includes("software-dev") ||
+      data.domains?.includes("web-dev")
+    ) {
+      return data.experience === "advanced"
+        ? "Senior Software Engineer"
+        : data.experience === "intermediate"
+          ? "Software Engineer"
+          : "Junior Developer";
     }
-    if (data.domains?.includes('data-science')) return 'Data Scientist';
-    if (data.domains?.includes('design')) return 'UI/UX Designer';
-    if (data.domains?.includes('mobile-dev')) return 'Mobile App Developer';
-    if (data.domains?.includes('cloud-computing')) return 'Cloud Engineer';
-    if (data.domains?.includes('blockchain')) return 'Blockchain Developer';
-    if (data.domains?.includes('devops')) return 'DevOps Engineer';
-    if (data.domains?.includes('cybersecurity')) return 'Cybersecurity Specialist';
-    if (data.domains?.includes('game-dev')) return 'Game Developer';
-    if (data.domains?.includes('iot')) return 'IoT Engineer';
-    if (data.domains?.includes('robotics')) return 'Robotics Engineer';
-    if (data.domains?.includes('ar-vr')) return 'AR/VR Developer';
-    if (data.domains?.includes('quantum-computing')) return 'Quantum Computing Researcher';
-    return 'Tech Professional';
+    if (data.domains?.includes("data-science")) return "Data Scientist";
+    if (data.domains?.includes("design")) return "UI/UX Designer";
+    if (data.domains?.includes("mobile-dev")) return "Mobile App Developer";
+    if (data.domains?.includes("cloud-computing")) return "Cloud Engineer";
+    if (data.domains?.includes("blockchain")) return "Blockchain Developer";
+    if (data.domains?.includes("devops")) return "DevOps Engineer";
+    if (data.domains?.includes("cybersecurity"))
+      return "Cybersecurity Specialist";
+    if (data.domains?.includes("game-dev")) return "Game Developer";
+    if (data.domains?.includes("iot")) return "IoT Engineer";
+    if (data.domains?.includes("robotics")) return "Robotics Engineer";
+    if (data.domains?.includes("ar-vr")) return "AR/VR Developer";
+    if (data.domains?.includes("quantum-computing"))
+      return "Quantum Computing Researcher";
+    return "Tech Professional";
   };
 
   const handleSkillToggle = (skill: string) => {
-    setProfile(prev => ({
+    setProfile((prev) => ({
       ...prev,
       skills: prev.skills.includes(skill)
-        ? prev.skills.filter(s => s !== skill)
-        : [...prev.skills, skill]
+        ? prev.skills.filter((s) => s !== skill)
+        : [...prev.skills, skill],
     }));
   };
 
   const handleDomainToggle = (domainId: string) => {
-    setProfile(prev => ({
+    setProfile((prev) => ({
       ...prev,
       domains: prev.domains.includes(domainId)
-        ? prev.domains.filter(d => d !== domainId)
-        : [...prev.domains, domainId]
+        ? prev.domains.filter((d) => d !== domainId)
+        : [...prev.domains, domainId],
     }));
   };
 
   const handleGoalToggle = (goal: string) => {
-    setProfile(prev => ({
+    setProfile((prev) => ({
       ...prev,
       goals: prev.goals.includes(goal)
-        ? prev.goals.filter(g => g !== goal)
-        : [...prev.goals, goal]
+        ? prev.goals.filter((g) => g !== goal)
+        : [...prev.goals, goal],
     }));
   };
 
   const addCustomSkill = () => {
     if (newSkill.trim() && !profile.skills.includes(newSkill.trim())) {
-      setProfile(prev => ({
+      setProfile((prev) => ({
         ...prev,
-        skills: [...prev.skills, newSkill.trim()]
+        skills: [...prev.skills, newSkill.trim()],
       }));
       setNewSkill("");
     }
   };
 
   const removeSkill = (skill: string) => {
-    setProfile(prev => ({
+    setProfile((prev) => ({
       ...prev,
-      skills: prev.skills.filter(s => s !== skill)
+      skills: prev.skills.filter((s) => s !== skill),
     }));
   };
 
   const addProject = () => {
     if (newProject.name.trim() && newProject.title.trim()) {
-      setProfile(prev => ({
+      setProfile((prev) => ({
         ...prev,
-        projects: [...prev.projects, { ...newProject }]
+        projects: [...prev.projects, { ...newProject }],
       }));
       setNewProject({ name: "", title: "", skillsUsed: [] });
     }
   };
 
   const removeProject = (index: number) => {
-    setProfile(prev => ({
+    setProfile((prev) => ({
       ...prev,
-      projects: prev.projects.filter((_, i) => i !== index)
+      projects: prev.projects.filter((_, i) => i !== index),
     }));
   };
 
-  const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     // Validate file type
-    if (!file.type.startsWith('image/')) {
-      alert('Please select an image file');
+    if (!file.type.startsWith("image/")) {
+      alert("Please select an image file");
       return;
     }
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      alert('File size must be less than 5MB');
+      alert("File size must be less than 5MB");
       return;
     }
 
@@ -260,13 +302,13 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const result = e.target?.result as string;
-        setProfile(prev => ({ ...prev, avatar: result }));
+        setProfile((prev) => ({ ...prev, avatar: result }));
         setUploadingPhoto(false);
       };
       reader.readAsDataURL(file);
     } catch (error) {
-      console.error('Error uploading photo:', error);
-      alert('Error uploading photo. Please try again.');
+      console.error("Error uploading photo:", error);
+      alert("Error uploading photo. Please try again.");
       setUploadingPhoto(false);
     }
   };
@@ -275,14 +317,14 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
     setIsLoading(true);
 
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Save to localStorage (in real app, this would be an API call)
     const updatedData = {
       ...profile,
-      userProjects: profile.projects
+      userProjects: profile.projects,
     };
-    localStorage.setItem('userOnboardingData', JSON.stringify(updatedData));
+    localStorage.setItem("userOnboardingData", JSON.stringify(updatedData));
 
     setIsLoading(false);
     onSave(profile);
@@ -299,7 +341,9 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
           </Button>
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold">Edit Profile</h1>
-            <p className="text-muted-foreground">Update your profile information and preferences</p>
+            <p className="text-muted-foreground">
+              Update your profile information and preferences
+            </p>
           </div>
         </div>
       </div>
@@ -328,7 +372,11 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
                       />
                     ) : (
                       <AvatarFallback className="bg-primary text-white text-xl font-bold">
-                        {profile.name.split(' ').map(n => n[0]).join('').toUpperCase() || 'AS'}
+                        {profile.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")
+                          .toUpperCase() || "AS"}
                       </AvatarFallback>
                     )}
                   </Avatar>
@@ -354,7 +402,7 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
                     asChild
                   >
                     <span className="cursor-pointer">
-                      {uploadingPhoto ? 'Uploading...' : 'Change Photo'}
+                      {uploadingPhoto ? "Uploading..." : "Change Photo"}
                     </span>
                   </Button>
                 </label>
@@ -362,7 +410,9 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => setProfile(prev => ({ ...prev, avatar: "" }))}
+                    onClick={() =>
+                      setProfile((prev) => ({ ...prev, avatar: "" }))
+                    }
                     className="ml-2 text-destructive hover:text-destructive"
                   >
                     Remove
@@ -376,7 +426,9 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
                   <Input
                     id="name"
                     value={profile.name}
-                    onChange={(e) => setProfile(prev => ({ ...prev, name: e.target.value }))}
+                    onChange={(e) =>
+                      setProfile((prev) => ({ ...prev, name: e.target.value }))
+                    }
                     placeholder="Your full name"
                   />
                 </div>
@@ -387,7 +439,9 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
                     id="email"
                     type="email"
                     value={profile.email}
-                    onChange={(e) => setProfile(prev => ({ ...prev, email: e.target.value }))}
+                    onChange={(e) =>
+                      setProfile((prev) => ({ ...prev, email: e.target.value }))
+                    }
                     placeholder="your.email@example.com"
                   />
                 </div>
@@ -397,7 +451,9 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
                   <Input
                     id="title"
                     value={profile.title}
-                    onChange={(e) => setProfile(prev => ({ ...prev, title: e.target.value }))}
+                    onChange={(e) =>
+                      setProfile((prev) => ({ ...prev, title: e.target.value }))
+                    }
                     placeholder="e.g., Senior Software Engineer"
                   />
                 </div>
@@ -407,7 +463,12 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
                   <Input
                     id="company"
                     value={profile.company}
-                    onChange={(e) => setProfile(prev => ({ ...prev, company: e.target.value }))}
+                    onChange={(e) =>
+                      setProfile((prev) => ({
+                        ...prev,
+                        company: e.target.value,
+                      }))
+                    }
                     placeholder="e.g., Tech Startup"
                   />
                 </div>
@@ -417,7 +478,12 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
                   <Input
                     id="location"
                     value={profile.location}
-                    onChange={(e) => setProfile(prev => ({ ...prev, location: e.target.value }))}
+                    onChange={(e) =>
+                      setProfile((prev) => ({
+                        ...prev,
+                        location: e.target.value,
+                      }))
+                    }
                     placeholder="e.g., Mumbai, India"
                   />
                 </div>
@@ -427,7 +493,9 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
                   <Textarea
                     id="bio"
                     value={profile.bio}
-                    onChange={(e) => setProfile(prev => ({ ...prev, bio: e.target.value }))}
+                    onChange={(e) =>
+                      setProfile((prev) => ({ ...prev, bio: e.target.value }))
+                    }
                     placeholder="Tell us about yourself..."
                     rows={4}
                   />
@@ -453,7 +521,9 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
                   <Label
                     key={domain.id}
                     className={`flex items-center space-x-2 cursor-pointer p-3 rounded-lg border text-sm transition-colors ${
-                      profile.domains.includes(domain.id) ? 'bg-primary/5 border-primary text-primary' : 'hover:bg-muted/50'
+                      profile.domains.includes(domain.id)
+                        ? "bg-primary/5 border-primary text-primary"
+                        : "hover:bg-muted/50"
                     }`}
                     onClick={() => handleDomainToggle(domain.id)}
                   >
@@ -476,7 +546,9 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
             <CardContent className="space-y-4">
               {/* Selected Skills */}
               <div>
-                <Label className="text-sm font-medium mb-2 block">Your Skills</Label>
+                <Label className="text-sm font-medium mb-2 block">
+                  Your Skills
+                </Label>
                 <div className="flex flex-wrap gap-2 mb-4">
                   {profile.skills.map((skill, index) => (
                     <Badge
@@ -498,13 +570,15 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
 
               {/* Add Custom Skill */}
               <div>
-                <Label className="text-sm font-medium mb-2 block">Add Custom Skill</Label>
+                <Label className="text-sm font-medium mb-2 block">
+                  Add Custom Skill
+                </Label>
                 <div className="flex gap-2">
                   <Input
                     value={newSkill}
                     onChange={(e) => setNewSkill(e.target.value)}
                     placeholder="Enter a skill..."
-                    onKeyPress={(e) => e.key === 'Enter' && addCustomSkill()}
+                    onKeyPress={(e) => e.key === "Enter" && addCustomSkill()}
                   />
                   <Button onClick={addCustomSkill} size="sm">
                     <Plus className="w-4 h-4" />
@@ -514,21 +588,25 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
 
               {/* Available Skills */}
               <div>
-                <Label className="text-sm font-medium mb-2 block">Select from Popular Skills</Label>
+                <Label className="text-sm font-medium mb-2 block">
+                  Select from Popular Skills
+                </Label>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-48 overflow-y-auto">
-                  {techSkillsOptions.filter(skill => !profile.skills.includes(skill)).map((skill) => (
-                    <Label
-                      key={skill}
-                      className="flex items-center space-x-2 cursor-pointer p-2 rounded border text-sm hover:bg-muted/50"
-                      onClick={() => handleSkillToggle(skill)}
-                    >
-                      <Checkbox
-                        checked={profile.skills.includes(skill)}
-                        onChange={() => {}}
-                      />
-                      <span>{skill}</span>
-                    </Label>
-                  ))}
+                  {techSkillsOptions
+                    .filter((skill) => !profile.skills.includes(skill))
+                    .map((skill) => (
+                      <Label
+                        key={skill}
+                        className="flex items-center space-x-2 cursor-pointer p-2 rounded border text-sm hover:bg-muted/50"
+                        onClick={() => handleSkillToggle(skill)}
+                      >
+                        <Checkbox
+                          checked={profile.skills.includes(skill)}
+                          onChange={() => {}}
+                        />
+                        <span>{skill}</span>
+                      </Label>
+                    ))}
                 </div>
               </div>
             </CardContent>
@@ -549,7 +627,12 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
                   <Input
                     id="leetcode"
                     value={profile.leetcodeId}
-                    onChange={(e) => setProfile(prev => ({ ...prev, leetcodeId: e.target.value }))}
+                    onChange={(e) =>
+                      setProfile((prev) => ({
+                        ...prev,
+                        leetcodeId: e.target.value,
+                      }))
+                    }
                     placeholder="your_leetcode_username"
                   />
                 </div>
@@ -558,7 +641,12 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
                   <Input
                     id="leetcode-rank"
                     value={profile.leetcodeRank}
-                    onChange={(e) => setProfile(prev => ({ ...prev, leetcodeRank: e.target.value }))}
+                    onChange={(e) =>
+                      setProfile((prev) => ({
+                        ...prev,
+                        leetcodeRank: e.target.value,
+                      }))
+                    }
                     placeholder="#12,345"
                   />
                 </div>
@@ -567,7 +655,12 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
                   <Input
                     id="github"
                     value={profile.githubId}
-                    onChange={(e) => setProfile(prev => ({ ...prev, githubId: e.target.value }))}
+                    onChange={(e) =>
+                      setProfile((prev) => ({
+                        ...prev,
+                        githubId: e.target.value,
+                      }))
+                    }
                     placeholder="your-github-username"
                   />
                 </div>
@@ -576,7 +669,12 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
                   <Input
                     id="hackathon"
                     value={profile.hackathonId}
-                    onChange={(e) => setProfile(prev => ({ ...prev, hackathonId: e.target.value }))}
+                    onChange={(e) =>
+                      setProfile((prev) => ({
+                        ...prev,
+                        hackathonId: e.target.value,
+                      }))
+                    }
                     placeholder="your-hackathon-id"
                   />
                 </div>
@@ -630,10 +728,16 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
                       <X className="w-4 h-4" />
                     </Button>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-2">{project.title}</p>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    {project.title}
+                  </p>
                   <div className="flex flex-wrap gap-1">
                     {project.skillsUsed.map((skill, skillIndex) => (
-                      <Badge key={skillIndex} variant="outline" className="text-xs">
+                      <Badge
+                        key={skillIndex}
+                        variant="outline"
+                        className="text-xs"
+                      >
                         {skill}
                       </Badge>
                     ))}
@@ -647,20 +751,34 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
                 <div className="space-y-3">
                   <Input
                     value={newProject.name}
-                    onChange={(e) => setNewProject(prev => ({ ...prev, name: e.target.value }))}
+                    onChange={(e) =>
+                      setNewProject((prev) => ({
+                        ...prev,
+                        name: e.target.value,
+                      }))
+                    }
                     placeholder="Project name"
                   />
                   <Input
                     value={newProject.title}
-                    onChange={(e) => setNewProject(prev => ({ ...prev, title: e.target.value }))}
+                    onChange={(e) =>
+                      setNewProject((prev) => ({
+                        ...prev,
+                        title: e.target.value,
+                      }))
+                    }
                     placeholder="Project description"
                   />
                   <Input
-                    value={newProject.skillsUsed.join(', ')}
-                    onChange={(e) => setNewProject(prev => ({ 
-                      ...prev, 
-                      skillsUsed: e.target.value.split(', ').filter(s => s.trim()) 
-                    }))}
+                    value={newProject.skillsUsed.join(", ")}
+                    onChange={(e) =>
+                      setNewProject((prev) => ({
+                        ...prev,
+                        skillsUsed: e.target.value
+                          .split(", ")
+                          .filter((s) => s.trim()),
+                      }))
+                    }
                     placeholder="Skills used (comma-separated)"
                   />
                   <Button onClick={addProject} size="sm" className="w-full">
@@ -683,7 +801,9 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
                   <Label
                     key={goal}
                     className={`flex items-center space-x-2 cursor-pointer p-3 rounded-lg border text-sm transition-colors ${
-                      profile.goals.includes(goal) ? 'bg-primary/5 border-primary text-primary' : 'hover:bg-muted/50'
+                      profile.goals.includes(goal)
+                        ? "bg-primary/5 border-primary text-primary"
+                        : "hover:bg-muted/50"
                     }`}
                     onClick={() => handleGoalToggle(goal)}
                   >
@@ -701,7 +821,12 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
                 <Textarea
                   id="custom-goal"
                   value={profile.customGoal}
-                  onChange={(e) => setProfile(prev => ({ ...prev, customGoal: e.target.value }))}
+                  onChange={(e) =>
+                    setProfile((prev) => ({
+                      ...prev,
+                      customGoal: e.target.value,
+                    }))
+                  }
                   placeholder="Tell us about your other specific goals..."
                   rows={3}
                 />
@@ -713,8 +838,8 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
 
       {/* Save Button */}
       <div className="flex justify-end pt-6 border-t">
-        <Button 
-          onClick={handleSave} 
+        <Button
+          onClick={handleSave}
           disabled={isLoading}
           size="lg"
           className="flex items-center gap-2"
