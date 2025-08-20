@@ -862,7 +862,9 @@ export default function UserDashboard() {
                               ? "12"
                               : getCurrentDomain().progress > 50
                                 ? "8"
-                                : "5"}
+                                : getCurrentDomain().progress > 20
+                                  ? "5"
+                                  : "1"}
                           </Badge>
                         </div>
                         <p className="text-lg text-muted-foreground mb-4">
