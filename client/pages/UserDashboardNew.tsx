@@ -177,17 +177,15 @@ export default function UserDashboard() {
   }, []);
 
   // Handle domain initialization when userOnboardingData first loads
-  const [initialDomainSet, setInitialDomainSet] = useState(false);
-
   useEffect(() => {
-    if (userOnboardingData?.domains && userOnboardingData.domains.length > 0 && !initialDomainSet) {
+    if (userOnboardingData?.domains && userOnboardingData.domains.length > 0) {
       const availableDomains = userOnboardingData.domains;
-      if (!selectedDomain) {
+      // Only set initial domain if none is selected
+      if (!selectedDomain || selectedDomain === "") {
         setSelectedDomain(availableDomains[0]);
       }
-      setInitialDomainSet(true);
     }
-  }, [userOnboardingData?.domains?.length, initialDomainSet, selectedDomain]);
+  }, [userOnboardingData]);
 
   // Function to join a project
   const joinProject = (project: any) => {
