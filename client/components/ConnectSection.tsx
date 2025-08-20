@@ -110,28 +110,58 @@ export default function ConnectSection() {
     });
   };
 
+  // Get featured profiles (top 3 by rating)
+  const featuredProfiles = connectProfiles
+    .sort((a, b) => b.rating - a.rating)
+    .slice(0, 3);
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold mb-2">
+        <h3 className="text-3xl font-bold mb-4">
           Connect with Talented Developers
         </h3>
-        <p className="text-muted-foreground">
-          Expand your network and collaborate with skilled professionals in your
-          field
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          Expand your network and collaborate with skilled professionals in your field
         </p>
       </div>
 
-      {/* Vertical scrollable list of profiles */}
-      <div className="space-y-4 max-w-4xl mx-auto">
-        {connectProfiles.map((profile) => (
-          <DetailedProfileCard
-            key={profile.id}
-            profile={profile}
-            isConnected={connectedUsers.has(profile.id)}
-            onConnect={() => handleConnect(profile.id)}
-          />
-        ))}
+      {/* Featured Profiles - Top 3 in a grid */}
+      <div className="mb-12">
+        <div className="text-center mb-6">
+          <Badge className="bg-primary/10 text-primary border-primary/20 text-sm px-4 py-2">
+            ⭐ Featured Profiles
+          </Badge>
+        </div>
+        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {featuredProfiles.map((profile) => (
+            <FeaturedProfileCard
+              key={profile.id}
+              profile={profile}
+              isConnected={connectedUsers.has(profile.id)}
+              onConnect={() => handleConnect(profile.id)}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* All Profiles Section */}
+      <div className="space-y-6">
+        <div className="text-center">
+          <h4 className="text-xl font-semibold mb-2">More Amazing Developers</h4>
+          <p className="text-muted-foreground">Discover more talented individuals in our community</p>
+        </div>
+
+        <div className="space-y-4 max-w-4xl mx-auto">
+          {connectProfiles.slice(3).map((profile) => (
+            <DetailedProfileCard
+              key={profile.id}
+              profile={profile}
+              isConnected={connectedUsers.has(profile.id)}
+              onConnect={() => handleConnect(profile.id)}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
