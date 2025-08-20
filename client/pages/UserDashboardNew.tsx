@@ -174,17 +174,20 @@ export default function UserDashboard() {
     }
   }, []);
 
-  // Separate effect to handle domain validation - only when userOnboardingData changes
+  // Separate effect to handle domain validation - use a ref to track if domains have been set
+  const [domainsInitialized, setDomainsInitialized] = useState(false);
+
   useEffect(() => {
-    if (userOnboardingData?.domains && userOnboardingData.domains.length > 0) {
+    if (userOnboardingData?.domains && userOnboardingData.domains.length > 0 && !domainsInitialized) {
       const availableDomains = userOnboardingData.domains;
 
       // Only update if current domain is not in available domains or is empty
       if (!selectedDomain || !availableDomains.includes(selectedDomain)) {
         setSelectedDomain(availableDomains[0]);
       }
+      setDomainsInitialized(true);
     }
-  }, [userOnboardingData?.domains]); // More specific dependency
+  }, [userOnboardingData, selectedDomain, domainsInitialized]);
 
   // Function to join a project
   const joinProject = (project: any) => {
