@@ -19,7 +19,7 @@ export default function NavBar({ onDomainsClick }: NavBarProps) {
           </div>
           <span className="text-xl font-bold">Dominic</span>
         </Link>
-        
+
         <div className="hidden md:flex items-center space-x-6">
           {isHomePage && onDomainsClick ? (
             <button
@@ -55,7 +55,7 @@ export default function NavBar({ onDomainsClick }: NavBarProps) {
             About
           </Link>
         </div>
-        
+
         <div className="flex items-center space-x-3">
           <Button variant="ghost">Sign In</Button>
           <Link to="/signup">

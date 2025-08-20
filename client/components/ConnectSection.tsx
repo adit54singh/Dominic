@@ -122,7 +122,8 @@ export default function ConnectSection() {
           Connect with Talented Developers
         </h3>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Expand your network and collaborate with skilled professionals in your field
+          Expand your network and collaborate with skilled professionals in your
+          field
         </p>
       </div>
 
@@ -148,8 +149,12 @@ export default function ConnectSection() {
       {/* All Profiles Section */}
       <div className="space-y-6">
         <div className="text-center">
-          <h4 className="text-xl font-semibold mb-2">More Amazing Developers</h4>
-          <p className="text-muted-foreground">Discover more talented individuals in our community</p>
+          <h4 className="text-xl font-semibold mb-2">
+            More Amazing Developers
+          </h4>
+          <p className="text-muted-foreground">
+            Discover more talented individuals in our community
+          </p>
         </div>
 
         <div className="space-y-4 max-w-4xl mx-auto">
@@ -206,7 +211,9 @@ function FeaturedProfileCard({
           </div>
           <div className="flex items-center space-x-1">
             <Users className="w-4 h-4 text-blue-400" />
-            <span className="font-bold text-blue-600">{profile.connections}</span>
+            <span className="font-bold text-blue-600">
+              {profile.connections}
+            </span>
           </div>
         </div>
 

@@ -17,7 +17,7 @@ export default function AnimatedDomains() {
     "Game Development",
     "DevOps Engineering",
     "Product Management",
-    "Technical Writing"
+    "Technical Writing",
   ];
 
   const upcomingNonTechDomains = [
@@ -35,11 +35,13 @@ export default function AnimatedDomains() {
     "Jewelry Design",
     "Graphic Arts",
     "Film Making",
-    "Sustainable Living"
+    "Sustainable Living",
   ];
 
   const [currentTechDomains, setCurrentTechDomains] = useState<string[]>([]);
-  const [currentNonTechDomains, setCurrentNonTechDomains] = useState<string[]>([]);
+  const [currentNonTechDomains, setCurrentNonTechDomains] = useState<string[]>(
+    [],
+  );
   const [techVisible, setTechVisible] = useState(true);
   const [nonTechVisible, setNonTechVisible] = useState(false);
 
@@ -56,7 +58,9 @@ export default function AnimatedDomains() {
     };
 
     const showRandomNonTechDomains = () => {
-      const shuffled = [...upcomingNonTechDomains].sort(() => 0.5 - Math.random());
+      const shuffled = [...upcomingNonTechDomains].sort(
+        () => 0.5 - Math.random(),
+      );
       const selected = shuffled.slice(0, Math.floor(Math.random() * 2) + 4); // 4-5 domains
       setCurrentNonTechDomains(selected);
       setNonTechVisible(true);
@@ -160,7 +164,7 @@ export default function AnimatedDomains() {
                         opacity: 0,
                         y: 60,
                         rotateY: -15,
-                        scale: 0.8
+                        scale: 0.8,
                       }}
                       animate={{
                         opacity: 1,
@@ -170,8 +174,8 @@ export default function AnimatedDomains() {
                         transition: {
                           delay: index * 0.15,
                           duration: 0.8,
-                          ease: [0.22, 1, 0.36, 1]
-                        }
+                          ease: [0.22, 1, 0.36, 1],
+                        },
                       }}
                       exit={{
                         opacity: 0,
@@ -179,17 +183,18 @@ export default function AnimatedDomains() {
                         scale: 0.9,
                         transition: {
                           delay: (currentTechDomains.length - index - 1) * 0.08,
-                          duration: 0.5
-                        }
+                          duration: 0.5,
+                        },
                       }}
                       whileHover={{
                         scale: 1.05,
                         rotateY: 5,
-                        transition: { duration: 0.3 }
+                        transition: { duration: 0.3 },
                       }}
                       className="group bg-background/90 backdrop-blur-lg border border-primary/30 rounded-2xl p-8 shadow-2xl hover:shadow-primary/20 transition-all duration-300"
                       style={{
-                        background: "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)"
+                        background:
+                          "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)",
                       }}
                     >
                       <div className="text-xl font-bold text-primary mb-3 group-hover:text-accent transition-colors">
@@ -203,7 +208,10 @@ export default function AnimatedDomains() {
                           className="h-full bg-gradient-to-r from-primary to-accent"
                           initial={{ width: "0%" }}
                           animate={{ width: `${60 + Math.random() * 40}%` }}
-                          transition={{ delay: index * 0.15 + 0.5, duration: 1 }}
+                          transition={{
+                            delay: index * 0.15 + 0.5,
+                            duration: 1,
+                          }}
                         />
                       </div>
                     </motion.div>
@@ -252,7 +260,7 @@ export default function AnimatedDomains() {
                         opacity: 0,
                         x: index % 2 === 0 ? -60 : 60,
                         rotateZ: index % 2 === 0 ? -10 : 10,
-                        scale: 0.7
+                        scale: 0.7,
                       }}
                       animate={{
                         opacity: 1,
@@ -262,22 +270,23 @@ export default function AnimatedDomains() {
                         transition: {
                           delay: index * 0.2,
                           duration: 0.9,
-                          ease: [0.23, 1, 0.32, 1]
-                        }
+                          ease: [0.23, 1, 0.32, 1],
+                        },
                       }}
                       exit={{
                         opacity: 0,
                         scale: 0.8,
                         rotateZ: index % 2 === 0 ? 10 : -10,
                         transition: {
-                          delay: (currentNonTechDomains.length - index - 1) * 0.1,
-                          duration: 0.6
-                        }
+                          delay:
+                            (currentNonTechDomains.length - index - 1) * 0.1,
+                          duration: 0.6,
+                        },
                       }}
                       whileHover={{
                         scale: 1.08,
                         rotateZ: 2,
-                        transition: { duration: 0.3 }
+                        transition: { duration: 0.3 },
                       }}
                       className="group bg-gradient-to-br from-accent/20 to-orange-500/20 backdrop-blur-lg border border-accent/40 rounded-2xl p-8 shadow-2xl hover:shadow-accent/20 transition-all duration-300 relative overflow-hidden"
                     >
