@@ -27,6 +27,28 @@ import { useState, useEffect } from "react";
 export default function Index() {
   const [showDomainsAnimation, setShowDomainsAnimation] = useState(false);
 
+  // Handle escape key to close domains animation
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showDomainsAnimation) {
+        setShowDomainsAnimation(false);
+      }
+    };
+
+    if (showDomainsAnimation) {
+      document.addEventListener('keydown', handleEscape);
+      // Prevent body scroll when overlay is open
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [showDomainsAnimation]);
+
   const domains = [
     {
       name: "Software Development",
