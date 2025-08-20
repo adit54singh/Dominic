@@ -47,6 +47,7 @@ import ProfileCard from "@/components/ProfileCard";
 import DiscoverFeed from "@/components/DiscoverFeed";
 import UserProfileView from "@/components/UserProfileView";
 import FollowingProjectsFeed from "@/components/FollowingProjectsFeed";
+import EditProfile from "@/components/EditProfile";
 
 export default function UserDashboard() {
   const [activeTab, setActiveTab] = useState("profile");
