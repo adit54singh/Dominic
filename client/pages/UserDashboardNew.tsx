@@ -174,12 +174,15 @@ export default function UserDashboard() {
     "mobile-dev": { name: "Mobile Development", icon: Smartphone, color: "bg-green-500" },
     "data-science": { name: "Data Science & AI", icon: Database, color: "bg-purple-500" },
     "design": { name: "UI/UX Design", icon: Palette, color: "bg-red-500" },
-    "content-creation": { name: "Content Creation", icon: Camera, color: "bg-pink-500" },
-    "cooking-food": { name: "Cooking & Food", icon: Utensils, color: "bg-orange-500" },
-    "travel": { name: "Travel & Adventure", icon: Plane, color: "bg-emerald-500" },
-    "music-arts": { name: "Music & Arts", icon: Music, color: "bg-violet-500" },
-    "business": { name: "Business & Entrepreneurship", icon: Briefcase, color: "bg-yellow-500" },
-    "academics": { name: "Academic Excellence", icon: GraduationCap, color: "bg-indigo-500" }
+    "cloud-computing": { name: "Cloud Computing", icon: Code, color: "bg-sky-500" },
+    "blockchain": { name: "Blockchain & Web3", icon: Code, color: "bg-amber-500" },
+    "devops": { name: "DevOps & Infrastructure", icon: Code, color: "bg-orange-500" },
+    "cybersecurity": { name: "Cybersecurity", icon: Code, color: "bg-red-600" },
+    "game-dev": { name: "Game Development", icon: Code, color: "bg-pink-500" },
+    "iot": { name: "IoT & Embedded Systems", icon: Code, color: "bg-emerald-600" },
+    "robotics": { name: "Robotics & Automation", icon: Code, color: "bg-indigo-600" },
+    "ar-vr": { name: "AR/VR Development", icon: Code, color: "bg-violet-600" },
+    "quantum-computing": { name: "Quantum Computing", icon: Code, color: "bg-rose-600" }
   };
 
   // Create user domains based on onboarding data
