@@ -116,15 +116,15 @@ export default function UserDashboard() {
     localStorage.setItem("userActivity", JSON.stringify(userActivity));
   }, [userActivity]);
 
-  // Function to add activity - moved here to avoid temporal dead zone
-  const addActivity = (activity: any) => {
+  // Function to add activity - memoized with useCallback to prevent infinite re-renders
+  const addActivity = useCallback((activity: any) => {
     const newActivity = {
       ...activity,
       timestamp: new Date().toISOString(),
       id: Date.now().toString(),
     };
     setUserActivity((prev) => [newActivity, ...prev].slice(0, 10)); // Keep only last 10 activities
-  };
+  }, []);
 
   // Save discovery time to localStorage
   useEffect(() => {
