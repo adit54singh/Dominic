@@ -1,8 +1,8 @@
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useState } from "react";
 import {
   X,
   MapPin,
@@ -44,13 +44,48 @@ interface UserProfile {
 interface UserProfileViewProps {
   profile: UserProfile | null;
   onClose: () => void;
+  followingCount?: number;
+  projectsCount?: number;
 }
 
 export default function UserProfileView({
   profile,
   onClose,
+  followingCount = 0,
+  projectsCount = 0,
 }: UserProfileViewProps) {
   const [isConnected, setIsConnected] = useState(false);
+  const [realTimeStats, setRealTimeStats] = useState({
+    connections: profile?.connections || 0,
+    projects: profile?.projects || 0,
+    following: followingCount,
+    projectsJoined: projectsCount
+  });
+
+  // Simulate real-time updates
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      // Simulate occasional stat updates
+      if (Math.random() < 0.1) { // 10% chance every 5 seconds
+        setRealTimeStats(prev => ({
+          ...prev,
+          connections: prev.connections + (Math.random() > 0.5 ? 1 : 0),
+          projects: prev.projects + (Math.random() > 0.8 ? 1 : 0)
+        }));
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Update stats when props change
+  React.useEffect(() => {
+    setRealTimeStats(prev => ({
+      ...prev,
+      following: followingCount,
+      projectsJoined: projectsCount
+    }));
+  }, [followingCount, projectsCount]);
 
   if (!profile) return null;
 
@@ -133,16 +168,30 @@ export default function UserProfileView({
               <div className="flex flex-wrap gap-4">
                 <div className="flex items-center space-x-2 bg-muted/50 px-3 py-1 rounded-lg">
                   <Briefcase className="w-4 h-4 text-primary" />
-                  <span className="font-semibold">{profile.projects}</span>
+                  <span className="font-semibold animate-pulse">{realTimeStats.projects}</span>
                   <span className="text-sm text-muted-foreground">
                     Projects
                   </span>
                 </div>
                 <div className="flex items-center space-x-2 bg-muted/50 px-3 py-1 rounded-lg">
                   <Users className="w-4 h-4 text-primary" />
-                  <span className="font-semibold">{profile.connections}</span>
+                  <span className="font-semibold animate-pulse">{realTimeStats.connections}</span>
                   <span className="text-sm text-muted-foreground">
                     Connections
+                  </span>
+                </div>
+                <div className="flex items-center space-x-2 bg-muted/50 px-3 py-1 rounded-lg">
+                  <UserPlus className="w-4 h-4 text-primary" />
+                  <span className="font-semibold animate-pulse">{realTimeStats.following}</span>
+                  <span className="text-sm text-muted-foreground">
+                    Following
+                  </span>
+                </div>
+                <div className="flex items-center space-x-2 bg-muted/50 px-3 py-1 rounded-lg">
+                  <Target className="w-4 h-4 text-primary" />
+                  <span className="font-semibold animate-pulse">{realTimeStats.projectsJoined}</span>
+                  <span className="text-sm text-muted-foreground">
+                    Projects Joined
                   </span>
                 </div>
                 <div className="flex items-center space-x-2 bg-muted/50 px-3 py-1 rounded-lg">

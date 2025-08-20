@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -65,6 +65,10 @@ export default function UserDashboard() {
     new Set(),
   );
   const [userActivity, setUserActivity] = useState<Array<any>>([]);
+  const [discoveryTimeSpent, setDiscoveryTimeSpent] = useState(0); // in minutes
+  const [discoverySessionStart, setDiscoverySessionStart] =
+    useState<Date | null>(null);
+  const [projectsCompleted, setProjectsCompleted] = useState(0);
   const [viewingCommunity, setViewingCommunity] = useState<string | null>(null);
   const [communityPosts, setCommunityPosts] = useState<Array<any>>([]);
 
@@ -113,33 +117,77 @@ export default function UserDashboard() {
     localStorage.setItem("userActivity", JSON.stringify(userActivity));
   }, [userActivity]);
 
-  // Real-time profile updates - watch for changes in userOnboardingData
-  useEffect(() => {
-    if (userOnboardingData) {
-      // Update selected domain if current one is no longer available
-      if (userOnboardingData.domains && userOnboardingData.domains.length > 0) {
-        if (!userOnboardingData.domains.includes(selectedDomain)) {
-          setSelectedDomain(userOnboardingData.domains[0]);
-        }
-      }
-
-      // Save updated data to localStorage for persistence
-      localStorage.setItem(
-        "userOnboardingData",
-        JSON.stringify(userOnboardingData),
-      );
-    }
-  }, [userOnboardingData, selectedDomain]);
-
-  // Function to add activity
-  const addActivity = (activity: any) => {
+  // Function to add activity - memoized with useCallback to prevent infinite re-renders
+  const addActivity = useCallback((activity: any) => {
     const newActivity = {
       ...activity,
       timestamp: new Date().toISOString(),
       id: Date.now().toString(),
     };
     setUserActivity((prev) => [newActivity, ...prev].slice(0, 10)); // Keep only last 10 activities
-  };
+  }, []);
+
+  // Save discovery time to localStorage
+  useEffect(() => {
+    localStorage.setItem("discoveryTimeSpent", discoveryTimeSpent.toString());
+  }, [discoveryTimeSpent]);
+
+  // Load discovery time from localStorage
+  useEffect(() => {
+    const savedDiscoveryTime = localStorage.getItem("discoveryTimeSpent");
+    if (savedDiscoveryTime) {
+      setDiscoveryTimeSpent(parseInt(savedDiscoveryTime));
+    }
+    const savedProjectsCompleted = localStorage.getItem("projectsCompleted");
+    if (savedProjectsCompleted) {
+      setProjectsCompleted(parseInt(savedProjectsCompleted));
+    }
+  }, []);
+
+  // Track time spent in discovery section
+  useEffect(() => {
+    if (activeTab === "discover") {
+      setDiscoverySessionStart(new Date());
+    } else if (discoverySessionStart && activeTab !== "discover") {
+      const sessionEnd = new Date();
+      const sessionTime = Math.floor(
+        (sessionEnd.getTime() - discoverySessionStart.getTime()) / 60000,
+      ); // minutes
+      if (sessionTime > 0) {
+        setDiscoveryTimeSpent((prev) => prev + sessionTime);
+        addActivity({
+          type: "discovery_time",
+          action: `Spent ${sessionTime} minutes in Discovery`,
+          details: `Explored posts and content for ${sessionTime} minutes`,
+        });
+      }
+      setDiscoverySessionStart(null);
+    }
+  }, [activeTab, discoverySessionStart, addActivity]);
+
+  // Real-time profile updates - watch for changes in userOnboardingData
+  useEffect(() => {
+    if (userOnboardingData) {
+      // Save updated data to localStorage for persistence
+      localStorage.setItem(
+        "userOnboardingData",
+        JSON.stringify(userOnboardingData),
+      );
+    }
+  }, [userOnboardingData]);
+
+  // Separate effect to handle domain validation - only when userOnboardingData changes
+  useEffect(() => {
+    if (userOnboardingData?.domains && userOnboardingData.domains.length > 0) {
+      const currentDomain = selectedDomain;
+      const availableDomains = userOnboardingData.domains;
+
+      // Only update if current domain is not in available domains
+      if (!availableDomains.includes(currentDomain)) {
+        setSelectedDomain(availableDomains[0]);
+      }
+    }
+  }, [userOnboardingData]);
 
   // Function to join a project
   const joinProject = (project: any) => {
@@ -155,6 +203,56 @@ export default function UserDashboard() {
       details: project.description,
       projectId: joinedProject.id,
     });
+  };
+
+  // Function to complete a project
+  const completeProject = (projectId: string) => {
+    setProjectsCompleted((prev) => {
+      const newCount = prev + 1;
+      localStorage.setItem("projectsCompleted", newCount.toString());
+      return newCount;
+    });
+    addActivity({
+      type: "project_completed",
+      action: "Completed a project",
+      details: "Successfully finished project collaboration",
+    });
+  };
+
+  // Calculate activity level based on discovery time and project completion
+  const calculateActivityLevel = () => {
+    const discoveryScore = Math.min(discoveryTimeSpent / 60, 50); // Max 50 points for 60+ minutes
+    const projectScore = projectsCompleted * 15; // 15 points per completed project
+    const followingScore = followedUsers.size * 2; // 2 points per person followed
+    const communityScore = joinedCommunities.size * 5; // 5 points per community
+
+    const totalScore =
+      discoveryScore + projectScore + followingScore + communityScore;
+    const activityPercentage = Math.min(Math.round(totalScore), 100);
+
+    return {
+      percentage: activityPercentage,
+      label:
+        activityPercentage >= 80
+          ? "Very Active"
+          : activityPercentage >= 60
+            ? "Active"
+            : activityPercentage >= 40
+              ? "Moderate"
+              : activityPercentage >= 20
+                ? "Getting Started"
+                : "New",
+      color:
+        activityPercentage >= 80
+          ? "text-green-500"
+          : activityPercentage >= 60
+            ? "text-blue-500"
+            : activityPercentage >= 40
+              ? "text-yellow-500"
+              : activityPercentage >= 20
+                ? "text-orange-500"
+                : "text-gray-500",
+    };
   };
 
   // Function to join a community
@@ -980,27 +1078,41 @@ export default function UserDashboard() {
                     </div>
                   </div>
 
-                  {/* Activity Progress */}
+                  {/* Enhanced Activity Progress */}
                   <div>
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-sm text-muted-foreground">
                         Activity Level
                       </span>
-                      <span className="text-sm font-bold text-green-500">
-                        {userActivity.length === 0
-                          ? "Getting Started"
-                          : userActivity.length < 5
-                            ? "Active"
-                            : "Very Active"}
+                      <span
+                        className={`text-sm font-bold ${calculateActivityLevel().color}`}
+                      >
+                        {calculateActivityLevel().label}
                       </span>
                     </div>
                     <div className="w-full bg-muted rounded-full h-2">
                       <div
                         className="bg-gradient-to-r from-primary to-primary/60 h-2 rounded-full transition-all duration-1000"
                         style={{
-                          width: `${Math.min((userActivity.length / 10) * 100, 100)}%`,
+                          width: `${calculateActivityLevel().percentage}%`,
                         }}
                       ></div>
+                    </div>
+
+                    {/* Activity Breakdown */}
+                    <div className="mt-3 space-y-1 text-xs text-muted-foreground">
+                      <div className="flex justify-between">
+                        <span>Discovery time:</span>
+                        <span>{Math.floor(discoveryTimeSpent)} minutes</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Projects completed:</span>
+                        <span>{projectsCompleted}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Overall score:</span>
+                        <span>{calculateActivityLevel().percentage}/100</span>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -1300,7 +1412,7 @@ export default function UserDashboard() {
             </div>
           </div>
 
-          <ConnectSection />
+          <ConnectSection onActivity={addActivity} />
         </div>
       );
     } else if (activeTab === "discover") {
@@ -2324,7 +2436,7 @@ export default function UserDashboard() {
                                   ? `${userOnboardingData.experience} level`
                                   : ""}
                                 {userOnboardingData.leetcodeRank &&
-                                  ` • LeetCode: ${userOnboardingData.leetcodeRank}`}
+                                  ` ��� LeetCode: ${userOnboardingData.leetcodeRank}`}
                                 {userOnboardingData.gfgRank &&
                                   ` • GFG: ${userOnboardingData.gfgRank}`}
                               </div>

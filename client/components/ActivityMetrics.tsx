@@ -11,7 +11,15 @@ import {
   GitBranch,
   Calendar,
   Target,
-  Zap
+  Zap,
+  MessageCircle,
+  BookOpen,
+  Code,
+  UserPlus,
+  Trophy,
+  Coffee,
+  Heart,
+  CheckCircle
 } from "lucide-react";
 
 interface ActivityMetricsProps {
@@ -37,6 +45,16 @@ interface ActivityData {
   activeProjects: number;
   completedProjects: number;
   mentorshipHours: number;
+}
+
+interface PlatformActivity {
+  id: string;
+  type: 'project_joined' | 'project_completed' | 'member_followed' | 'skill_learned' | 'achievement_earned' | 'contribution_made' | 'review_received' | 'milestone_reached';
+  title: string;
+  description: string;
+  timestamp: string;
+  icon: any;
+  color: string;
 }
 
 export default function ActivityMetrics({ selectedDomain }: ActivityMetricsProps) {
@@ -145,6 +163,114 @@ export default function ActivityMetrics({ selectedDomain }: ActivityMetricsProps
         }`}
       />
     ));
+  };
+
+  // User activities since joining platform
+  const platformActivities: PlatformActivity[] = [
+    {
+      id: '1',
+      type: 'project_joined',
+      title: 'Joined E-commerce Platform Project',
+      description: 'Started collaborating on a React-based e-commerce platform with 5 other developers',
+      timestamp: '2 days ago',
+      icon: GitBranch,
+      color: 'text-blue-500'
+    },
+    {
+      id: '2',
+      type: 'member_followed',
+      title: 'Connected with Rajesh Kumar',
+      description: 'Started following senior full-stack developer for mentorship',
+      timestamp: '3 days ago',
+      icon: UserPlus,
+      color: 'text-green-500'
+    },
+    {
+      id: '3',
+      type: 'project_completed',
+      title: 'Completed Task Management Tool',
+      description: 'Successfully delivered frontend components for productivity app',
+      timestamp: '1 week ago',
+      icon: CheckCircle,
+      color: 'text-green-600'
+    },
+    {
+      id: '4',
+      type: 'achievement_earned',
+      title: 'Earned "Collaborative Coder" Badge',
+      description: 'Completed 10 successful project collaborations',
+      timestamp: '1 week ago',
+      icon: Trophy,
+      color: 'text-yellow-500'
+    },
+    {
+      id: '5',
+      type: 'skill_learned',
+      title: 'Mastered TypeScript',
+      description: 'Completed advanced TypeScript course and applied in recent projects',
+      timestamp: '2 weeks ago',
+      icon: BookOpen,
+      color: 'text-purple-500'
+    },
+    {
+      id: '6',
+      type: 'review_received',
+      title: 'Received 5-star Review',
+      description: 'Got excellent feedback from Priya Sharma for mobile banking app work',
+      timestamp: '2 weeks ago',
+      icon: Star,
+      color: 'text-yellow-400'
+    },
+    {
+      id: '7',
+      type: 'contribution_made',
+      title: 'Contributed to Open Source',
+      description: 'Made significant contributions to React component library',
+      timestamp: '3 weeks ago',
+      icon: Code,
+      color: 'text-blue-400'
+    },
+    {
+      id: '8',
+      type: 'milestone_reached',
+      title: 'Reached 1000 Hours of Coding',
+      description: 'Hit major coding milestone since joining the platform',
+      timestamp: '1 month ago',
+      icon: Coffee,
+      color: 'text-orange-500'
+    },
+    {
+      id: '9',
+      type: 'member_followed',
+      title: 'Connected with Sneha Agarwal',
+      description: 'Started following UI/UX designer for design insights',
+      timestamp: '1 month ago',
+      icon: UserPlus,
+      color: 'text-green-500'
+    },
+    {
+      id: '10',
+      type: 'project_joined',
+      title: 'Joined Platform Beta Testing',
+      description: 'Became one of the first users to test new platform features',
+      timestamp: '2 months ago',
+      icon: Heart,
+      color: 'text-red-500'
+    }
+  ];
+
+  const getActivityTypeLabel = (type: string) => {
+    const labels = {
+      'project_joined': 'Project',
+      'project_completed': 'Completed',
+      'member_followed': 'Connection',
+      'skill_learned': 'Learning',
+      'achievement_earned': 'Achievement',
+      'contribution_made': 'Contribution',
+      'review_received': 'Review',
+      'milestone_reached': 'Milestone'
+    };
+    return labels[type as keyof typeof labels] || 'Activity';
   };
 
   return (
@@ -312,6 +438,64 @@ export default function ActivityMetrics({ selectedDomain }: ActivityMetricsProps
                 </div>
               </div>
             ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Platform Activity Timeline */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <Calendar className="w-5 h-5 text-primary" />
+            <span>Your Journey Since Joining</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {platformActivities.map((activity, index) => {
+              const IconComponent = activity.icon;
+              return (
+                <div key={activity.id} className="flex items-start space-x-3 p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors">
+                  <div className={`flex-shrink-0 w-8 h-8 rounded-full bg-background border-2 border-current ${activity.color} flex items-center justify-center`}>
+                    <IconComponent className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <h4 className="text-sm font-semibold">{activity.title}</h4>
+                      <div className="flex items-center space-x-2">
+                        <Badge variant="outline" className="text-xs">
+                          {getActivityTypeLabel(activity.type)}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground">{activity.timestamp}</span>
+                      </div>
+                    </div>
+                    <p className="text-xs text-muted-foreground">{activity.description}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Summary Stats */}
+          <div className="mt-6 pt-4 border-t">
+            <div className="grid grid-cols-4 gap-4 text-center">
+              <div>
+                <div className="text-lg font-bold text-blue-500">{platformActivities.filter(a => a.type === 'project_joined').length}</div>
+                <div className="text-xs text-muted-foreground">Projects Joined</div>
+              </div>
+              <div>
+                <div className="text-lg font-bold text-green-500">{platformActivities.filter(a => a.type === 'project_completed').length}</div>
+                <div className="text-xs text-muted-foreground">Projects Completed</div>
+              </div>
+              <div>
+                <div className="text-lg font-bold text-purple-500">{platformActivities.filter(a => a.type === 'skill_learned').length}</div>
+                <div className="text-xs text-muted-foreground">Skills Learned</div>
+              </div>
+              <div>
+                <div className="text-lg font-bold text-yellow-500">{platformActivities.filter(a => a.type === 'achievement_earned').length}</div>
+                <div className="text-xs text-muted-foreground">Achievements</div>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>
