@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpen, ArrowLeft, Construction } from "lucide-react";
+import { ArrowLeft, Construction } from "lucide-react";
 import { Link } from "react-router-dom";
+import NavBar from "@/components/NavBar";
 
 interface PlaceholderProps {
   title: string;
