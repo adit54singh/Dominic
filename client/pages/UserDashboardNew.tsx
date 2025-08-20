@@ -165,13 +165,6 @@ export default function UserDashboard() {
   // Real-time profile updates - watch for changes in userOnboardingData
   useEffect(() => {
     if (userOnboardingData) {
-      // Update selected domain if current one is no longer available
-      if (userOnboardingData.domains && userOnboardingData.domains.length > 0) {
-        if (!userOnboardingData.domains.includes(selectedDomain)) {
-          setSelectedDomain(userOnboardingData.domains[0]);
-        }
-      }
-
       // Save updated data to localStorage for persistence
       localStorage.setItem(
         "userOnboardingData",
@@ -179,6 +172,15 @@ export default function UserDashboard() {
       );
     }
   }, [userOnboardingData]);
+
+  // Separate effect to handle domain validation to prevent infinite loops
+  useEffect(() => {
+    if (userOnboardingData?.domains && userOnboardingData.domains.length > 0) {
+      if (!userOnboardingData.domains.includes(selectedDomain)) {
+        setSelectedDomain(userOnboardingData.domains[0]);
+      }
+    }
+  }, [userOnboardingData?.domains, selectedDomain]);
 
   // Function to join a project
   const joinProject = (project: any) => {
