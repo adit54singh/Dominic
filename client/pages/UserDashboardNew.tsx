@@ -178,7 +178,7 @@ export default function UserDashboard() {
         JSON.stringify(userOnboardingData),
       );
     }
-  }, [userOnboardingData, selectedDomain]);
+  }, [userOnboardingData]);
 
   // Function to join a project
   const joinProject = (project: any) => {
