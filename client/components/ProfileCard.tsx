@@ -99,8 +99,11 @@ export default function ProfileCard({ profile, className = "" }: ProfileCardProp
               <div className="text-xs text-slate-400">Projects Collaborated</div>
             </div>
             <div className="bg-slate-900/30 rounded-lg p-3 text-center">
-              <div className="text-xl font-bold text-white">{profile.mentorshipHours}</div>
-              <div className="text-xs text-slate-400">Mentorship Hours</div>
+              <div className="flex items-center justify-center space-x-1 mb-1">
+                <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                <div className="text-xl font-bold text-white">{profile.rating.toFixed(1)}</div>
+              </div>
+              <div className="text-xs text-slate-400">Average Rating</div>
             </div>
           </div>
         </div>
