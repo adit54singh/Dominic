@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function AnimatedDomains() {
@@ -74,41 +74,42 @@ export default function AnimatedDomains() {
     showRandomTechDomains();
 
     // Stagger the non-tech domains to appear after tech domains
-    setTimeout(() => {
+    const nonTechTimeout = setTimeout(() => {
       showRandomNonTechDomains();
     }, 2000);
 
-    // Set intervals for continuous animation
-    const techInterval = setInterval(showRandomTechDomains, 8000);
-    const nonTechInterval = setInterval(showRandomNonTechDomains, 8000);
+    // Set intervals for continuous animation with longer duration
+    const techInterval = setInterval(showRandomTechDomains, 12000);
+    const nonTechInterval = setInterval(showRandomNonTechDomains, 12000);
 
     return () => {
+      clearTimeout(nonTechTimeout);
       clearInterval(techInterval);
       clearInterval(nonTechInterval);
     };
+
   }, []);
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-primary/10 via-transparent to-accent/10 relative">
-      {/* Animated background particles */}
-      <div className="absolute inset-0">
-        {Array.from({ length: 20 }).map((_, i) => (
+      {/* Optimized background particles - reduced count and complexity */}
+      <div className="absolute inset-0 pointer-events-none">
+        {Array.from({ length: 8 }).map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-2 h-2 bg-primary/20 rounded-full"
+            className="absolute w-1 h-1 bg-primary/30 rounded-full"
             animate={{
-              x: [0, Math.random() * 100 - 50],
-              y: [0, Math.random() * 100 - 50],
-              opacity: [0.2, 0.6, 0.2],
+              opacity: [0.3, 0.6, 0.3],
             }}
             transition={{
-              duration: Math.random() * 10 + 5,
+              duration: 4 + Math.random() * 2,
               repeat: Infinity,
               ease: "easeInOut",
+              delay: i * 0.5,
             }}
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${20 + (i * 10)}%`,
+              top: `${20 + (i * 8)}%`,
             }}
           />
         ))}
@@ -162,34 +163,31 @@ export default function AnimatedDomains() {
                       key={`${domain}-${index}`}
                       initial={{
                         opacity: 0,
-                        y: 60,
-                        rotateY: -15,
-                        scale: 0.8,
+                        y: 40,
+                        scale: 0.9,
                       }}
                       animate={{
                         opacity: 1,
                         y: 0,
-                        rotateY: 0,
                         scale: 1,
                         transition: {
-                          delay: index * 0.15,
-                          duration: 0.8,
-                          ease: [0.22, 1, 0.36, 1],
+                          delay: index * 0.1,
+                          duration: 0.5,
+                          ease: "easeOut",
                         },
                       }}
                       exit={{
                         opacity: 0,
-                        y: -40,
-                        scale: 0.9,
+                        y: -20,
+                        scale: 0.95,
                         transition: {
-                          delay: (currentTechDomains.length - index - 1) * 0.08,
-                          duration: 0.5,
+                          delay: (currentTechDomains.length - index - 1) * 0.05,
+                          duration: 0.3,
                         },
                       }}
                       whileHover={{
-                        scale: 1.05,
-                        rotateY: 5,
-                        transition: { duration: 0.3 },
+                        scale: 1.02,
+                        transition: { duration: 0.2 },
                       }}
                       className="group bg-background/90 backdrop-blur-lg border border-primary/30 rounded-2xl p-8 shadow-2xl hover:shadow-primary/20 transition-all duration-300"
                       style={{
@@ -258,35 +256,31 @@ export default function AnimatedDomains() {
                       key={`${domain}-${index}`}
                       initial={{
                         opacity: 0,
-                        x: index % 2 === 0 ? -60 : 60,
-                        rotateZ: index % 2 === 0 ? -10 : 10,
-                        scale: 0.7,
+                        x: index % 2 === 0 ? -30 : 30,
+                        scale: 0.9,
                       }}
                       animate={{
                         opacity: 1,
                         x: 0,
-                        rotateZ: 0,
                         scale: 1,
                         transition: {
-                          delay: index * 0.2,
-                          duration: 0.9,
-                          ease: [0.23, 1, 0.32, 1],
+                          delay: index * 0.15,
+                          duration: 0.6,
+                          ease: "easeOut",
                         },
                       }}
                       exit={{
                         opacity: 0,
-                        scale: 0.8,
-                        rotateZ: index % 2 === 0 ? 10 : -10,
+                        scale: 0.9,
                         transition: {
                           delay:
-                            (currentNonTechDomains.length - index - 1) * 0.1,
-                          duration: 0.6,
+                            (currentNonTechDomains.length - index - 1) * 0.05,
+                          duration: 0.4,
                         },
                       }}
                       whileHover={{
-                        scale: 1.08,
-                        rotateZ: 2,
-                        transition: { duration: 0.3 },
+                        scale: 1.03,
+                        transition: { duration: 0.2 },
                       }}
                       className="group bg-gradient-to-br from-accent/20 to-orange-500/20 backdrop-blur-lg border border-accent/40 rounded-2xl p-8 shadow-2xl hover:shadow-accent/20 transition-all duration-300 relative overflow-hidden"
                     >
