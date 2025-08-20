@@ -146,6 +146,16 @@
     background: hsl(var(--primary) / 0.8);
   }
 
+  /* Hide scrollbar utility */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Animation keyframes */
   @keyframes animate-in {
     from {
