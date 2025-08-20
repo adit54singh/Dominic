@@ -158,26 +158,15 @@
     display: none;
   }
 
-  /* Animation keyframes */
+  /* Optimized animation keyframes */
   @keyframes animate-in {
     from {
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(8px);
     }
     to {
       opacity: 1;
       transform: translateY(0);
-    }
-  }
-
-  @keyframes zoom-in {
-    from {
-      opacity: 0;
-      transform: scale(0.8);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
     }
   }
 
@@ -193,7 +182,7 @@
   @keyframes slide-up {
     from {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(16px);
     }
     to {
       opacity: 1;
@@ -201,67 +190,33 @@
     }
   }
 
-  @keyframes slide-down {
-    from {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes scale-in {
-    from {
-      opacity: 0;
-      transform: scale(0.9);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  /* Animation classes */
+  /* Optimized animation classes */
   .animate-in {
-    animation: animate-in 0.5s ease-out forwards;
+    animation: animate-in 0.3s ease-out forwards;
   }
 
   .slide-in-from-top-4 {
-    transform: translateY(-16px);
+    animation: slide-up 0.4s ease-out forwards;
   }
 
   .slide-in-from-left-4 {
-    transform: translateX(-16px);
-  }
-
-  .slide-in-from-left-2 {
-    transform: translateX(-8px);
-  }
-
-  .slide-in-from-left-1 {
-    transform: translateX(-4px);
+    animation: slide-up 0.4s ease-out forwards;
   }
 
   .slide-in-from-right-4 {
-    transform: translateX(16px);
+    animation: slide-up 0.4s ease-out forwards;
   }
 
-  .slide-in-from-right-2 {
-    transform: translateX(8px);
+  .duration-300 {
+    animation-duration: 300ms;
   }
 
-  .slide-in-from-bottom-4 {
-    transform: translateY(16px);
+  .duration-400 {
+    animation-duration: 400ms;
   }
 
   .duration-500 {
     animation-duration: 500ms;
-  }
-
-  .duration-700 {
-    animation-duration: 700ms;
   }
 
   .delay-100 {
@@ -288,28 +243,12 @@
     animation-delay: 600ms;
   }
 
-  .delay-800 {
-    animation-delay: 800ms;
-  }
-
-  .zoom-in {
-    animation: zoom-in 0.5s ease-out forwards;
-  }
-
   .fade-in {
-    animation: fade-in 0.3s ease-out forwards;
+    animation: fade-in 0.2s ease-out forwards;
   }
 
   .slide-up {
-    animation: slide-up 0.4s ease-out forwards;
-  }
-
-  .slide-down {
-    animation: slide-down 0.4s ease-out forwards;
-  }
-
-  .scale-in {
-    animation: scale-in 0.3s ease-out forwards;
+    animation: slide-up 0.3s ease-out forwards;
   }
 
   /* Smooth transitions for all interactive elements */
@@ -349,10 +288,27 @@
     transform: translateY(-2px);
   }
 
-  /* Glass effect */
+  /* Optimized glass effect - reduced blur */
   .glass-effect {
-    backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(4px);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Performance utilities */
+  .will-change-transform {
+    will-change: transform;
+  }
+
+  .will-change-opacity {
+    will-change: opacity;
+  }
+
+  .contain-layout {
+    contain: layout;
+  }
+
+  .contain-paint {
+    contain: paint;
   }
 }
