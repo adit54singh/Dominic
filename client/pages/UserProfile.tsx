@@ -33,8 +33,9 @@ import {
   Trophy,
   Upload
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import FollowingProjectsFeed from "@/components/FollowingProjectsFeed";
+import { generateSampleProfiles } from "@/components/ProfileCard";
 
 export default function UserProfile() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
