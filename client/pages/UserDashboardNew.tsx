@@ -967,130 +967,211 @@ export default function UserDashboard() {
             </div>
           </div>
 
-          <div className="max-w-2xl mx-auto space-y-6">
-            {communityProfiles.map((profile) => (
-              <Card key={profile.id} className="hover:shadow-lg transition-all duration-200 cursor-pointer group w-full">
-                <CardContent className="p-6">
-                  {/* Profile content same as before */}
-                  <div className="flex items-start space-x-4 mb-4">
-                    <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-semibold">
-                      {profile.avatar}
+          <div className="grid lg:grid-cols-4 gap-6">
+            {/* Left Sidebar - User Info and Profile Card */}
+            <div className="lg:col-span-1 space-y-6">
+              {/* About User Section */}
+              <Card className="bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <User className="w-5 h-5 text-primary" />
+                    About You
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <Avatar className="w-12 h-12 border-2 border-primary/20">
+                      {userOnboardingData?.avatar ? (
+                        <img
+                          src={userOnboardingData.avatar}
+                          alt="Profile"
+                          className="w-full h-full object-cover rounded-full"
+                        />
+                      ) : (
+                        <AvatarFallback className="bg-primary text-white text-sm">
+                          {user.avatar}
+                        </AvatarFallback>
+                      )}
+                    </Avatar>
+                    <div>
+                      <div className="font-semibold text-sm">{user.name}</div>
+                      <div className="text-xs text-muted-foreground">{generateProfileForDomain().title}</div>
+                      <div className="text-xs text-primary">{user.location}</div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-1">
-                        <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">
-                          {profile.name}
-                        </h3>
-                        <Badge variant="outline" className="text-xs">
-                          {profile.availability}
-                        </Badge>
+                  </div>
+
+                  <div className="text-xs text-muted-foreground leading-relaxed">
+                    {user.bio ? user.bio.substring(0, 120) + '...' : `Passionate ${getCurrentDomain().name.toLowerCase()} enthusiast looking to connect with peers and collaborate on exciting projects.`}
+                  </div>
+
+                  <div className="flex flex-wrap gap-1">
+                    {userOnboardingData?.skills?.slice(0, 3).map((skill: string, index: number) => (
+                      <Badge key={index} variant="secondary" className="text-xs bg-primary/10 border-primary/20">
+                        {skill}
+                      </Badge>
+                    ))}
+                  </div>
+
+                  <div className="pt-2 border-t border-primary/10">
+                    <div className="text-xs text-muted-foreground mb-2">Quick Stats</div>
+                    <div className="grid grid-cols-2 gap-2 text-center">
+                      <div className="p-2 bg-muted/30 rounded">
+                        <div className="text-sm font-semibold text-primary">{joinedProjects.length}</div>
+                        <div className="text-xs text-muted-foreground">Projects</div>
                       </div>
-                      <p className="text-sm text-muted-foreground">{profile.title}</p>
-                      <p className="text-xs text-muted-foreground flex items-center mt-1">
-                        <span>📍 {profile.location} • {profile.experience} experience</span>
-                      </p>
-                      <p className="text-xs text-primary mt-1">
-                        Focus: {profile.currentFocus}
-                      </p>
+                      <div className="p-2 bg-muted/30 rounded">
+                        <div className="text-sm font-semibold text-yellow-500">4.8</div>
+                        <div className="text-xs text-muted-foreground">Rating</div>
+                      </div>
                     </div>
-                  </div>
-
-                  {/* Description */}
-                  <div className="mb-4">
-                    <p className="text-sm text-muted-foreground leading-relaxed mb-2">
-                      {profile.description}
-                    </p>
-                    <p className="text-xs text-muted-foreground italic">
-                      "{profile.bio}"
-                    </p>
-                  </div>
-
-                  {/* Skills */}
-                  <div className="mb-4">
-                    <h4 className="text-xs font-medium text-muted-foreground mb-2">SKILLS</h4>
-                    <div className="flex flex-wrap gap-1">
-                      {profile.skills.map((skill, index) => (
-                        <Badge key={index} variant="secondary" className="text-xs">
-                          {skill}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Communities */}
-                  <div className="mb-4">
-                    <h4 className="text-xs font-medium text-muted-foreground mb-2">ACTIVE COMMUNITIES</h4>
-                    <div className="space-y-2">
-                      {profile.communities.map((community, index) => (
-                        <div key={index} className="flex items-center justify-between p-2 bg-muted/30 rounded-md">
-                          <div>
-                            <div className="text-xs font-medium">{community.name}</div>
-                            <div className="text-xs text-muted-foreground">{community.role}</div>
-                          </div>
-                          <Badge variant="outline" className="text-xs">
-                            {community.members} members
-                          </Badge>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Stats */}
-                  <div className="mb-4 grid grid-cols-3 gap-4 text-center">
-                    <div>
-                      <div className="text-sm font-semibold">{profile.projects}</div>
-                      <div className="text-xs text-muted-foreground">Projects</div>
-                    </div>
-                    <div>
-                      <div className="text-sm font-semibold">{profile.connections}</div>
-                      <div className="text-xs text-muted-foreground">Connections</div>
-                    </div>
-                    <div>
-                      <div className="text-sm font-semibold">{profile.communities.length}</div>
-                      <div className="text-xs text-muted-foreground">Communities</div>
-                    </div>
-                  </div>
-
-                  <div className="flex space-x-2">
-                    <Button
-                      size="sm"
-                      className="flex-1"
-                      variant={followedUsers.has(profile.id) ? "outline" : "default"}
-                      onClick={() => {
-                        const isFollowing = followedUsers.has(profile.id);
-                        setFollowedUsers(prev => {
-                          const newFollowed = new Set(prev);
-                          if (newFollowed.has(profile.id)) {
-                            newFollowed.delete(profile.id);
-                          } else {
-                            newFollowed.add(profile.id);
-                          }
-                          return newFollowed;
-                        });
-
-                        // Add activity
-                        addActivity({
-                          type: 'follow',
-                          action: isFollowing ? `Unfollowed ${profile.name}` : `Started following ${profile.name}`,
-                          details: `${profile.title} - ${profile.location}`,
-                          userId: profile.id
-                        });
-                      }}
-                    >
-                      {followedUsers.has(profile.id) ? "Unfollow" : "Follow"}
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="flex-1"
-                      onClick={() => setViewingProfile(profile.id)}
-                    >
-                      View Profile
-                    </Button>
                   </div>
                 </CardContent>
               </Card>
-            ))}
+
+              {/* User's Profile Card */}
+              <div>
+                <h3 className="text-sm font-semibold text-muted-foreground mb-3 flex items-center gap-2">
+                  <Trophy className="w-4 h-4" />
+                  Your Profile Card
+                </h3>
+                <ProfileCard profile={generateProfileForDomain()} className="w-full" />
+              </div>
+            </div>
+
+            {/* Right Content - Community Profiles */}
+            <div className="lg:col-span-3">
+              <div className="space-y-4">
+                {communityProfiles.map((profile, index) => (
+                  <div key={profile.id}>
+                    <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer group w-full border-l-4 border-l-transparent hover:border-l-primary">
+                      <CardContent className="p-6">
+                        {/* Profile content same as before */}
+                        <div className="flex items-start space-x-4 mb-4">
+                          <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white font-semibold">
+                            {profile.avatar}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between mb-1">
+                              <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">
+                                {profile.name}
+                              </h3>
+                              <Badge variant="outline" className="text-xs">
+                                {profile.availability}
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-muted-foreground">{profile.title}</p>
+                            <p className="text-xs text-muted-foreground flex items-center mt-1">
+                              <span>📍 {profile.location} • {profile.experience} experience</span>
+                            </p>
+                            <p className="text-xs text-primary mt-1">
+                              Focus: {profile.currentFocus}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Description */}
+                        <div className="mb-4">
+                          <p className="text-sm text-muted-foreground leading-relaxed mb-2">
+                            {profile.description}
+                          </p>
+                          <p className="text-xs text-muted-foreground italic">
+                            "{profile.bio}"
+                          </p>
+                        </div>
+
+                        {/* Skills */}
+                        <div className="mb-4">
+                          <h4 className="text-xs font-medium text-muted-foreground mb-2">SKILLS</h4>
+                          <div className="flex flex-wrap gap-1">
+                            {profile.skills.map((skill, skillIndex) => (
+                              <Badge key={skillIndex} variant="secondary" className="text-xs">
+                                {skill}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Communities */}
+                        <div className="mb-4">
+                          <h4 className="text-xs font-medium text-muted-foreground mb-2">ACTIVE COMMUNITIES</h4>
+                          <div className="space-y-2">
+                            {profile.communities.map((community, communityIndex) => (
+                              <div key={communityIndex} className="flex items-center justify-between p-2 bg-muted/30 rounded-md">
+                                <div>
+                                  <div className="text-xs font-medium">{community.name}</div>
+                                  <div className="text-xs text-muted-foreground">{community.role}</div>
+                                </div>
+                                <Badge variant="outline" className="text-xs">
+                                  {community.members} members
+                                </Badge>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Stats */}
+                        <div className="mb-4 grid grid-cols-3 gap-4 text-center">
+                          <div>
+                            <div className="text-sm font-semibold">{profile.projects}</div>
+                            <div className="text-xs text-muted-foreground">Projects</div>
+                          </div>
+                          <div>
+                            <div className="text-sm font-semibold">{profile.connections}</div>
+                            <div className="text-xs text-muted-foreground">Connections</div>
+                          </div>
+                          <div>
+                            <div className="text-sm font-semibold">{profile.communities.length}</div>
+                            <div className="text-xs text-muted-foreground">Communities</div>
+                          </div>
+                        </div>
+
+                        <div className="flex space-x-2">
+                          <Button
+                            size="sm"
+                            className="flex-1"
+                            variant={followedUsers.has(profile.id) ? "outline" : "default"}
+                            onClick={() => {
+                              const isFollowing = followedUsers.has(profile.id);
+                              setFollowedUsers(prev => {
+                                const newFollowed = new Set(prev);
+                                if (newFollowed.has(profile.id)) {
+                                  newFollowed.delete(profile.id);
+                                } else {
+                                  newFollowed.add(profile.id);
+                                }
+                                return newFollowed;
+                              });
+
+                              // Add activity
+                              addActivity({
+                                type: 'follow',
+                                action: isFollowing ? `Unfollowed ${profile.name}` : `Started following ${profile.name}`,
+                                details: `${profile.title} - ${profile.location}`,
+                                userId: profile.id
+                              });
+                            }}
+                          >
+                            {followedUsers.has(profile.id) ? "Unfollow" : "Follow"}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="flex-1"
+                            onClick={() => setViewingProfile(profile.id)}
+                          >
+                            View Profile
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    {/* Thin line separator */}
+                    {index < communityProfiles.length - 1 && (
+                      <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent my-4"></div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       );
