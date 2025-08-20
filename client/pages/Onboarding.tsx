@@ -105,18 +105,18 @@ export default function Onboarding() {
     { id: "mobile-dev", name: "Mobile Development", icon: Code, color: "bg-green-500" },
     { id: "data-science", name: "Data Science & AI", icon: Code, color: "bg-purple-500" },
     { id: "design", name: "UI/UX Design", icon: Palette, color: "bg-red-500" },
+    { id: "cloud-computing", name: "Cloud Computing", icon: Code, color: "bg-sky-500" },
+    { id: "blockchain", name: "Blockchain & Web3", icon: Code, color: "bg-amber-500" },
+    { id: "devops", name: "DevOps & Infrastructure", icon: Code, color: "bg-orange-500" },
+    { id: "cybersecurity", name: "Cybersecurity", icon: Code, color: "bg-red-600" },
+    { id: "game-dev", name: "Game Development", icon: Code, color: "bg-pink-500" },
+    { id: "iot", name: "IoT & Embedded Systems", icon: Code, color: "bg-emerald-600" },
+    { id: "robotics", name: "Robotics & Automation", icon: Code, color: "bg-indigo-600" },
+    { id: "ar-vr", name: "AR/VR Development", icon: Code, color: "bg-violet-600" },
+    { id: "quantum-computing", name: "Quantum Computing", icon: Code, color: "bg-rose-600" }
   ];
 
-  const nonTechDomains = [
-    { id: "content-creation", name: "Content Creation", icon: Camera, color: "bg-pink-500" },
-    { id: "cooking-food", name: "Cooking & Food", icon: Utensils, color: "bg-orange-500" },
-    { id: "travel", name: "Travel & Adventure", icon: Plane, color: "bg-emerald-500" },
-    { id: "music-arts", name: "Music & Arts", icon: Music, color: "bg-violet-500" },
-    { id: "business", name: "Business & Entrepreneurship", icon: Briefcase, color: "bg-yellow-500" },
-    { id: "academics", name: "Academic Excellence", icon: GraduationCap, color: "bg-indigo-500" },
-  ];
-
-  const allDomains = [...techDomains, ...nonTechDomains];
+  const allDomains = [...techDomains];
 
   const techSkillsOptions = [
     "JavaScript", "Python", "Java", "C++", "React", "Node.js", "Django", "Flask",
@@ -251,19 +251,15 @@ export default function Onboarding() {
     switch (currentStep) {
       case 1: return data.domains.length > 0;
       case 2:
-        if (isTechDomain) {
-          const hasValidProjects = !data.hasProjects ||
-            (data.userProjects.length > 0 &&
-             data.userProjects.every(p => p.name.trim() && p.title.trim() && p.skillsUsed.length > 0));
-          return data.skills.length > 0 &&
-                 data.experience !== "" &&
-                 (data.preferredPlatform === 'leetcode' ? data.leetcodeId.trim() !== "" :
-                  data.preferredPlatform === 'gfg' ? data.gfgId.trim() !== "" : false) &&
-                 data.githubId.trim() !== "" &&
-                 hasValidProjects;
-        } else {
-          return data.skills.length > 0;
-        }
+        const hasValidProjects = !data.hasProjects ||
+          (data.userProjects.length > 0 &&
+           data.userProjects.every(p => p.name.trim() && p.title.trim() && p.skillsUsed.length > 0));
+        return data.skills.length > 0 &&
+               data.experience !== "" &&
+               (data.preferredPlatform === 'leetcode' ? data.leetcodeId.trim() !== "" :
+                data.preferredPlatform === 'gfg' ? data.gfgId.trim() !== "" : false) &&
+               data.githubId.trim() !== "" &&
+               hasValidProjects;
       case 3: return data.goals.length > 0 || data.customGoal.trim() !== "";
       case 4: return data.heardFrom !== "";
       default: return false;
@@ -279,8 +275,8 @@ export default function Onboarding() {
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Target className="w-8 h-8 text-primary" />
               </div>
-              <h2 className="text-2xl font-bold">Choose Your Domains</h2>
-              <p className="text-muted-foreground">Select all areas you're interested in learning or growing.</p>
+              <h2 className="text-2xl font-bold">Choose Your Tech Domains</h2>
+              <p className="text-muted-foreground">Select all technology areas you're interested in learning or growing in.</p>
             </div>
 
             {/* Tech Domains Section */}
@@ -288,9 +284,9 @@ export default function Onboarding() {
               <div>
                 <h3 className="text-lg font-semibold mb-4 flex items-center space-x-2">
                   <Code className="w-5 h-5 text-blue-500" />
-                  <span>Tech Domains</span>
+                  <span>Technology Domains</span>
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {techDomains.map((domain) => (
                     <Card
                       key={domain.id}
@@ -307,42 +303,7 @@ export default function Onboarding() {
                             <domain.icon className="w-5 h-5 text-white" />
                           </div>
                           <div className="flex-1">
-                            <h3 className="font-semibold">{domain.name}</h3>
-                          </div>
-                          {data.domains.includes(domain.id) && (
-                            <CheckCircle className="w-5 h-5 text-primary" />
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-
-              {/* Non-Tech Domains Section */}
-              <div>
-                <h3 className="text-lg font-semibold mb-4 flex items-center space-x-2">
-                  <Heart className="w-5 h-5 text-pink-500" />
-                  <span>Non-Tech Domains</span>
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {nonTechDomains.map((domain) => (
-                    <Card
-                      key={domain.id}
-                      className={`cursor-pointer transition-all hover:shadow-md ${
-                        data.domains.includes(domain.id)
-                          ? 'ring-2 ring-primary bg-primary/5'
-                          : ''
-                      }`}
-                      onClick={() => handleDomainToggle(domain.id)}
-                    >
-                      <CardContent className="p-4">
-                        <div className="flex items-center space-x-3">
-                          <div className={`w-10 h-10 ${domain.color} rounded-lg flex items-center justify-center`}>
-                            <domain.icon className="w-5 h-5 text-white" />
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="font-semibold">{domain.name}</h3>
+                            <h3 className="font-semibold text-sm">{domain.name}</h3>
                           </div>
                           {data.domains.includes(domain.id) && (
                             <CheckCircle className="w-5 h-5 text-primary" />
@@ -362,28 +323,25 @@ export default function Onboarding() {
         );
 
       case 2:
-        const isTechDomain = data.domains.some(domain => techDomains.find(td => td.id === domain));
-        const skillsToShow = isTechDomain ? techSkillsOptions : nonTechSkillsOptions;
-
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                {isTechDomain ? <Code className="w-8 h-8 text-primary" /> : <Heart className="w-8 h-8 text-primary" />}
+                <Code className="w-8 h-8 text-primary" />
               </div>
               <h2 className="text-2xl font-bold">
-                {isTechDomain ? 'Tell Us About Your Tech Skills' : 'Tell Us About Your Skills'}
+                Tell Us About Your Tech Skills
               </h2>
               <p className="text-muted-foreground">
-                {isTechDomain ? 'Help us understand your technical expertise level.' : 'Help us understand your expertise and interests.'}
+                Help us understand your technical expertise level.
               </p>
             </div>
 
             {/* Skills Section */}
             <div className="space-y-4">
-              <Label className="text-lg font-semibold">Skills & {isTechDomain ? 'Technologies' : 'Expertise'}</Label>
+              <Label className="text-lg font-semibold">Skills & Technologies</Label>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {skillsToShow.map((skill) => (
+                {techSkillsOptions.map((skill) => (
                   <Label
                     key={skill}
                     className={`flex items-center space-x-2 cursor-pointer p-3 rounded-lg border text-sm transition-colors ${
@@ -473,38 +431,35 @@ export default function Onboarding() {
               )}
             </div>
 
-            {isTechDomain ? (
-              /* Tech Domain Fields */
-              <>
-                {/* Experience Level */}
-                <div className="space-y-4">
-                  <Label className="text-lg font-semibold">Experience Level</Label>
-                  <RadioGroup value={data.experience} onValueChange={(value) => setData(prev => ({ ...prev, experience: value }))}>
-                    <div className="space-y-3">
-                      <Label className="flex items-center space-x-3 cursor-pointer p-4 rounded-lg border hover:bg-muted/50">
-                        <RadioGroupItem value="beginner" />
-                        <div>
-                          <div className="font-semibold">Beginner (0-1 years)</div>
-                          <div className="text-sm text-muted-foreground">Just starting out</div>
-                        </div>
-                      </Label>
-                      <Label className="flex items-center space-x-3 cursor-pointer p-4 rounded-lg border hover:bg-muted/50">
-                        <RadioGroupItem value="intermediate" />
-                        <div>
-                          <div className="font-semibold">Intermediate (1-3 years)</div>
-                          <div className="text-sm text-muted-foreground">Have some experience</div>
-                        </div>
-                      </Label>
-                      <Label className="flex items-center space-x-3 cursor-pointer p-4 rounded-lg border hover:bg-muted/50">
-                        <RadioGroupItem value="advanced" />
-                        <div>
-                          <div className="font-semibold">Advanced (3+ years)</div>
-                          <div className="text-sm text-muted-foreground">Experienced and looking to mentor</div>
-                        </div>
-                      </Label>
+            {/* Experience Level */}
+            <div className="space-y-4">
+              <Label className="text-lg font-semibold">Experience Level</Label>
+              <RadioGroup value={data.experience} onValueChange={(value) => setData(prev => ({ ...prev, experience: value }))}>
+                <div className="space-y-3">
+                  <Label className="flex items-center space-x-3 cursor-pointer p-4 rounded-lg border hover:bg-muted/50">
+                    <RadioGroupItem value="beginner" />
+                    <div>
+                      <div className="font-semibold">Beginner (0-1 years)</div>
+                      <div className="text-sm text-muted-foreground">Just starting out</div>
                     </div>
-                  </RadioGroup>
+                  </Label>
+                  <Label className="flex items-center space-x-3 cursor-pointer p-4 rounded-lg border hover:bg-muted/50">
+                    <RadioGroupItem value="intermediate" />
+                    <div>
+                      <div className="font-semibold">Intermediate (1-3 years)</div>
+                      <div className="text-sm text-muted-foreground">Have some experience</div>
+                    </div>
+                  </Label>
+                  <Label className="flex items-center space-x-3 cursor-pointer p-4 rounded-lg border hover:bg-muted/50">
+                    <RadioGroupItem value="advanced" />
+                    <div>
+                      <div className="font-semibold">Advanced (3+ years)</div>
+                      <div className="text-sm text-muted-foreground">Experienced and looking to mentor</div>
+                    </div>
+                  </Label>
                 </div>
+              </RadioGroup>
+            </div>
 
                 {/* Coding Platform Selection */}
                 <div className="space-y-4">
@@ -648,70 +603,15 @@ export default function Onboarding() {
                   </div>
                 </div>
 
-                {/* Hackathon/Unstop ID */}
-                <div className="space-y-4">
-                  <Label className="text-lg font-semibold">Hackathon/Unstop ID (Optional)</Label>
-                  <Input
-                    placeholder="your-unstop-or-hackathon-id"
-                    value={data.hackathonId}
-                    onChange={(e) => setData(prev => ({ ...prev, hackathonId: e.target.value }))}
-                  />
-                </div>
-              </>
-            ) : (
-              /* Non-Tech Domain Fields */
-              <>
-                {/* Social Media Link */}
-                <div className="space-y-4">
-                  <Label className="text-lg font-semibold">Social Media Profile</Label>
-                  <Input
-                    placeholder="https://instagram.com/yourprofile or any social platform"
-                    value={data.socialMediaLink}
-                    onChange={(e) => setData(prev => ({ ...prev, socialMediaLink: e.target.value }))}
-                  />
-                  {data.socialMediaLink && (
-                    <div className="mt-2">
-                      <a
-                        href={data.socialMediaLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-primary hover:underline flex items-center space-x-1"
-                      >
-                        <ExternalLink className="w-3 h-3" />
-                        <span>View Social Profile</span>
-                      </a>
-                    </div>
-                  )}
-                </div>
-
-                {/* Beginner Status */}
-                <div className="space-y-4">
-                  <Label className="text-lg font-semibold">Are you a beginner?</Label>
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      checked={data.isBeginner}
-                      onCheckedChange={(checked) => setData(prev => ({ ...prev, isBeginner: checked as boolean }))}
-                    />
-                    <Label className="text-sm">Yes, I'm just starting out in this domain</Label>
-                  </div>
-                </div>
-
-                {/* Title Awarded - Only show if not a beginner */}
-                {!data.isBeginner && (
-                  <div className="space-y-4">
-                    <Label className="text-lg font-semibold">Any Title Awarded</Label>
-                    <Input
-                      placeholder="e.g., Best Content Creator 2024, Photography Award Winner"
-                      value={data.titleAwarded}
-                      onChange={(e) => setData(prev => ({ ...prev, titleAwarded: e.target.value }))}
-                    />
-                    <p className="text-xs text-muted-foreground">
-                      Enter any awards, recognitions, or titles you've received in your domain
-                    </p>
-                  </div>
-                )}
-              </>
-            )}
+            {/* Hackathon/Unstop ID */}
+            <div className="space-y-4">
+              <Label className="text-lg font-semibold">Hackathon/Unstop ID (Optional)</Label>
+              <Input
+                placeholder="your-unstop-or-hackathon-id"
+                value={data.hackathonId}
+                onChange={(e) => setData(prev => ({ ...prev, hackathonId: e.target.value }))}
+              />
+            </div>
           </div>
         );
 
@@ -814,26 +714,23 @@ export default function Onboarding() {
     };
 
     const getUserTitle = () => {
-      const isTechDomain = data.domains.some(domain => techDomains.find(td => td.id === domain));
-
-      if (isTechDomain) {
-        if (data.domains.includes('software-dev') || data.domains.includes('web-dev')) {
-          return data.experience === 'advanced' ? 'Senior Software Engineer' :
-                 data.experience === 'intermediate' ? 'Software Engineer' : 'Junior Developer';
-        }
-        if (data.domains.includes('data-science')) return 'Data Scientist';
-        if (data.domains.includes('design')) return 'UI/UX Designer';
-        if (data.domains.includes('mobile-dev')) return 'Mobile App Developer';
-        return 'Tech Enthusiast';
-      } else {
-        if (data.domains.includes('content-creation')) return 'Content Creator';
-        if (data.domains.includes('cooking-food')) return 'Food Enthusiast';
-        if (data.domains.includes('travel')) return 'Travel Blogger';
-        if (data.domains.includes('music-arts')) return 'Artist';
-        if (data.domains.includes('business')) return 'Entrepreneur';
-        if (data.domains.includes('academics')) return 'Academic';
-        return 'Creative Professional';
+      if (data.domains.includes('software-dev') || data.domains.includes('web-dev')) {
+        return data.experience === 'advanced' ? 'Senior Software Engineer' :
+               data.experience === 'intermediate' ? 'Software Engineer' : 'Junior Developer';
       }
+      if (data.domains.includes('data-science')) return 'Data Scientist';
+      if (data.domains.includes('design')) return 'UI/UX Designer';
+      if (data.domains.includes('mobile-dev')) return 'Mobile App Developer';
+      if (data.domains.includes('cloud-computing')) return 'Cloud Engineer';
+      if (data.domains.includes('blockchain')) return 'Blockchain Developer';
+      if (data.domains.includes('devops')) return 'DevOps Engineer';
+      if (data.domains.includes('cybersecurity')) return 'Cybersecurity Specialist';
+      if (data.domains.includes('game-dev')) return 'Game Developer';
+      if (data.domains.includes('iot')) return 'IoT Engineer';
+      if (data.domains.includes('robotics')) return 'Robotics Engineer';
+      if (data.domains.includes('ar-vr')) return 'AR/VR Developer';
+      if (data.domains.includes('quantum-computing')) return 'Quantum Computing Researcher';
+      return 'Tech Professional';
     };
 
     const getCompany = () => {
