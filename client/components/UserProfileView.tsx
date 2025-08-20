@@ -144,9 +144,22 @@ export default function UserProfileView({ profile, onClose }: UserProfileViewPro
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <Button className="flex items-center space-x-2">
-                  <UserPlus className="w-4 h-4" />
-                  <span>Connect</span>
+                <Button
+                  onClick={handleConnect}
+                  className={`flex items-center space-x-2 ${isConnected ? 'bg-green-600 hover:bg-green-700' : ''}`}
+                  variant={isConnected ? "default" : "default"}
+                >
+                  {isConnected ? (
+                    <>
+                      <UserCheck className="w-4 h-4" />
+                      <span>Connected</span>
+                    </>
+                  ) : (
+                    <>
+                      <UserPlus className="w-4 h-4" />
+                      <span>Connect</span>
+                    </>
+                  )}
                 </Button>
                 <Button variant="outline" className="flex items-center space-x-2">
                   <MessageCircle className="w-4 h-4" />
