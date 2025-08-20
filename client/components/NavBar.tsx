@@ -2,14 +2,7 @@ import { Button } from "@/components/ui/button";
 import { BookOpen } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
-interface NavBarProps {
-  onDomainsClick?: () => void;
-}
-
-export default function NavBar({ onDomainsClick }: NavBarProps) {
-  const location = useLocation();
-  const isHomePage = location.pathname === "/";
-
+export default function NavBar() {
   return (
     <nav className="border-b bg-background/95 sticky top-0 z-50 will-change-transform">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -21,21 +14,12 @@ export default function NavBar({ onDomainsClick }: NavBarProps) {
         </Link>
 
         <div className="hidden md:flex items-center space-x-6">
-          {isHomePage && onDomainsClick ? (
-            <button
-              onClick={onDomainsClick}
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Domains
-            </button>
-          ) : (
-            <Link
-              to="/domains"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Domains
-            </Link>
-          )}
+          <Link
+            to="/domains"
+            className="text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Domains
+          </Link>
           <Link
             to="/mentors"
             className="text-muted-foreground hover:text-foreground transition-colors"
