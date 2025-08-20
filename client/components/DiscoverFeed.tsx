@@ -357,9 +357,12 @@ export default function DiscoverFeed({
 
     return allPosts.filter((post) => {
       if (post.domain === selectedDomain) return true;
-      
+
       // Cross-domain compatibility
-      if (selectedDomain === "web-dev" && ["design", "security"].includes(post.domain)) {
+      if (
+        selectedDomain === "web-dev" &&
+        ["design", "security"].includes(post.domain)
+      ) {
         return true;
       }
       if (selectedDomain === "mobile-dev" && post.domain === "design") {
@@ -368,7 +371,7 @@ export default function DiscoverFeed({
       if (selectedDomain === "data-science" && post.domain === "business") {
         return true;
       }
-      
+
       return false;
     });
   }, [selectedDomain]);
@@ -409,42 +412,51 @@ export default function DiscoverFeed({
     });
   }, []);
 
-  const handleAddComment = useCallback((postId: string) => {
-    const comment = newComment[postId];
-    if (comment && comment.trim()) {
-      console.log("Adding comment:", comment, "to post:", postId);
-      setNewComment((prev) => ({ ...prev, [postId]: "" }));
-    }
-  }, [newComment]);
+  const handleAddComment = useCallback(
+    (postId: string) => {
+      const comment = newComment[postId];
+      if (comment && comment.trim()) {
+        console.log("Adding comment:", comment, "to post:", postId);
+        setNewComment((prev) => ({ ...prev, [postId]: "" }));
+      }
+    },
+    [newComment],
+  );
 
   const handleCommentChange = useCallback((postId: string, value: string) => {
     setNewComment((prev) => ({ ...prev, [postId]: value }));
   }, []);
 
-  const handleJoinProject = useCallback((post: Post) => {
-    if (!onJoinProject || !post.project) return;
+  const handleJoinProject = useCallback(
+    (post: Post) => {
+      if (!onJoinProject || !post.project) return;
 
-    const projectData = {
-      id: post.id,
-      title: post.content.title,
-      description: post.content.description,
-      techStack: post.project.techStack,
-      teamSize: post.project.teamSize,
-      duration: post.project.duration,
-      difficulty: post.project.difficulty,
-      author: post.author,
-      dueDate: new Date(
-        Date.now() + Math.random() * 90 * 24 * 60 * 60 * 1000
-      ).toISOString(),
-      progress: 0,
-    };
+      const projectData = {
+        id: post.id,
+        title: post.content.title,
+        description: post.content.description,
+        techStack: post.project.techStack,
+        teamSize: post.project.teamSize,
+        duration: post.project.duration,
+        difficulty: post.project.difficulty,
+        author: post.author,
+        dueDate: new Date(
+          Date.now() + Math.random() * 90 * 24 * 60 * 60 * 1000,
+        ).toISOString(),
+        progress: 0,
+      };
 
-    onJoinProject(projectData);
-  }, [onJoinProject]);
+      onJoinProject(projectData);
+    },
+    [onJoinProject],
+  );
 
-  const isProjectJoined = useCallback((postTitle: string) => {
-    return joinedProjects.some((jp) => jp.title === postTitle);
-  }, [joinedProjects]);
+  const isProjectJoined = useCallback(
+    (postTitle: string) => {
+      return joinedProjects.some((jp) => jp.title === postTitle);
+    },
+    [joinedProjects],
+  );
 
   if (!posts.length) {
     return (
@@ -455,7 +467,8 @@ export default function DiscoverFeed({
               <TrendingUp className="w-12 h-12 mx-auto mb-4 opacity-50" />
               <h3 className="text-lg font-semibold mb-2">No posts available</h3>
               <p className="text-sm">
-                Check back later for more content in the {selectedDomain} domain.
+                Check back later for more content in the {selectedDomain}{" "}
+                domain.
               </p>
             </div>
           </CardContent>

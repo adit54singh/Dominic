@@ -58,7 +58,9 @@ export default function UserDashboard() {
   const [selectedDomain, setSelectedDomain] = useState("");
   const [domainSwitcherOpen, setDomainSwitcherOpen] = useState(false);
   const [viewingProfile, setViewingProfile] = useState<string | null>(null);
-  const [viewingUserProfile, setViewingUserProfile] = useState<string | null>(null);
+  const [viewingUserProfile, setViewingUserProfile] = useState<string | null>(
+    null,
+  );
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userOnboardingData, setUserOnboardingData] = useState<any>(null);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -132,7 +134,10 @@ export default function UserDashboard() {
   }, [userActivity]);
 
   useEffect(() => {
-    localStorage.setItem("followedUsers", JSON.stringify(Array.from(followedUsers)));
+    localStorage.setItem(
+      "followedUsers",
+      JSON.stringify(Array.from(followedUsers)),
+    );
   }, [followedUsers]);
 
   // Function to add activity - memoized with useCallback to prevent infinite re-renders
@@ -1423,7 +1428,7 @@ export default function UserDashboard() {
             onActivity={addActivity}
             followedUsers={followedUsers}
             onFollowUser={(userId: string, isFollowing: boolean) => {
-              setFollowedUsers(prev => {
+              setFollowedUsers((prev) => {
                 const newSet = new Set(prev);
                 if (isFollowing) {
                   newSet.add(userId);
