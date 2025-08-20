@@ -30,6 +30,7 @@ interface UserProfile {
   company: string;
   location: string;
   bio: string;
+  avatar: string;
   skills: string[];
   domains: string[];
   experience: string;
