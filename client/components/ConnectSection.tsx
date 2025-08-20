@@ -347,7 +347,7 @@ interface ConnectSectionProps {
   onViewUser?: (userId: string) => void;
 }
 
-const ConnectSection = memo(({ onActivity, followedUsers = new Set(), onFollowUser }: ConnectSectionProps) => {
+const ConnectSection = memo(({ onActivity, followedUsers = new Set(), onFollowUser, onViewUser }: ConnectSectionProps) => {
 
   // Memoized user data to prevent unnecessary re-calculations
   const users = useMemo<User[]>(
