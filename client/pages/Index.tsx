@@ -331,18 +331,29 @@ export default function Index() {
 
       {/* Domains Animation Overlay */}
       {showDomainsAnimation && (
-        <div className="fixed inset-0 z-50 bg-background">
-          <div className="absolute top-4 right-4 z-60">
+        <div className="fixed inset-0 z-40 bg-background/95 backdrop-blur-sm">
+          {/* Navbar stays visible */}
+          <div className="sticky top-0 z-50">
+            <NavBar onDomainsClick={() => setShowDomainsAnimation(false)} />
+          </div>
+
+          {/* Close button */}
+          <div className="absolute top-20 right-4 z-50">
             <Button
-              variant="ghost"
+              variant="outline"
               size="sm"
               onClick={() => setShowDomainsAnimation(false)}
-              className="text-muted-foreground hover:text-foreground"
+              className="bg-background/80 backdrop-blur-sm border-primary/20 hover:bg-primary/10"
             >
-              <X className="w-4 h-4" />
+              <X className="w-4 h-4 mr-2" />
+              Close (ESC)
             </Button>
           </div>
-          <AnimatedDomains />
+
+          {/* Scrollable content */}
+          <div className="relative overflow-y-auto max-h-screen">
+            <AnimatedDomains />
+          </div>
         </div>
       )}
     </div>
