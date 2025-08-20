@@ -58,6 +58,7 @@ export default function UserDashboard() {
   const [selectedDomain, setSelectedDomain] = useState("");
   const [domainSwitcherOpen, setDomainSwitcherOpen] = useState(false);
   const [viewingProfile, setViewingProfile] = useState<string | null>(null);
+  const [viewingUserProfile, setViewingUserProfile] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userOnboardingData, setUserOnboardingData] = useState<any>(null);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
@@ -676,7 +677,7 @@ export default function UserDashboard() {
         "Blockchain developer specializing in Ethereum and Solidity. Built 5+ DeFi protocols with $50M+ TVL. Active contributor to open-source Web3 projects.",
       achievements: [
         "⛓️ Built DeFi protocol with $50M TVL",
-        "🏆 ETHIndia hackathon winner",
+        "��� ETHIndia hackathon winner",
         "📝 Published 10+ smart contracts",
       ],
       communities: [
