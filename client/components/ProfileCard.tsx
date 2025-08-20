@@ -1,12 +1,13 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
-  Briefcase, 
+import {
+  Briefcase,
   Code,
   Users,
   BookOpen,
   Trophy,
-  Zap
+  Zap,
+  Star
 } from "lucide-react";
 
 interface ProfileCardData {
