@@ -124,6 +124,7 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
     title: "",
     skillsUsed: []
   });
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
   // Load user data from localStorage on mount
   useEffect(() => {
