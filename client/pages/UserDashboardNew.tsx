@@ -101,6 +101,11 @@ export default function UserDashboard() {
     if (savedUserActivity) {
       setUserActivity(JSON.parse(savedUserActivity));
     }
+
+    const savedFollowedUsers = localStorage.getItem("followedUsers");
+    if (savedFollowedUsers) {
+      setFollowedUsers(new Set(JSON.parse(savedFollowedUsers)));
+    }
   }, []);
 
   // Save to localStorage when state changes (debounced to prevent excessive saves)
