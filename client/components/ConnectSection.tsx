@@ -233,6 +233,17 @@ const ConnectSection = memo(() => {
     [],
   );
 
+  // Separate followed and unfollowed users
+  const followedMentors = useMemo(() =>
+    users.filter(user => followedUsers.has(user.id)),
+    [users, followedUsers]
+  );
+
+  const suggestedMentors = useMemo(() =>
+    users.filter(user => !followedUsers.has(user.id)),
+    [users, followedUsers]
+  );
+
   const handleFollow = useCallback((userId: string) => {
     setFollowedUsers((prev) => {
       const newFollowed = new Set(prev);
@@ -254,7 +265,7 @@ const ConnectSection = memo(() => {
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="text-center">
         <h3 className="text-2xl font-bold mb-2">Connect with Mentors</h3>
         <p className="text-muted-foreground">
@@ -262,17 +273,72 @@ const ConnectSection = memo(() => {
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {users.map((user) => (
-          <UserCard
-            key={user.id}
-            user={user}
-            onFollow={handleFollow}
-            onMessage={handleMessage}
-            onView={handleView}
-            isFollowed={followedUsers.has(user.id)}
-          />
-        ))}
+      {/* Connected Members Section */}
+      {followedMentors.length > 0 && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h4 className="text-xl font-semibold text-primary">
+              Your Connected Mentors
+            </h4>
+            <Badge variant="secondary" className="bg-primary/10 text-primary">
+              {followedMentors.length} connected
+            </Badge>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Mentors you're currently following and connected with
+          </p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {followedMentors.map((user) => (
+              <UserCard
+                key={user.id}
+                user={user}
+                onFollow={handleFollow}
+                onMessage={handleMessage}
+                onView={handleView}
+                isFollowed={true}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Suggested Connections Section */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h4 className="text-xl font-semibold">
+            People You May Want to Connect With
+          </h4>
+          <Badge variant="outline">
+            {suggestedMentors.length} available
+          </Badge>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          Discover experienced mentors who can help guide your career journey
+        </p>
+
+        {suggestedMentors.length > 0 ? (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {suggestedMentors.map((user) => (
+              <UserCard
+                key={user.id}
+                user={user}
+                onFollow={handleFollow}
+                onMessage={handleMessage}
+                onView={handleView}
+                isFollowed={false}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <div className="text-muted-foreground mb-2">
+              You're connected with all available mentors!
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Check back later for new mentor suggestions
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
