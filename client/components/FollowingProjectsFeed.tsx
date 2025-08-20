@@ -51,7 +51,12 @@ interface FollowingProjectsFeedProps {
   onJoinProject: (project: any) => void;
 }
 
-export default function FollowingProjectsFeed({ selectedDomain, followedUsers, joinedProjects, onJoinProject }: FollowingProjectsFeedProps) {
+export default function FollowingProjectsFeed({
+  selectedDomain = 'all',
+  followedUsers = new Set<string>(),
+  joinedProjects = [],
+  onJoinProject = () => {}
+}: FollowingProjectsFeedProps) {
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
 
   // Sample project posts from followed users
