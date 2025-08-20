@@ -1,63 +1,97 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  BookOpen, 
-  Users, 
-  Lightbulb, 
-  Target, 
-  Code, 
-  Camera, 
-  Utensils, 
-  Plane, 
-  Music, 
+import {
+  BookOpen,
+  Users,
+  Lightbulb,
+  Target,
+  Code,
+  Camera,
+  Utensils,
+  Plane,
+  Music,
   Palette,
   ArrowRight,
   Star,
   MessageCircle,
-  Shield
+  Shield,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import RotatingProfileCards from "@/components/RotatingProfileCards";
+import ConnectSection from "@/components/ConnectSection";
 
 export default function Index() {
   const domains = [
-    { name: "Software Development", icon: Code, color: "bg-blue-500", students: "2.5k+" },
-    { name: "Content Creation", icon: Camera, color: "bg-pink-500", students: "1.8k+" },
-    { name: "Cooking & Food", icon: Utensils, color: "bg-orange-500", students: "3.2k+" },
-    { name: "Travel & Adventure", icon: Plane, color: "bg-green-500", students: "1.9k+" },
-    { name: "Music & Arts", icon: Music, color: "bg-purple-500", students: "1.4k+" },
-    { name: "Design & Creative", icon: Palette, color: "bg-red-500", students: "2.1k+" },
+    {
+      name: "Software Development",
+      icon: Code,
+      color: "bg-blue-500",
+      students: "2.5k+",
+    },
+    {
+      name: "Content Creation",
+      icon: Camera,
+      color: "bg-pink-500",
+      students: "1.8k+",
+    },
+    {
+      name: "Cooking & Food",
+      icon: Utensils,
+      color: "bg-orange-500",
+      students: "3.2k+",
+    },
+    {
+      name: "Travel & Adventure",
+      icon: Plane,
+      color: "bg-green-500",
+      students: "1.9k+",
+    },
+    {
+      name: "Music & Arts",
+      icon: Music,
+      color: "bg-purple-500",
+      students: "1.4k+",
+    },
+    {
+      name: "Design & Creative",
+      icon: Palette,
+      color: "bg-red-500",
+      students: "2.1k+",
+    },
   ];
 
   const features = [
     {
       icon: Users,
       title: "Peer-to-Peer Learning",
-      description: "Connect with fellow students and recent graduates who've walked the same path."
+      description:
+        "Connect with fellow students and recent graduates who've walked the same path.",
     },
     {
       icon: Target,
       title: "Domain-Specific Guidance",
-      description: "Get targeted advice from mentors specialized in your field of interest."
+      description:
+        "Get targeted advice from mentors specialized in your field of interest.",
     },
     {
       icon: MessageCircle,
       title: "Smart Query Matching",
-      description: "Our AI groups students with similar questions for collaborative learning sessions."
+      description:
+        "Our AI groups students with similar questions for collaborative learning sessions.",
     },
     {
       icon: Shield,
       title: "Quality Content",
-      description: "Advanced filtering ensures you get unique, valuable insights every time."
-    }
+      description:
+        "Advanced filtering ensures you get unique, valuable insights every time.",
+    },
   ];
 
   const stats = [
     { label: "Active Students", value: "15k+" },
     { label: "Expert Mentors", value: "800+" },
     { label: "Learning Domains", value: "25+" },
-    { label: "Success Stories", value: "3.2k+" }
+    { label: "Success Stories", value: "3.2k+" },
   ];
 
   return (
@@ -72,10 +106,30 @@ export default function Index() {
             <span className="text-xl font-bold">Dominic</span>
           </div>
           <div className="hidden md:flex items-center space-x-6">
-            <Link to="/domains" className="text-muted-foreground hover:text-foreground">Domains</Link>
-            <Link to="/mentors" className="text-muted-foreground hover:text-foreground">Mentors</Link>
-            <Link to="/community" className="text-muted-foreground hover:text-foreground">Community</Link>
-            <Link to="/about" className="text-muted-foreground hover:text-foreground">About</Link>
+            <Link
+              to="/domains"
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Domains
+            </Link>
+            <Link
+              to="/mentors"
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Mentors
+            </Link>
+            <Link
+              to="/community"
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Community
+            </Link>
+            <Link
+              to="/about"
+              className="text-muted-foreground hover:text-foreground"
+            >
+              About
+            </Link>
           </div>
           <div className="flex items-center space-x-3">
             <Button variant="ghost">Sign In</Button>
@@ -98,8 +152,9 @@ export default function Index() {
             Grow Together
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-            Join India's largest peer-led learning community. Get mentored by successful students, 
-            share knowledge, and accelerate your journey in tech and beyond.
+            Join India's largest peer-led learning community. Get mentored by
+            successful students, share knowledge, and accelerate your journey in
+            tech and beyond.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link to="/signup">
@@ -112,13 +167,17 @@ export default function Index() {
               Become a Mentor
             </Button>
           </div>
-          
+
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="text-3xl font-bold text-primary">{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
+                <div className="text-3xl font-bold text-primary">
+                  {stat.value}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {stat.label}
+                </div>
               </div>
             ))}
           </div>
@@ -130,12 +189,16 @@ export default function Index() {
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4">Why Choose Dominic?</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Experience learning like never before with our innovative peer-to-peer approach
+            Experience learning like never before with our innovative
+            peer-to-peer approach
           </p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 animate-in slide-up duration-500 delay-200">
           {features.map((feature, index) => (
-            <Card key={index} className="text-center border-0 bg-background/50 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+            <Card
+              key={index}
+              className="text-center border-0 bg-background/50 backdrop-blur-sm hover:shadow-lg transition-all duration-300"
+            >
               <CardHeader>
                 <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
                   <feature.icon className="w-6 h-6 text-primary" />
@@ -143,7 +206,9 @@ export default function Index() {
                 <CardTitle className="text-lg">{feature.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground text-sm">{feature.description}</p>
+                <p className="text-muted-foreground text-sm">
+                  {feature.description}
+                </p>
               </CardContent>
             </Card>
           ))}
@@ -155,15 +220,21 @@ export default function Index() {
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4">Explore Learning Domains</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            From coding to cooking, find mentors and peers in every field that matters to you
+            From coding to cooking, find mentors and peers in every field that
+            matters to you
           </p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in slide-up duration-500 delay-300">
           {domains.map((domain, index) => (
-            <Card key={index} className="group cursor-pointer border-0 bg-background/50 backdrop-blur-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+            <Card
+              key={index}
+              className="group cursor-pointer border-0 bg-background/50 backdrop-blur-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+            >
               <CardContent className="p-6">
                 <div className="flex items-center space-x-4">
-                  <div className={`w-12 h-12 ${domain.color} rounded-lg flex items-center justify-center`}>
+                  <div
+                    className={`w-12 h-12 ${domain.color} rounded-lg flex items-center justify-center`}
+                  >
                     <domain.icon className="w-6 h-6 text-white" />
                   </div>
                   <div className="flex-1">
@@ -193,20 +264,24 @@ export default function Index() {
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4">Meet Our Community</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Connect with talented students and professionals who are shaping the future of tech
+            Connect with talented students and professionals who are shaping the
+            future of tech
           </p>
         </div>
-        <div className="flex justify-center animate-in scale-in duration-500 delay-400">
-          <RotatingProfileCards />
+        <div className="animate-in scale-in duration-500 delay-400">
+          <ConnectSection />
         </div>
       </section>
 
       {/* CTA Section */}
       <section className="container mx-auto px-4 py-20 text-center animate-in slide-up duration-500 delay-500">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-4xl font-bold mb-6">Ready to Transform Your Learning Journey?</h2>
+          <h2 className="text-4xl font-bold mb-6">
+            Ready to Transform Your Learning Journey?
+          </h2>
           <p className="text-xl text-muted-foreground mb-8">
-            Join thousands of students who are already learning, growing, and succeeding together.
+            Join thousands of students who are already learning, growing, and
+            succeeding together.
           </p>
           <Link to="/signup">
             <Button size="lg" className="text-lg px-12 py-6">
@@ -229,7 +304,8 @@ export default function Index() {
                 <span className="text-xl font-bold">Dominic</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                Empowering Indian students through peer-led learning and mentorship.
+                Empowering Indian students through peer-led learning and
+                mentorship.
               </p>
             </div>
             <div>

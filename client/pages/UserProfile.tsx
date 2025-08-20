@@ -31,92 +31,210 @@ import {
   Camera,
   Edit,
   Trophy,
-  Upload
+  Upload,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import FollowingProjectsFeed from "@/components/FollowingProjectsFeed";
+import { generateSampleProfiles } from "@/components/ProfileCard";
 
 export default function UserProfile() {
+  const { userId } = useParams();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userOnboardingData, setUserOnboardingData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isConnected, setIsConnected] = useState(false);
+
+  // Check if this is another user's profile (has userId param)
+  const isOtherUserProfile = !!userId;
+
+  // Generate sample profiles for other users
+  const sampleProfiles = generateSampleProfiles();
+  const targetProfile = userId
+    ? sampleProfiles.find((p) => p.id === userId)
+    : null;
 
   // Load user onboarding data from localStorage
   useEffect(() => {
     const loadData = async () => {
       try {
-        const savedData = localStorage.getItem('userOnboardingData');
+        const savedData = localStorage.getItem("userOnboardingData");
         if (savedData) {
           setUserOnboardingData(JSON.parse(savedData));
         }
       } catch (error) {
-        console.error('Error loading user data:', error);
+        console.error("Error loading user data:", error);
       } finally {
         setIsLoading(false);
       }
     };
-    
+
     loadData();
   }, []);
 
-  // Mock user data - in real app this would come from backend
-  const user = {
-    name: "Aditya Singh",
-    title: "Goal-Driven Developer | React Specialist | Community Mentor",
-    level: 12,
-    avatar: "AS",
-    location: "Mumbai, India",
-    joinedDate: "March 2023",
-    streak: 15,
-    github: "adityasingh",
-    linkedin: "aditya-singh-dev",
-    bio: "Passionate full-stack developer with expertise in React, Node.js, and modern web technologies. Love building scalable applications and mentoring upcoming developers.",
-    overallProgress: 68,
-    activeGoals: 3,
-    completedGoals: 12,
-    stats: {
-      totalCollaborations: 24,
-      rating: 4.8,
-      activeProjects: 3,
-      testimonials: 18
-    },
-    weeklyStats: {
-      focusTime: "28h",
-      tasksDone: 15,
-      milestones: 3,
-      weeklyProgress: 12
-    },
-    currentProjects: [
-      {
-        name: "E-commerce Dashboard",
-        progress: 75,
-        status: "In Progress",
-        priority: "High",
-        dueDate: "Dec 15, 2024",
-        skills: ["React", "TypeScript", "Tailwind"]
+  // Function to get user data - either current user or target profile
+  const getUserData = () => {
+    if (isOtherUserProfile && targetProfile) {
+      return {
+        name: targetProfile.name,
+        title: targetProfile.title,
+        level: Math.floor(Math.random() * 15) + 5,
+        avatar: targetProfile.avatar,
+        location: [
+          "Mumbai, India",
+          "Delhi, India",
+          "Bangalore, India",
+          "Pune, India",
+          "Chennai, India",
+        ][Math.floor(Math.random() * 5)],
+        joinedDate: [
+          "March 2023",
+          "January 2023",
+          "June 2022",
+          "September 2023",
+          "November 2022",
+        ][Math.floor(Math.random() * 5)],
+        streak: Math.floor(Math.random() * 30) + 5,
+        github: targetProfile.name.toLowerCase().replace(" ", ""),
+        linkedin: targetProfile.name.toLowerCase().replace(" ", "-"),
+        bio: `Passionate developer specializing in ${targetProfile.domains.join(", ")}. ${targetProfile.experience} of experience in building scalable applications and working with modern technologies.`,
+        overallProgress: targetProfile.rating * 20,
+        activeGoals: Math.floor(Math.random() * 5) + 2,
+        completedGoals: Math.floor(Math.random() * 20) + 5,
+        stats: {
+          totalCollaborations: targetProfile.projectsCollaborated,
+          rating: targetProfile.rating,
+          activeProjects: Math.floor(Math.random() * 4) + 1,
+          testimonials: Math.floor(Math.random() * 25) + 5,
+        },
+        weeklyStats: {
+          focusTime: Math.floor(Math.random() * 30) + 10 + "h",
+          tasksDone: Math.floor(Math.random() * 20) + 5,
+          milestones: Math.floor(Math.random() * 5) + 1,
+          weeklyProgress: Math.floor(Math.random() * 20) + 5,
+        },
+        skills: targetProfile.skills,
+        domains: targetProfile.domains,
+        currentProjects: [
+          {
+            name: `${targetProfile.domains[0]} Project Alpha`,
+            progress: Math.floor(Math.random() * 50) + 50,
+            status: "In Progress",
+            priority: "High",
+            dueDate: "Dec 15, 2024",
+            skills: targetProfile.skills.slice(0, 3),
+          },
+          {
+            name: `${targetProfile.company} Integration`,
+            progress: Math.floor(Math.random() * 40) + 20,
+            status: "Planning",
+            priority: "Medium",
+            dueDate: "Jan 20, 2025",
+            skills: targetProfile.skills.slice(1, 4),
+          },
+        ],
+        recentCollaborations: [
+          {
+            name: "Rajesh Kumar",
+            project: "E-commerce Platform",
+            rating: 5,
+            feedback: "Excellent frontend work and great communication",
+            time: "2 days ago",
+          },
+          {
+            name: "Priya Sharma",
+            project: "Mobile Banking App",
+            rating: 4,
+            feedback: "Strong technical skills, delivered on time",
+            time: "1 week ago",
+          },
+        ],
+      };
+    }
+
+    // Default current user data
+    return {
+      name: "Aditya Singh",
+      title: "Goal-Driven Developer | React Specialist | Community Mentor",
+      level: 12,
+      avatar: "AS",
+      location: "Mumbai, India",
+      joinedDate: "March 2023",
+      streak: 15,
+      github: "adityasingh",
+      linkedin: "aditya-singh-dev",
+      bio: "Passionate full-stack developer with expertise in React, Node.js, and modern web technologies. Love building scalable applications and mentoring upcoming developers.",
+      overallProgress: 68,
+      activeGoals: 3,
+      completedGoals: 12,
+      stats: {
+        totalCollaborations: 24,
+        rating: 4.8,
+        activeProjects: 3,
+        testimonials: 18,
       },
-      {
-        name: "Mobile Learning App",
-        progress: 45,
-        status: "In Progress",
-        priority: "Medium",
-        dueDate: "Jan 20, 2025",
-        skills: ["React Native", "Node.js", "MongoDB"]
+      weeklyStats: {
+        focusTime: "28h",
+        tasksDone: 15,
+        milestones: 3,
+        weeklyProgress: 12,
       },
-      {
-        name: "AI Chat Platform",
-        progress: 30,
-        status: "Planning",
-        priority: "Low",
-        dueDate: "Feb 10, 2025",
-        skills: ["Python", "FastAPI", "OpenAI"]
-      }
-    ],
-    recentCollaborations: [
-      { name: "Rajesh Kumar", project: "E-commerce Platform", rating: 5, feedback: "Excellent frontend work and great communication", time: "2 days ago" },
-      { name: "Priya Sharma", project: "Mobile Banking App", rating: 4, feedback: "Strong technical skills, delivered on time", time: "1 week ago" },
-      { name: "Arjun Patel", project: "Data Analytics Dashboard", rating: 5, feedback: "Outstanding problem-solving abilities", time: "2 weeks ago" }
-    ]
+      currentProjects: [
+        {
+          name: "E-commerce Dashboard",
+          progress: 75,
+          status: "In Progress",
+          priority: "High",
+          dueDate: "Dec 15, 2024",
+          skills: ["React", "TypeScript", "Tailwind"],
+        },
+        {
+          name: "Mobile Learning App",
+          progress: 45,
+          status: "In Progress",
+          priority: "Medium",
+          dueDate: "Jan 20, 2025",
+          skills: ["React Native", "Node.js", "MongoDB"],
+        },
+        {
+          name: "AI Chat Platform",
+          progress: 30,
+          status: "Planning",
+          priority: "Low",
+          dueDate: "Feb 10, 2025",
+          skills: ["Python", "FastAPI", "OpenAI"],
+        },
+      ],
+      recentCollaborations: [
+        {
+          name: "Rajesh Kumar",
+          project: "E-commerce Platform",
+          rating: 5,
+          feedback: "Excellent frontend work and great communication",
+          time: "2 days ago",
+        },
+        {
+          name: "Priya Sharma",
+          project: "Mobile Banking App",
+          rating: 4,
+          feedback: "Strong technical skills, delivered on time",
+          time: "1 week ago",
+        },
+        {
+          name: "Arjun Patel",
+          project: "Data Analytics Dashboard",
+          rating: 5,
+          feedback: "Outstanding problem-solving abilities",
+          time: "2 weeks ago",
+        },
+      ],
+    };
+  };
+
+  const user = getUserData();
+
+  const handleConnect = () => {
+    setIsConnected(!isConnected);
+    // In real app, this would make an API call to connect/disconnect
   };
 
   if (isLoading) {
@@ -146,24 +264,47 @@ export default function UserProfile() {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-6">
-              <Link to="/dashboard" className="text-gray-300 hover:text-white transition-colors">Dashboard</Link>
-              <Link to="/community" className="text-gray-300 hover:text-white transition-colors">Community</Link>
-              <Link to="/mentors" className="text-gray-300 hover:text-white transition-colors">Mentors</Link>
+              <Link
+                to="/dashboard"
+                className="text-gray-300 hover:text-white transition-colors"
+              >
+                Dashboard
+              </Link>
+              <Link
+                to="/community"
+                className="text-gray-300 hover:text-white transition-colors"
+              >
+                Community
+              </Link>
+              <Link
+                to="/mentors"
+                className="text-gray-300 hover:text-white transition-colors"
+              >
+                Mentors
+              </Link>
             </div>
 
             {/* Right Side */}
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-gray-300 hover:text-white"
+              >
                 <Bell className="w-4 h-4" />
               </Button>
-              
+
               {/* Mobile Menu Button */}
               <div className="md:hidden">
                 <button
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                   className="text-gray-300 hover:text-white"
                 >
-                  {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                  {mobileMenuOpen ? (
+                    <X className="w-5 h-5" />
+                  ) : (
+                    <Menu className="w-5 h-5" />
+                  )}
                 </button>
               </div>
 
@@ -182,9 +323,24 @@ export default function UserProfile() {
           {mobileMenuOpen && (
             <div className="md:hidden border-t border-gray-800 mt-4 pt-4">
               <div className="space-y-2">
-                <Link to="/dashboard" className="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg">Dashboard</Link>
-                <Link to="/community" className="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg">Community</Link>
-                <Link to="/mentors" className="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg">Mentors</Link>
+                <Link
+                  to="/dashboard"
+                  className="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg"
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  to="/community"
+                  className="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg"
+                >
+                  Community
+                </Link>
+                <Link
+                  to="/mentors"
+                  className="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg"
+                >
+                  Mentors
+                </Link>
               </div>
             </div>
           )}
@@ -221,14 +377,39 @@ export default function UserProfile() {
                         </Badge>
                       </div>
                       <p className="text-lg text-gray-300 mb-3">{user.title}</p>
-                      <p className="text-gray-400 leading-relaxed max-w-2xl">{user.bio}</p>
+                      <p className="text-gray-400 leading-relaxed max-w-2xl">
+                        {user.bio}
+                      </p>
                     </div>
-                    <Button className="bg-primary hover:bg-primary/90">
-                      <Edit className="w-4 h-4 mr-2" />
-                      Edit Profile
-                    </Button>
+                    {isOtherUserProfile ? (
+                      <Button
+                        onClick={handleConnect}
+                        className={
+                          isConnected
+                            ? "bg-green-600 hover:bg-green-700"
+                            : "bg-primary hover:bg-primary/90"
+                        }
+                      >
+                        {isConnected ? (
+                          <>
+                            <CheckCircle className="w-4 h-4 mr-2" />
+                            Connected
+                          </>
+                        ) : (
+                          <>
+                            <Users className="w-4 h-4 mr-2" />
+                            Connect
+                          </>
+                        )}
+                      </Button>
+                    ) : (
+                      <Button className="bg-primary hover:bg-primary/90">
+                        <Edit className="w-4 h-4 mr-2" />
+                        Edit Profile
+                      </Button>
+                    )}
                   </div>
-                  
+
                   <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400">
                     <div className="flex items-center gap-1">
                       <MapPin className="w-4 h-4" />
@@ -246,7 +427,7 @@ export default function UserProfile() {
 
                   {/* Social Links */}
                   <div className="flex items-center gap-3">
-                    <a 
+                    <a
                       href={`https://github.com/${user.github}`}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -255,7 +436,7 @@ export default function UserProfile() {
                       <Github className="w-4 h-4" />
                       GitHub
                     </a>
-                    <a 
+                    <a
                       href={`https://linkedin.com/in/${user.linkedin}`}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -276,18 +457,27 @@ export default function UserProfile() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
               <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-blue-400 mb-2">{user.stats.totalCollaborations}</div>
-                <div className="text-sm text-gray-400">Total Collaborations</div>
+                <div className="text-3xl font-bold text-blue-400 mb-2">
+                  {user.stats.totalCollaborations}
+                </div>
+                <div className="text-sm text-gray-400">
+                  Total Collaborations
+                </div>
               </CardContent>
             </Card>
-            
+
             <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
               <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-yellow-400 mb-2">{user.stats.rating}</div>
+                <div className="text-3xl font-bold text-yellow-400 mb-2">
+                  {user.stats.rating}
+                </div>
                 <div className="text-sm text-gray-400">Rating</div>
                 <div className="flex justify-center mt-1">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className={`w-3 h-3 ${i < Math.floor(user.stats.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-500'}`} />
+                    <Star
+                      key={i}
+                      className={`w-3 h-3 ${i < Math.floor(user.stats.rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-500"}`}
+                    />
                   ))}
                 </div>
               </CardContent>
@@ -295,14 +485,18 @@ export default function UserProfile() {
 
             <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
               <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-green-400 mb-2">{user.stats.activeProjects}</div>
+                <div className="text-3xl font-bold text-green-400 mb-2">
+                  {user.stats.activeProjects}
+                </div>
                 <div className="text-sm text-gray-400">Active Projects</div>
               </CardContent>
             </Card>
 
             <Card className="bg-gray-800 border-gray-700 hover:bg-gray-750 transition-colors">
               <CardContent className="p-6 text-center">
-                <div className="text-3xl font-bold text-purple-400 mb-2">{user.stats.testimonials}</div>
+                <div className="text-3xl font-bold text-purple-400 mb-2">
+                  {user.stats.testimonials}
+                </div>
                 <div className="text-sm text-gray-400">Testimonials</div>
               </CardContent>
             </Card>
@@ -329,15 +523,21 @@ export default function UserProfile() {
                   </h3>
                   <div className="grid grid-cols-3 gap-4">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-green-400">{user.weeklyStats.focusTime}</div>
+                      <div className="text-2xl font-bold text-green-400">
+                        {user.weeklyStats.focusTime}
+                      </div>
                       <div className="text-xs text-gray-400">Focus Time</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-blue-400">{user.weeklyStats.tasksDone}</div>
+                      <div className="text-2xl font-bold text-blue-400">
+                        {user.weeklyStats.tasksDone}
+                      </div>
                       <div className="text-xs text-gray-400">Tasks Done</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-yellow-400">{user.weeklyStats.milestones}</div>
+                      <div className="text-2xl font-bold text-yellow-400">
+                        {user.weeklyStats.milestones}
+                      </div>
                       <div className="text-xs text-gray-400">Milestones</div>
                     </div>
                   </div>
@@ -346,29 +546,62 @@ export default function UserProfile() {
                 {/* Weekly Progress */}
                 <div>
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm text-gray-400">Weekly Progress</span>
-                    <span className="text-sm font-bold text-green-400">+{user.weeklyStats.weeklyProgress}%</span>
+                    <span className="text-sm text-gray-400">
+                      Weekly Progress
+                    </span>
+                    <span className="text-sm font-bold text-green-400">
+                      +{user.weeklyStats.weeklyProgress}%
+                    </span>
                   </div>
                   <Progress value={75} className="h-2 bg-gray-700" />
                 </div>
 
                 {/* Recent Activity */}
                 <div>
-                  <h4 className="font-semibold mb-3 text-sm text-gray-400">Recent Activity</h4>
+                  <h4 className="font-semibold mb-3 text-sm text-gray-400">
+                    Recent Activity
+                  </h4>
                   <div className="space-y-3">
                     {[
-                      { id: 1, action: "Completed React Advanced Patterns", time: "2 hours ago", type: "completed" },
-                      { id: 2, action: "Started TypeScript Deep Dive", time: "5 hours ago", type: "started" },
-                      { id: 3, action: "Mentored 3 junior developers", time: "1 day ago", type: "mentor" }
+                      {
+                        id: 1,
+                        action: "Completed React Advanced Patterns",
+                        time: "2 hours ago",
+                        type: "completed",
+                      },
+                      {
+                        id: 2,
+                        action: "Started TypeScript Deep Dive",
+                        time: "5 hours ago",
+                        type: "started",
+                      },
+                      {
+                        id: 3,
+                        action: "Mentored 3 junior developers",
+                        time: "1 day ago",
+                        type: "mentor",
+                      },
                     ].map((activity) => (
-                      <div key={activity.id} className="flex items-center gap-3 p-3 bg-gray-700/50 rounded-lg transition-colors hover:bg-gray-700/70">
-                        <div className={`w-2 h-2 rounded-full ${
-                          activity.type === 'completed' ? 'bg-green-400' :
-                          activity.type === 'started' ? 'bg-blue-400' : 'bg-orange-400'
-                        }`} />
+                      <div
+                        key={activity.id}
+                        className="flex items-center gap-3 p-3 bg-gray-700/50 rounded-lg transition-colors hover:bg-gray-700/70"
+                      >
+                        <div
+                          className={`w-2 h-2 rounded-full ${
+                            activity.type === "completed"
+                              ? "bg-green-400"
+                              : activity.type === "started"
+                                ? "bg-blue-400"
+                                : "bg-orange-400"
+                          }`}
+                        />
                         <div className="flex-1">
-                          <div className="text-sm font-medium">{activity.action}</div>
-                          <div className="text-xs text-gray-400">{activity.time}</div>
+                          <div className="text-sm font-medium">
+                            {activity.action}
+                          </div>
+                          <div className="text-xs text-gray-400">
+                            {activity.time}
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -393,33 +626,64 @@ export default function UserProfile() {
               </CardHeader>
               <CardContent className="space-y-4">
                 {user.currentProjects.map((project, index) => (
-                  <Card key={index} className="bg-gray-700 border-gray-600 hover:bg-gray-650 transition-colors">
+                  <Card
+                    key={index}
+                    className="bg-gray-700 border-gray-600 hover:bg-gray-650 transition-colors"
+                  >
                     <CardContent className="p-4">
                       <div className="flex justify-between items-start mb-3">
                         <div className="flex-1">
-                          <h3 className="font-semibold text-lg">{project.name}</h3>
+                          <h3 className="font-semibold text-lg">
+                            {project.name}
+                          </h3>
                           <div className="flex items-center gap-2 mt-1">
-                            <Badge variant={project.status === "In Progress" ? "default" : "secondary"} className="text-xs">
+                            <Badge
+                              variant={
+                                project.status === "In Progress"
+                                  ? "default"
+                                  : "secondary"
+                              }
+                              className="text-xs"
+                            >
                               {project.status}
                             </Badge>
-                            <Badge variant={project.priority === "High" ? "destructive" : project.priority === "Medium" ? "default" : "outline"} className="text-xs">
+                            <Badge
+                              variant={
+                                project.priority === "High"
+                                  ? "destructive"
+                                  : project.priority === "Medium"
+                                    ? "default"
+                                    : "outline"
+                              }
+                              className="text-xs"
+                            >
                               {project.priority}
                             </Badge>
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className="text-2xl font-bold text-green-400">{project.progress}%</div>
-                          <div className="text-xs text-gray-400">Due {project.dueDate}</div>
+                          <div className="text-2xl font-bold text-green-400">
+                            {project.progress}%
+                          </div>
+                          <div className="text-xs text-gray-400">
+                            Due {project.dueDate}
+                          </div>
                         </div>
                       </div>
-                      
+
                       <Progress value={project.progress} className="h-2 mb-3" />
-                      
+
                       <div>
-                        <div className="text-xs text-gray-400 mb-2">Skills Working With:</div>
+                        <div className="text-xs text-gray-400 mb-2">
+                          Skills Working With:
+                        </div>
                         <div className="flex flex-wrap gap-1">
                           {project.skills.map((skill, skillIndex) => (
-                            <Badge key={skillIndex} variant="outline" className="text-xs bg-gray-600 border-gray-500">
+                            <Badge
+                              key={skillIndex}
+                              variant="outline"
+                              className="text-xs bg-gray-600 border-gray-500"
+                            >
                               {skill}
                             </Badge>
                           ))}
@@ -442,7 +706,9 @@ export default function UserProfile() {
                 <CardTitle className="flex items-center gap-2">
                   <Users className="w-5 h-5 text-primary" />
                   Projects from People You Follow
-                  <Badge variant="secondary" className="text-xs animate-pulse">Live Updates</Badge>
+                  <Badge variant="secondary" className="text-xs animate-pulse">
+                    Live Updates
+                  </Badge>
                 </CardTitle>
               </CardHeader>
               <CardContent className="max-h-[500px] overflow-y-auto custom-scrollbar">
@@ -461,29 +727,43 @@ export default function UserProfile() {
               <CardContent>
                 <div className="space-y-4">
                   {user.recentCollaborations.map((collab, index) => (
-                    <div 
-                      key={index} 
+                    <div
+                      key={index}
                       className="p-4 bg-gray-700/50 rounded-lg border-l-4 border-primary transition-all duration-300 hover:scale-[1.02] hover:bg-gray-700 cursor-pointer"
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center space-x-3 mb-2">
                             <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-xs font-semibold">
-                              {collab.name.split(' ').map(n => n[0]).join('')}
+                              {collab.name
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")}
                             </div>
                             <div>
-                              <div className="font-medium text-sm">{collab.name}</div>
-                              <div className="text-xs text-gray-400">{collab.project}</div>
+                              <div className="font-medium text-sm">
+                                {collab.name}
+                              </div>
+                              <div className="text-xs text-gray-400">
+                                {collab.project}
+                              </div>
                             </div>
                           </div>
-                          <p className="text-xs text-gray-400 italic mb-2">"{collab.feedback}"</p>
+                          <p className="text-xs text-gray-400 italic mb-2">
+                            "{collab.feedback}"
+                          </p>
                           <div className="flex items-center justify-between">
                             <div className="flex">
                               {[...Array(5)].map((_, i) => (
-                                <Star key={i} className={`w-3 h-3 ${i < collab.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-500'}`} />
+                                <Star
+                                  key={i}
+                                  className={`w-3 h-3 ${i < collab.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-500"}`}
+                                />
                               ))}
                             </div>
-                            <span className="text-xs text-gray-400">{collab.time}</span>
+                            <span className="text-xs text-gray-400">
+                              {collab.time}
+                            </span>
                           </div>
                         </div>
                       </div>
