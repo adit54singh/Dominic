@@ -357,7 +357,29 @@ const ConnectSection = memo(() => {
         responseTime: "~2 hrs",
         expertise: ["React", "Node.js", "MongoDB", "TypeScript", "AWS"],
         bio: "Former Amazon SDE helping students break into FAANG. Specialized in system design and coding interviews.",
+        detailedBio: "With 8+ years at Amazon and Microsoft, I've helped over 200 students land jobs at top tech companies. I specialize in system design, data structures, and behavioral interviews. My approach focuses on building confidence while mastering technical skills.",
+        yearsExperience: 8,
+        companies: ["Amazon", "Microsoft"],
         isOnline: true,
+        projects: [
+          {
+            id: "p1",
+            title: "E-commerce Microservices",
+            description: "Building a scalable e-commerce platform using microservices architecture with React, Node.js, and AWS.",
+            technologies: ["React", "Node.js", "AWS", "Docker", "MongoDB"],
+            seekingRoles: ["Frontend Dev", "Backend Dev"],
+            membersCount: 4,
+            deadline: "March 15, 2024"
+          },
+          {
+            id: "p2",
+            title: "Real-time Chat App",
+            description: "A real-time messaging application with video calls, file sharing, and group chat features.",
+            technologies: ["React", "Socket.io", "WebRTC"],
+            seekingRoles: ["Frontend Dev", "UI/UX"],
+            membersCount: 2
+          }
+        ]
       },
       {
         id: "2",
@@ -370,7 +392,20 @@ const ConnectSection = memo(() => {
         responseTime: "~1 hr",
         expertise: ["Python", "Machine Learning", "TensorFlow", "SQL"],
         bio: "ML Engineer at Google. Passionate about teaching data science and helping students land their dream jobs.",
+        detailedBio: "Senior Data Scientist at Google with expertise in machine learning, deep learning, and big data analytics. I love mentoring students transitioning into data science careers and have helped many land roles at FAANG companies.",
+        yearsExperience: 6,
+        companies: ["Google", "Flipkart"],
         isOnline: false,
+        projects: [
+          {
+            id: "p3",
+            title: "Recommendation Engine",
+            description: "Building a machine learning recommendation system for e-commerce using collaborative filtering and deep learning.",
+            technologies: ["Python", "TensorFlow", "Pandas", "AWS"],
+            seekingRoles: ["ML Engineer", "Data Analyst"],
+            membersCount: 3
+          }
+        ]
       },
       {
         id: "3",
@@ -396,7 +431,21 @@ const ConnectSection = memo(() => {
         responseTime: "~1 hr",
         expertise: ["Figma", "Design Systems", "User Research", "Prototyping"],
         bio: "Lead designer at Zomato. Helping students build beautiful and user-friendly interfaces.",
+        detailedBio: "Lead Product Designer at Zomato with 5+ years of experience in creating user-centered designs. I specialize in design systems, user research, and mentoring aspiring designers to break into top product companies.",
+        yearsExperience: 5,
+        companies: ["Zomato", "Swiggy"],
         isOnline: true,
+        projects: [
+          {
+            id: "p4",
+            title: "Design System Library",
+            description: "Creating a comprehensive design system library with reusable components for web and mobile applications.",
+            technologies: ["Figma", "React", "Storybook", "Tokens"],
+            seekingRoles: ["UI Designer", "Frontend Dev"],
+            membersCount: 5,
+            deadline: "April 1, 2024"
+          }
+        ]
       },
       {
         id: "5",
@@ -464,12 +513,17 @@ const ConnectSection = memo(() => {
     console.log("View profile:", userId);
   }, []);
 
+  const handleJoinProject = useCallback((projectId: string, userId: string) => {
+    console.log("Join project:", projectId, "by user:", userId);
+    // Here you would implement the actual project joining logic
+  }, []);
+
   return (
     <div className="space-y-8">
       <div className="text-center">
-        <h3 className="text-2xl font-bold mb-2">Connect with Mentors</h3>
+        <h3 className="text-2xl font-bold mb-2">Connect with Members</h3>
         <p className="text-muted-foreground">
-          Learn from experienced professionals who've been in your shoes
+          Learn from experienced professionals and collaborate on exciting projects
         </p>
       </div>
 
@@ -478,24 +532,24 @@ const ConnectSection = memo(() => {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h4 className="text-xl font-semibold text-primary">
-              Your Connected Mentors
+              Your Connected Members
             </h4>
             <Badge variant="secondary" className="bg-primary/10 text-primary">
               {followedMentors.length} connected
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground">
-            Mentors you're currently following and connected with
+            Members you're following with their detailed profiles and open projects
           </p>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid lg:grid-cols-2 gap-8">
             {followedMentors.map((user) => (
-              <UserCard
+              <ExpandedUserCard
                 key={user.id}
                 user={user}
                 onFollow={handleFollow}
                 onMessage={handleMessage}
                 onView={handleView}
-                isFollowed={true}
+                onJoinProject={handleJoinProject}
               />
             ))}
           </div>
@@ -513,7 +567,7 @@ const ConnectSection = memo(() => {
           </Badge>
         </div>
         <p className="text-sm text-muted-foreground">
-          Discover experienced mentors who can help guide your career journey
+          Discover experienced members who can help guide your career journey
         </p>
 
         {suggestedMentors.length > 0 ? (
