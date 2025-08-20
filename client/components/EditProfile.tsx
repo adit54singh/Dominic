@@ -131,12 +131,13 @@ export default function EditProfile({ onBack, onSave }: EditProfileProps) {
     if (savedData) {
       const data = JSON.parse(savedData);
       setProfile({
-        name: "Aditya Singh", // In real app, this would come from auth
-        email: "aditya@example.com", // In real app, this would come from auth
-        title: getUserTitle(data),
-        company: "Tech Startup",
-        location: "Mumbai, India",
-        bio: `Passionate about ${data.domains?.map((d: string) => techDomains.find(td => td.id === d)?.name || d).join(", ").toLowerCase()} with expertise in modern technologies. Love building scalable solutions and mentoring upcoming developers in the community.`,
+        name: data.name || "Aditya Singh", // In real app, this would come from auth
+        email: data.email || "aditya@example.com", // In real app, this would come from auth
+        title: data.title || getUserTitle(data),
+        company: data.company || "Tech Startup",
+        location: data.location || "Mumbai, India",
+        bio: data.bio || `Passionate about ${data.domains?.map((d: string) => techDomains.find(td => td.id === d)?.name || d).join(", ").toLowerCase()} with expertise in modern technologies. Love building scalable solutions and mentoring upcoming developers in the community.`,
+        avatar: data.avatar || "",
         skills: data.skills || [],
         domains: data.domains || [],
         experience: data.experience || "",
