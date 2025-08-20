@@ -1777,9 +1777,17 @@ export default function UserDashboard() {
                   className="flex items-center space-x-2 p-1 rounded-full hover:bg-muted/50 transition-all duration-200"
                 >
                   <Avatar className="w-8 h-8">
-                    <AvatarFallback className="bg-primary text-white text-sm">
-                      {user.avatar}
-                    </AvatarFallback>
+                    {userOnboardingData?.avatar ? (
+                      <img
+                        src={userOnboardingData.avatar}
+                        alt="Profile"
+                        className="w-full h-full object-cover rounded-full"
+                      />
+                    ) : (
+                      <AvatarFallback className="bg-primary text-white text-sm">
+                        {user.avatar}
+                      </AvatarFallback>
+                    )}
                   </Avatar>
                   <ChevronDown className={`w-3 h-3 text-muted-foreground transition-transform duration-200 ${userDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
@@ -1790,9 +1798,17 @@ export default function UserDashboard() {
                     <div className="p-4 border-b border-primary/10">
                       <div className="flex items-center space-x-3">
                         <Avatar className="w-10 h-10">
-                          <AvatarFallback className="bg-primary text-white">
-                            {user.avatar}
-                          </AvatarFallback>
+                          {userOnboardingData?.avatar ? (
+                            <img
+                              src={userOnboardingData.avatar}
+                              alt="Profile"
+                              className="w-full h-full object-cover rounded-full"
+                            />
+                          ) : (
+                            <AvatarFallback className="bg-primary text-white">
+                              {user.avatar}
+                            </AvatarFallback>
+                          )}
                         </Avatar>
                         <div>
                           <div className="font-semibold text-sm">{user.name}</div>
