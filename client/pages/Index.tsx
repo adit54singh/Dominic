@@ -16,9 +16,12 @@ import {
   Star,
   MessageCircle,
   Shield,
+  X,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import ConnectSection from "@/components/ConnectSection";
+import AnimatedDomains from "@/components/AnimatedDomains";
+import { useState } from "react";
 
 export default function Index() {
   const domains = [
