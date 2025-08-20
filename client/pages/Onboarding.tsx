@@ -740,7 +740,7 @@ export default function Onboarding() {
 
     const getRandomStats = () => ({
       projectsCollaborated: Math.floor(Math.random() * 30) + 5,
-      mentorshipHours: Math.floor(Math.random() * 100) + 20
+      rating: Math.round((Math.random() * 1.5 + 3.5) * 10) / 10 // Random rating between 3.5-5.0
     });
 
     const userProfile = {
