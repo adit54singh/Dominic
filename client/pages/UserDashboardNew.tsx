@@ -27,6 +27,8 @@ import {
   GitBranch,
   Zap,
   Award,
+  Heart,
+  Share,
   Palette,
   Camera,
   Utensils,
