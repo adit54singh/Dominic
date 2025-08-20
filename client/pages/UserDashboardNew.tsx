@@ -1777,63 +1777,78 @@ export default function UserDashboard() {
             <div className="flex items-center space-x-4">
               {/* Domain Switcher Logo - Desktop */}
               {userDomains && userDomains.length > 0 && (
-                <div className="hidden md:block relative group">
-                  {/* Logo that shows on hover */}
-                  <div className="flex items-center space-x-2 px-3 py-2 bg-primary/10 border border-primary/30 rounded-lg cursor-pointer transition-all duration-200 group-hover:bg-primary/20 group-hover:border-primary/50">
+                <div className="hidden md:block relative">
+                  {/* Logo button */}
+                  <button
+                    onClick={() => setDomainSwitcherOpen(!domainSwitcherOpen)}
+                    className="flex items-center space-x-2 px-3 py-2 bg-primary/10 border border-primary/30 rounded-lg cursor-pointer transition-all duration-200 hover:bg-primary/20 hover:border-primary/50"
+                  >
                     <div className={`w-3 h-3 rounded-full ${getCurrentDomain().color} animate-pulse`}></div>
                     <div className="text-xs font-mono font-semibold text-primary">
                       {getCurrentDomain().name.split(' ').map(word => word[0]).join('')}
                     </div>
-                    <div className="text-xs text-muted-foreground hidden group-hover:block transition-all duration-200">
+                    <div className="text-xs text-muted-foreground">
                       Switch Domain
                     </div>
-                  </div>
+                    <ChevronDown className={`w-3 h-3 text-muted-foreground transition-transform duration-200 ${domainSwitcherOpen ? 'rotate-180' : ''}`} />
+                  </button>
 
-                  {/* Dropdown that appears on hover - Fixed positioning */}
-                  <div className="absolute top-full right-0 mt-2 w-72 bg-background/95 backdrop-blur-sm border border-primary/20 rounded-lg overflow-hidden z-[60] shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 pointer-events-none group-hover:pointer-events-auto">
-                    <div className="p-3 border-b border-primary/10">
-                      <div className="text-sm font-semibold text-primary">Switch Domain</div>
-                      <div className="text-xs text-muted-foreground">Choose your active learning domain</div>
-                    </div>
-                    <div className="max-h-80 overflow-y-auto">
-                      {userDomains.map((domain, index) => (
-                        <button
-                          key={domain.id}
-                          onClick={() => {
-                            setSelectedDomain(domain.id);
-                          }}
-                          className={`w-full p-3 text-left hover:bg-primary/10 transition-all duration-200 border-b border-primary/5 last:border-b-0 ${
-                            selectedDomain === domain.id ? 'bg-primary/15' : ''
-                          } transform hover:scale-[1.02]`}
-                          style={{
-                            animationDelay: `${index * 50}ms`,
-                            transform: 'translateZ(0)' // Force hardware acceleration
-                          }}
-                        >
-                          <div className="flex items-center space-x-3">
-                            <div className={`w-4 h-4 rounded-full ${domain.color} ${selectedDomain === domain.id ? 'animate-pulse' : ''} flex items-center justify-center`}>
-                              <domain.icon className="w-2 h-2 text-white" />
-                            </div>
-                            <div className="flex-1">
-                              <div className="font-medium text-sm">{domain.name}</div>
-                              <div className="text-xs text-muted-foreground">{domain.progress}% complete</div>
-                              {userOnboardingData && (
-                                <div className="text-xs text-primary mt-1">
-                                  Skills: {userOnboardingData.skills?.slice(0, 2).join(', ') || 'None'}
+                  {/* Dropdown that appears on click */}
+                  {domainSwitcherOpen && (
+                    <div className="absolute top-full right-0 mt-2 w-72 bg-background/95 backdrop-blur-sm border border-primary/20 rounded-lg overflow-hidden z-[60] shadow-2xl animate-in slide-in-from-top-2 duration-300">
+                      <div className="p-3 border-b border-primary/10">
+                        <div className="text-sm font-semibold text-primary">Switch Domain</div>
+                        <div className="text-xs text-muted-foreground">Choose your active learning domain</div>
+                      </div>
+                      <div className="max-h-80 overflow-y-auto">
+                        {userDomains.map((domain, index) => (
+                          <button
+                            key={domain.id}
+                            onClick={() => {
+                              setSelectedDomain(domain.id);
+                              setDomainSwitcherOpen(false);
+                            }}
+                            className={`w-full p-3 text-left hover:bg-primary/10 transition-all duration-200 border-b border-primary/5 last:border-b-0 ${
+                              selectedDomain === domain.id ? 'bg-primary/15' : ''
+                            } transform hover:scale-[1.02]`}
+                            style={{
+                              animationDelay: `${index * 50}ms`,
+                              transform: 'translateZ(0)' // Force hardware acceleration
+                            }}
+                          >
+                            <div className="flex items-center space-x-3">
+                              <div className={`w-4 h-4 rounded-full ${domain.color} ${selectedDomain === domain.id ? 'animate-pulse' : ''} flex items-center justify-center`}>
+                                <domain.icon className="w-2 h-2 text-white" />
+                              </div>
+                              <div className="flex-1">
+                                <div className="font-medium text-sm">{domain.name}</div>
+                                <div className="text-xs text-muted-foreground">{domain.progress}% complete</div>
+                                {userOnboardingData && (
+                                  <div className="text-xs text-primary mt-1">
+                                    Skills: {userOnboardingData.skills?.slice(0, 2).join(', ') || 'None'}
+                                  </div>
+                                )}
+                              </div>
+                              {selectedDomain === domain.id && (
+                                <div className="ml-auto flex items-center space-x-1">
+                                  <div className="w-2 h-2 bg-primary rounded-full animate-ping"></div>
+                                  <CheckCircle className="w-4 h-4 text-primary" />
                                 </div>
                               )}
                             </div>
-                            {selectedDomain === domain.id && (
-                              <div className="ml-auto flex items-center space-x-1">
-                                <div className="w-2 h-2 bg-primary rounded-full animate-ping"></div>
-                                <CheckCircle className="w-4 h-4 text-primary" />
-                              </div>
-                            )}
-                          </div>
-                        </button>
-                      ))}
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
+
+                  {/* Click outside to close */}
+                  {domainSwitcherOpen && (
+                    <div
+                      className="fixed inset-0 z-[55]"
+                      onClick={() => setDomainSwitcherOpen(false)}
+                    ></div>
+                  )}
                 </div>
               )}
 
