@@ -69,64 +69,128 @@ export default function UserProfile() {
     loadData();
   }, []);
 
-  // Mock user data - in real app this would come from backend
-  const user = {
-    name: "Aditya Singh",
-    title: "Goal-Driven Developer | React Specialist | Community Mentor",
-    level: 12,
-    avatar: "AS",
-    location: "Mumbai, India",
-    joinedDate: "March 2023",
-    streak: 15,
-    github: "adityasingh",
-    linkedin: "aditya-singh-dev",
-    bio: "Passionate full-stack developer with expertise in React, Node.js, and modern web technologies. Love building scalable applications and mentoring upcoming developers.",
-    overallProgress: 68,
-    activeGoals: 3,
-    completedGoals: 12,
-    stats: {
-      totalCollaborations: 24,
-      rating: 4.8,
-      activeProjects: 3,
-      testimonials: 18
-    },
-    weeklyStats: {
-      focusTime: "28h",
-      tasksDone: 15,
-      milestones: 3,
-      weeklyProgress: 12
-    },
-    currentProjects: [
-      {
-        name: "E-commerce Dashboard",
-        progress: 75,
-        status: "In Progress",
-        priority: "High",
-        dueDate: "Dec 15, 2024",
-        skills: ["React", "TypeScript", "Tailwind"]
+  // Function to get user data - either current user or target profile
+  const getUserData = () => {
+    if (isOtherUserProfile && targetProfile) {
+      return {
+        name: targetProfile.name,
+        title: targetProfile.title,
+        level: Math.floor(Math.random() * 15) + 5,
+        avatar: targetProfile.avatar,
+        location: ["Mumbai, India", "Delhi, India", "Bangalore, India", "Pune, India", "Chennai, India"][Math.floor(Math.random() * 5)],
+        joinedDate: ["March 2023", "January 2023", "June 2022", "September 2023", "November 2022"][Math.floor(Math.random() * 5)],
+        streak: Math.floor(Math.random() * 30) + 5,
+        github: targetProfile.name.toLowerCase().replace(' ', ''),
+        linkedin: targetProfile.name.toLowerCase().replace(' ', '-'),
+        bio: `Passionate developer specializing in ${targetProfile.domains.join(', ')}. ${targetProfile.experience} of experience in building scalable applications and working with modern technologies.`,
+        overallProgress: targetProfile.rating * 20,
+        activeGoals: Math.floor(Math.random() * 5) + 2,
+        completedGoals: Math.floor(Math.random() * 20) + 5,
+        stats: {
+          totalCollaborations: targetProfile.projectsCollaborated,
+          rating: targetProfile.rating,
+          activeProjects: Math.floor(Math.random() * 4) + 1,
+          testimonials: Math.floor(Math.random() * 25) + 5
+        },
+        weeklyStats: {
+          focusTime: Math.floor(Math.random() * 30) + 10 + "h",
+          tasksDone: Math.floor(Math.random() * 20) + 5,
+          milestones: Math.floor(Math.random() * 5) + 1,
+          weeklyProgress: Math.floor(Math.random() * 20) + 5
+        },
+        skills: targetProfile.skills,
+        domains: targetProfile.domains,
+        currentProjects: [
+          {
+            name: `${targetProfile.domains[0]} Project Alpha`,
+            progress: Math.floor(Math.random() * 50) + 50,
+            status: "In Progress",
+            priority: "High",
+            dueDate: "Dec 15, 2024",
+            skills: targetProfile.skills.slice(0, 3)
+          },
+          {
+            name: `${targetProfile.company} Integration`,
+            progress: Math.floor(Math.random() * 40) + 20,
+            status: "Planning",
+            priority: "Medium",
+            dueDate: "Jan 20, 2025",
+            skills: targetProfile.skills.slice(1, 4)
+          }
+        ],
+        recentCollaborations: [
+          { name: "Rajesh Kumar", project: "E-commerce Platform", rating: 5, feedback: "Excellent frontend work and great communication", time: "2 days ago" },
+          { name: "Priya Sharma", project: "Mobile Banking App", rating: 4, feedback: "Strong technical skills, delivered on time", time: "1 week ago" }
+        ]
+      };
+    }
+
+    // Default current user data
+    return {
+      name: "Aditya Singh",
+      title: "Goal-Driven Developer | React Specialist | Community Mentor",
+      level: 12,
+      avatar: "AS",
+      location: "Mumbai, India",
+      joinedDate: "March 2023",
+      streak: 15,
+      github: "adityasingh",
+      linkedin: "aditya-singh-dev",
+      bio: "Passionate full-stack developer with expertise in React, Node.js, and modern web technologies. Love building scalable applications and mentoring upcoming developers.",
+      overallProgress: 68,
+      activeGoals: 3,
+      completedGoals: 12,
+      stats: {
+        totalCollaborations: 24,
+        rating: 4.8,
+        activeProjects: 3,
+        testimonials: 18
       },
-      {
-        name: "Mobile Learning App",
-        progress: 45,
-        status: "In Progress",
-        priority: "Medium",
-        dueDate: "Jan 20, 2025",
-        skills: ["React Native", "Node.js", "MongoDB"]
+      weeklyStats: {
+        focusTime: "28h",
+        tasksDone: 15,
+        milestones: 3,
+        weeklyProgress: 12
       },
-      {
-        name: "AI Chat Platform",
-        progress: 30,
-        status: "Planning",
-        priority: "Low",
-        dueDate: "Feb 10, 2025",
-        skills: ["Python", "FastAPI", "OpenAI"]
-      }
-    ],
-    recentCollaborations: [
-      { name: "Rajesh Kumar", project: "E-commerce Platform", rating: 5, feedback: "Excellent frontend work and great communication", time: "2 days ago" },
-      { name: "Priya Sharma", project: "Mobile Banking App", rating: 4, feedback: "Strong technical skills, delivered on time", time: "1 week ago" },
-      { name: "Arjun Patel", project: "Data Analytics Dashboard", rating: 5, feedback: "Outstanding problem-solving abilities", time: "2 weeks ago" }
-    ]
+      currentProjects: [
+        {
+          name: "E-commerce Dashboard",
+          progress: 75,
+          status: "In Progress",
+          priority: "High",
+          dueDate: "Dec 15, 2024",
+          skills: ["React", "TypeScript", "Tailwind"]
+        },
+        {
+          name: "Mobile Learning App",
+          progress: 45,
+          status: "In Progress",
+          priority: "Medium",
+          dueDate: "Jan 20, 2025",
+          skills: ["React Native", "Node.js", "MongoDB"]
+        },
+        {
+          name: "AI Chat Platform",
+          progress: 30,
+          status: "Planning",
+          priority: "Low",
+          dueDate: "Feb 10, 2025",
+          skills: ["Python", "FastAPI", "OpenAI"]
+        }
+      ],
+      recentCollaborations: [
+        { name: "Rajesh Kumar", project: "E-commerce Platform", rating: 5, feedback: "Excellent frontend work and great communication", time: "2 days ago" },
+        { name: "Priya Sharma", project: "Mobile Banking App", rating: 4, feedback: "Strong technical skills, delivered on time", time: "1 week ago" },
+        { name: "Arjun Patel", project: "Data Analytics Dashboard", rating: 5, feedback: "Outstanding problem-solving abilities", time: "2 weeks ago" }
+      ]
+    };
+  };
+
+  const user = getUserData();
+
+  const handleConnect = () => {
+    setIsConnected(!isConnected);
+    // In real app, this would make an API call to connect/disconnect
   };
 
   if (isLoading) {
