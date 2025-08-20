@@ -534,7 +534,7 @@ export default function DiscoverFeed({ selectedDomain, joinedProjects = [], onJo
   };
 
   return (
-    <div className="max-w-lg mx-auto space-y-6">
+    <div className="max-w-2xl mx-auto space-y-6">
       {posts.map((post) => (
         <Card key={post.id} className="border-0 shadow-sm bg-background/80 backdrop-blur-sm overflow-hidden">
           {/* Post Header */}
