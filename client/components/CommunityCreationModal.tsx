@@ -110,15 +110,19 @@ export default function CommunityCreationModal({
   };
 
   const handleCreate = () => {
-    const community = {
-      id: Date.now().toString(),
+    addCommunity({
       ...communityData,
-      createdAt: new Date().toISOString(),
       members: 1,
       posts: 0,
-      isOwner: true
-    };
-    onCreateCommunity(community);
+      isOwner: true,
+      membersList: [],
+      recentPosts: [],
+      events: [],
+      projects: [],
+      hackathons: [],
+      queries: []
+    });
+    onCreateCommunity(communityData);
     onClose();
   };
 
