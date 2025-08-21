@@ -56,7 +56,6 @@ const App = () => (
           </Routes>
         </Suspense>
       </BrowserRouter>
-      <PerformanceDebugger />
     </TooltipProvider>
   </QueryClientProvider>
 );
