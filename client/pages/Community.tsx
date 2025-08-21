@@ -28,6 +28,8 @@ import {
 import { useCommunityStore } from "@/lib/community-store";
 import CommunityCreationModal from "@/components/CommunityCreationModal";
 import CommunityDetailView from "@/components/CommunityDetailView";
+import CommunityStats from "@/components/CommunityStats";
+import TrendingTopics from "@/components/TrendingTopics";
 
 export default function Community() {
   const {
