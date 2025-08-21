@@ -19,6 +19,7 @@ import {
   Calendar,
   Target
 } from "lucide-react";
+import { useCommunityStore } from "@/lib/community-store";
 
 interface CommunityCreationModalProps {
   onClose: () => void;
