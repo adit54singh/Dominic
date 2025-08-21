@@ -269,82 +269,77 @@ export default function Community() {
     </div>
   );
 
-  const TrendingSection = () => (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold flex items-center">
-        <TrendingUp className="w-6 h-6 mr-2 text-primary" />
-        Trending Now
-      </h2>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Trending Topics */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm">🔥 Hot Topics</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {["React 18", "AI/ML", "Web3", "TypeScript"].map((topic, index) => (
-              <div key={index} className="flex items-center justify-between text-sm">
-                <span className="text-primary cursor-pointer hover:underline">#{topic}</span>
-                <span className="text-muted-foreground">{Math.floor(Math.random() * 100) + 50}</span>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+  const TrendingSection = () => {
+    const trendingTopics = [
+      { name: "React 18", count: 127, trend: 'up' as const, change: 12 },
+      { name: "AI/ML", count: 89, trend: 'up' as const, change: 25 },
+      { name: "Web3", count: 67, trend: 'down' as const, change: -5 },
+      { name: "TypeScript", count: 156, trend: 'up' as const, change: 8 },
+      { name: "Next.js", count: 94, trend: 'stable' as const, change: 0 },
+      { name: "Vue.js", count: 45, trend: 'up' as const, change: 15 }
+    ];
 
-        {/* Active Communities */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm">⚡ Most Active</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {communities.slice(0, 4).map((community) => (
-              <div key={community.id} className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-sm truncate">{community.name}</span>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+    const platformStats = {
+      totalCommunities: communities.length,
+      totalMembers: communities.reduce((acc, c) => acc + c.members, 0),
+      totalPosts: communities.reduce((acc, c) => acc + c.posts, 0),
+      totalProjects: communities.reduce((acc, c) => acc + (c.projects?.length || 0), 0),
+      totalHackathons: communities.reduce((acc, c) => acc + (c.hackathons?.length || 0), 0),
+      activeToday: Math.floor(Math.random() * 500) + 200
+    };
 
-        {/* New Communities */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm">✨ Recently Created</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {communities.slice(-4).map((community) => (
-              <div key={community.id} className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                <span className="text-sm truncate">{community.name}</span>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+    return (
+      <div className="space-y-8">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            Platform Overview
+          </h2>
+          <p className="text-muted-foreground">Real-time insights and trending topics</p>
+        </div>
 
-        {/* Quick Stats */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm">📊 Platform Stats</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div>
-              <div className="text-2xl font-bold text-primary">{communities.length}</div>
-              <div className="text-xs text-muted-foreground">Communities</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-green-500">{communities.reduce((acc, c) => acc + c.members, 0).toLocaleString()}</div>
-              <div className="text-xs text-muted-foreground">Total Members</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-blue-500">{communities.reduce((acc, c) => acc + c.posts, 0)}</div>
-              <div className="text-xs text-muted-foreground">Posts Shared</div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Platform Stats */}
+        <CommunityStats stats={platformStats} />
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Trending Topics */}
+          <TrendingTopics topics={trendingTopics} />
+
+          {/* Active Communities */}
+          <Card className="border-0 bg-card/50 backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
+                  <TrendingUp className="w-4 h-4 text-white" />
+                </div>
+                <span>Most Active Communities</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {communities.slice(0, 6).map((community, index) => (
+                <div key={community.id} className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors group cursor-pointer" onClick={() => handleViewCommunity(community)}>
+                  <div className="flex items-center space-x-3">
+                    <div className="relative">
+                      <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                        <Users className="w-4 h-4 text-primary" />
+                      </div>
+                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                    </div>
+                    <div>
+                      <p className="font-medium group-hover:text-primary transition-colors">{community.name}</p>
+                      <p className="text-sm text-muted-foreground">{community.members} members</p>
+                    </div>
+                  </div>
+                  <Badge variant="secondary" className="text-xs">
+                    #{index + 1}
+                  </Badge>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
