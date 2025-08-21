@@ -26,10 +26,11 @@ interface CommunityCreationModalProps {
   onCreateCommunity: (community: any) => void;
 }
 
-export default function CommunityCreationModal({ 
-  onClose, 
-  onCreateCommunity 
+export default function CommunityCreationModal({
+  onClose,
+  onCreateCommunity
 }: CommunityCreationModalProps) {
+  const { addCommunity } = useCommunityStore();
   const [step, setStep] = useState(1);
   const [communityData, setCommunityData] = useState({
     name: "",
