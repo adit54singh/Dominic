@@ -164,7 +164,10 @@ export default function UserDashboard() {
 
   // Save discovery time to localStorage
   useEffect(() => {
-    localStorage.setItem("discoveryTimeSpent", discoveryTimeSpent.toString());
+    const timeoutId = setTimeout(() => {
+      localStorage.setItem("discoveryTimeSpent", discoveryTimeSpent.toString());
+    }, 1000);
+    return () => clearTimeout(timeoutId);
   }, [discoveryTimeSpent]);
 
   // Load discovery time from localStorage
