@@ -17,7 +17,7 @@ import {
   Users,
   TrendingUp,
   Eye,
-  GitFork,
+  Github,
   Calendar,
   Target,
   ExternalLink,
