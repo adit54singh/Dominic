@@ -1,6 +1,15 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, Users, Award, BookOpen, Code, Palette, TrendingUp, Briefcase } from "lucide-react";
+import {
+  Star,
+  Users,
+  Award,
+  BookOpen,
+  Code,
+  Palette,
+  TrendingUp,
+  Briefcase,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
@@ -20,7 +29,7 @@ export default function AnimatedMentors() {
       sessions: 150,
       icon: <Code className="w-6 h-6" />,
       color: "from-blue-500 to-cyan-500",
-      avatar: "SC"
+      avatar: "SC",
     },
     {
       id: "2",
@@ -36,7 +45,7 @@ export default function AnimatedMentors() {
       sessions: 200,
       icon: <TrendingUp className="w-6 h-6" />,
       color: "from-purple-500 to-pink-500",
-      avatar: "RP"
+      avatar: "RP",
     },
     {
       id: "3",
@@ -52,7 +61,7 @@ export default function AnimatedMentors() {
       sessions: 120,
       icon: <Palette className="w-6 h-6" />,
       color: "from-orange-500 to-red-500",
-      avatar: "SW"
+      avatar: "SW",
     },
     {
       id: "4",
@@ -68,7 +77,7 @@ export default function AnimatedMentors() {
       sessions: 180,
       icon: <Briefcase className="w-6 h-6" />,
       color: "from-green-500 to-emerald-500",
-      avatar: "MR"
+      avatar: "MR",
     },
     {
       id: "5",
@@ -84,7 +93,7 @@ export default function AnimatedMentors() {
       sessions: 140,
       icon: <Code className="w-6 h-6" />,
       color: "from-indigo-500 to-blue-500",
-      avatar: "LW"
+      avatar: "LW",
     },
     {
       id: "6",
@@ -100,7 +109,7 @@ export default function AnimatedMentors() {
       sessions: 160,
       icon: <Code className="w-6 h-6" />,
       color: "from-teal-500 to-green-500",
-      avatar: "CR"
+      avatar: "CR",
     },
     {
       id: "7",
@@ -116,7 +125,7 @@ export default function AnimatedMentors() {
       sessions: 135,
       icon: <TrendingUp className="w-6 h-6" />,
       color: "from-pink-500 to-rose-500",
-      avatar: "ET"
+      avatar: "ET",
     },
     {
       id: "8",
@@ -132,7 +141,7 @@ export default function AnimatedMentors() {
       sessions: 125,
       icon: <Code className="w-6 h-6" />,
       color: "from-yellow-500 to-orange-500",
-      avatar: "AH"
+      avatar: "AH",
     },
     {
       id: "9",
@@ -148,7 +157,7 @@ export default function AnimatedMentors() {
       sessions: 110,
       icon: <BookOpen className="w-6 h-6" />,
       color: "from-cyan-500 to-blue-500",
-      avatar: "JW"
+      avatar: "JW",
     },
     {
       id: "10",
@@ -164,8 +173,8 @@ export default function AnimatedMentors() {
       sessions: 95,
       icon: <TrendingUp className="w-6 h-6" />,
       color: "from-emerald-500 to-teal-500",
-      avatar: "RC"
-    }
+      avatar: "RC",
+    },
   ];
 
   const [currentMentors, setCurrentMentors] = useState<typeof allMentors>([]);
@@ -192,16 +201,22 @@ export default function AnimatedMentors() {
     return () => clearInterval(interval);
   }, []);
 
-  const MentorCard = ({ mentor, index }: { mentor: typeof allMentors[0]; index: number }) => (
+  const MentorCard = ({
+    mentor,
+    index,
+  }: {
+    mentor: (typeof allMentors)[0];
+    index: number;
+  }) => (
     <motion.div
-      initial={{ 
-        opacity: 0, 
+      initial={{
+        opacity: 0,
         y: 80,
         scale: 0.8,
         rotateY: -30,
       }}
-      animate={{ 
-        opacity: 1, 
+      animate={{
+        opacity: 1,
         y: 0,
         scale: 1,
         rotateY: 0,
@@ -209,10 +224,10 @@ export default function AnimatedMentors() {
           delay: index * 0.1, // Fast stagger for 2-second refresh
           duration: 0.6, // Fast entrance
           ease: [0.25, 0.46, 0.45, 0.94],
-        }
+        },
       }}
-      exit={{ 
-        opacity: 0, 
+      exit={{
+        opacity: 0,
         y: -60,
         scale: 0.9,
         rotateY: 30,
@@ -220,12 +235,12 @@ export default function AnimatedMentors() {
           delay: (3 - index) * 0.05,
           duration: 0.4,
           ease: "easeInOut",
-        }
+        },
       }}
-      whileHover={{ 
+      whileHover={{
         scale: 1.05,
         y: -8,
-        transition: { duration: 0.3, ease: "easeOut" }
+        transition: { duration: 0.3, ease: "easeOut" },
       }}
       className="relative group cursor-pointer"
       style={{ transformStyle: "preserve-3d" }}
@@ -234,7 +249,7 @@ export default function AnimatedMentors() {
       <motion.div
         className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100"
         style={{
-          background: `linear-gradient(135deg, ${mentor.color.split(' ')[1]}25, ${mentor.color.split(' ')[3]}15)`,
+          background: `linear-gradient(135deg, ${mentor.color.split(" ")[1]}25, ${mentor.color.split(" ")[3]}15)`,
           filter: "blur(25px)",
         }}
         animate={{
@@ -248,21 +263,21 @@ export default function AnimatedMentors() {
       />
 
       {/* Main card */}
-      <div 
+      <div
         className="relative bg-card/95 backdrop-blur-lg border border-border/60 rounded-3xl p-6 shadow-2xl"
         style={{
-          background: `linear-gradient(135deg, ${mentor.color.split(' ')[1]}08, ${mentor.color.split(' ')[3]}04)`,
-          borderColor: `${mentor.color.split(' ')[1]}25`,
+          background: `linear-gradient(135deg, ${mentor.color.split(" ")[1]}08, ${mentor.color.split(" ")[3]}04)`,
+          borderColor: `${mentor.color.split(" ")[1]}25`,
         }}
       >
         {/* Mentor header */}
         <div className="flex items-center space-x-4 mb-4">
-          <motion.div 
+          <motion.div
             className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${mentor.color} flex items-center justify-center text-white shadow-lg relative`}
-            whileHover={{ 
-              scale: 1.1, 
+            whileHover={{
+              scale: 1.1,
               rotate: 5,
-              transition: { duration: 0.3 }
+              transition: { duration: 0.3 },
             }}
           >
             <Avatar className="w-full h-full">
@@ -274,13 +289,17 @@ export default function AnimatedMentors() {
               <Award className="w-3 h-3 text-yellow-800" />
             </div>
           </motion.div>
-          
+
           <div className="flex-1 min-w-0">
             <h3 className="text-lg font-bold group-hover:text-primary transition-all duration-500 truncate">
               {mentor.name}
             </h3>
-            <p className="text-sm text-muted-foreground truncate">{mentor.title}</p>
-            <p className="text-xs text-muted-foreground/70 truncate">{mentor.company}</p>
+            <p className="text-sm text-muted-foreground truncate">
+              {mentor.title}
+            </p>
+            <p className="text-xs text-muted-foreground/70 truncate">
+              {mentor.company}
+            </p>
           </div>
         </div>
 
@@ -289,7 +308,9 @@ export default function AnimatedMentors() {
           <Badge variant="secondary" className="text-xs mb-2">
             {mentor.domain}
           </Badge>
-          <p className="text-sm text-muted-foreground">{mentor.experience} experience</p>
+          <p className="text-sm text-muted-foreground">
+            {mentor.experience} experience
+          </p>
         </div>
 
         {/* Stats */}
@@ -325,7 +346,11 @@ export default function AnimatedMentors() {
         {/* Skills */}
         <div className="flex flex-wrap gap-1 mb-4">
           {mentor.skills.slice(0, 3).map((skill, skillIndex) => (
-            <Badge key={skillIndex} variant="outline" className="text-xs px-2 py-0.5">
+            <Badge
+              key={skillIndex}
+              variant="outline"
+              className="text-xs px-2 py-0.5"
+            >
               {skill}
             </Badge>
           ))}
@@ -340,23 +365,24 @@ export default function AnimatedMentors() {
         <motion.div
           className="absolute inset-0 rounded-3xl border-2 border-transparent opacity-0 group-hover:opacity-100"
           style={{
-            background: `linear-gradient(135deg, ${mentor.color.split(' ')[1]}, ${mentor.color.split(' ')[3]}) border-box`,
-            WebkitMask: "linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)",
+            background: `linear-gradient(135deg, ${mentor.color.split(" ")[1]}, ${mentor.color.split(" ")[3]}) border-box`,
+            WebkitMask:
+              "linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)",
             WebkitMaskComposite: "subtract",
           }}
           animate={{
             background: [
-              `linear-gradient(0deg, ${mentor.color.split(' ')[1]}, ${mentor.color.split(' ')[3]}) border-box`,
-              `linear-gradient(90deg, ${mentor.color.split(' ')[1]}, ${mentor.color.split(' ')[3]}) border-box`,
-              `linear-gradient(180deg, ${mentor.color.split(' ')[1]}, ${mentor.color.split(' ')[3]}) border-box`,
-              `linear-gradient(270deg, ${mentor.color.split(' ')[1]}, ${mentor.color.split(' ')[3]}) border-box`,
-              `linear-gradient(360deg, ${mentor.color.split(' ')[1]}, ${mentor.color.split(' ')[3]}) border-box`,
-            ]
+              `linear-gradient(0deg, ${mentor.color.split(" ")[1]}, ${mentor.color.split(" ")[3]}) border-box`,
+              `linear-gradient(90deg, ${mentor.color.split(" ")[1]}, ${mentor.color.split(" ")[3]}) border-box`,
+              `linear-gradient(180deg, ${mentor.color.split(" ")[1]}, ${mentor.color.split(" ")[3]}) border-box`,
+              `linear-gradient(270deg, ${mentor.color.split(" ")[1]}, ${mentor.color.split(" ")[3]}) border-box`,
+              `linear-gradient(360deg, ${mentor.color.split(" ")[1]}, ${mentor.color.split(" ")[3]}) border-box`,
+            ],
           }}
           transition={{
             duration: 4,
             repeat: Infinity,
-            ease: "linear"
+            ease: "linear",
           }}
         />
       </div>
@@ -411,16 +437,16 @@ export default function AnimatedMentors() {
           <p className="text-2xl md:text-3xl text-muted-foreground mb-8 font-light">
             Learn from industry professionals who've built successful careers
           </p>
-          
+
           <motion.div
-            animate={{ 
+            animate={{
               scaleX: [0.8, 1.2, 0.8],
               opacity: [0.6, 1, 0.6],
             }}
-            transition={{ 
-              duration: 4, 
+            transition={{
+              duration: 4,
               repeat: Infinity,
-              ease: "easeInOut"
+              ease: "easeInOut",
             }}
             className="w-32 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full"
           />
@@ -438,7 +464,8 @@ export default function AnimatedMentors() {
               Connect with Industry Leaders
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Get 1-on-1 guidance from experts at top companies who are passionate about helping you succeed
+              Get 1-on-1 guidance from experts at top companies who are
+              passionate about helping you succeed
             </p>
           </motion.div>
 
@@ -447,7 +474,7 @@ export default function AnimatedMentors() {
               <AnimatePresence mode="wait">
                 {visible && currentMentors.length > 0 && (
                   <motion.div
-                    key={`mentors-${currentMentors.map(m => m.id).join()}`}
+                    key={`mentors-${currentMentors.map((m) => m.id).join()}`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -481,14 +508,14 @@ export default function AnimatedMentors() {
             Ready to accelerate your career with expert guidance?
           </p>
           <motion.div
-            animate={{ 
+            animate={{
               scale: [1, 1.08, 1],
               rotate: [0, 5, -5, 0],
             }}
-            transition={{ 
-              duration: 4, 
+            transition={{
+              duration: 4,
               repeat: Infinity,
-              ease: "easeInOut"
+              ease: "easeInOut",
             }}
             className="mt-4"
           >

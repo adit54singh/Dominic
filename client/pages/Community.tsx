@@ -2,7 +2,9 @@ import { Suspense, lazy } from "react";
 import NavBar from "@/components/NavBar";
 
 // Lazy load the AnimatedCommunityShowcase component
-const AnimatedCommunityShowcase = lazy(() => import("@/components/AnimatedCommunityShowcase"));
+const AnimatedCommunityShowcase = lazy(
+  () => import("@/components/AnimatedCommunityShowcase"),
+);
 
 export default function Community() {
   return (

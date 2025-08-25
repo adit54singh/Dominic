@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function AnimatedDomains() {
   const allTechDomains = [
     "Software Development",
-    "Data Science & Analytics", 
+    "Data Science & Analytics",
     "UI/UX Design",
     "Digital Marketing",
     "Machine Learning",
@@ -20,7 +20,7 @@ export default function AnimatedDomains() {
     "AI Engineering",
     "Frontend Development",
     "Backend Development",
-    "Quality Assurance"
+    "Quality Assurance",
   ];
 
   const allNonTechDomains = [
@@ -41,11 +41,13 @@ export default function AnimatedDomains() {
     "Pottery & Ceramics",
     "Digital Art",
     "Fashion Styling",
-    "Content Creation"
+    "Content Creation",
   ];
 
   const [currentTechDomains, setCurrentTechDomains] = useState<string[]>([]);
-  const [currentNonTechDomains, setCurrentNonTechDomains] = useState<string[]>([]);
+  const [currentNonTechDomains, setCurrentNonTechDomains] = useState<string[]>(
+    [],
+  );
   const [techVisible, setTechVisible] = useState(true);
   const [nonTechVisible, setNonTechVisible] = useState(true);
 
@@ -87,27 +89,27 @@ export default function AnimatedDomains() {
   }, []);
 
   // Domain card component with smooth animations
-  const DomainCard = ({ 
-    domain, 
-    index, 
-    color, 
-    isNonTech = false 
-  }: { 
-    domain: string; 
-    index: number; 
+  const DomainCard = ({
+    domain,
+    index,
+    color,
+    isNonTech = false,
+  }: {
+    domain: string;
+    index: number;
     color: string;
     isNonTech?: boolean;
   }) => {
     return (
       <motion.div
-        initial={{ 
-          opacity: 0, 
+        initial={{
+          opacity: 0,
           y: 80,
           scale: 0.8,
           rotateY: -30,
         }}
-        animate={{ 
-          opacity: 1, 
+        animate={{
+          opacity: 1,
           y: 0,
           scale: 1,
           rotateY: 0,
@@ -115,10 +117,10 @@ export default function AnimatedDomains() {
             delay: index * 0.1, // Faster stagger for 2-second refresh
             duration: 0.6, // Faster entrance for quick transitions
             ease: [0.25, 0.46, 0.45, 0.94], // Smooth ease curve
-          }
+          },
         }}
-        exit={{ 
-          opacity: 0, 
+        exit={{
+          opacity: 0,
           y: -60,
           scale: 0.9,
           rotateY: 30,
@@ -126,12 +128,12 @@ export default function AnimatedDomains() {
             delay: (3 - index) * 0.05,
             duration: 0.4, // Faster exit
             ease: "easeInOut",
-          }
+          },
         }}
-        whileHover={{ 
+        whileHover={{
           scale: 1.08,
           y: -12,
-          transition: { duration: 0.3, ease: "easeOut" }
+          transition: { duration: 0.3, ease: "easeOut" },
         }}
         className="relative group cursor-pointer"
         style={{ transformStyle: "preserve-3d" }}
@@ -154,7 +156,7 @@ export default function AnimatedDomains() {
         />
 
         {/* Main card */}
-        <div 
+        <div
           className="relative bg-card/95 backdrop-blur-lg border border-border/60 rounded-3xl p-8 shadow-2xl"
           style={{
             background: `linear-gradient(135deg, ${color}08, ${color}04)`,
@@ -162,48 +164,60 @@ export default function AnimatedDomains() {
           }}
         >
           {/* Domain icon area */}
-          <motion.div 
+          <motion.div
             className={`w-20 h-20 rounded-2xl bg-gradient-to-br mb-8 flex items-center justify-center text-white shadow-lg mx-auto`}
             style={{
               background: `linear-gradient(135deg, ${color}, ${color}80)`,
             }}
-            whileHover={{ 
-              scale: 1.15, 
+            whileHover={{
+              scale: 1.15,
               rotate: 8,
-              transition: { duration: 0.3 }
+              transition: { duration: 0.3 },
             }}
           >
             <div className="text-2xl font-bold">
-              {domain.split(' ').map(word => word[0]).join('').slice(0, 2)}
+              {domain
+                .split(" ")
+                .map((word) => word[0])
+                .join("")
+                .slice(0, 2)}
             </div>
           </motion.div>
-          
+
           {/* Domain name */}
           <h3 className="text-xl font-bold text-center mb-6 group-hover:text-primary transition-all duration-500 leading-tight">
             {domain}
           </h3>
-          
+
           {/* Status and info */}
           <div className="text-center space-y-3">
             {isNonTech ? (
               <div className="space-y-2">
                 <div className="inline-flex items-center space-x-2">
-                  <motion.div 
+                  <motion.div
                     className="w-2 h-2 bg-orange-400 rounded-full"
                     animate={{ scale: [1, 1.3, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   />
-                  <span className="text-sm text-muted-foreground">Coming Soon</span>
+                  <span className="text-sm text-muted-foreground">
+                    Coming Soon
+                  </span>
                 </div>
-                <p className="text-xs text-muted-foreground/70">Creative excellence awaits</p>
+                <p className="text-xs text-muted-foreground/70">
+                  Creative excellence awaits
+                </p>
               </div>
             ) : (
               <div className="space-y-2">
                 <div className="inline-flex items-center space-x-2">
                   <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                  <span className="text-sm text-muted-foreground">Available Now</span>
+                  <span className="text-sm text-muted-foreground">
+                    Available Now
+                  </span>
                 </div>
-                <p className="text-xs text-muted-foreground/70">{Math.floor(Math.random() * 800) + 200}+ learners active</p>
+                <p className="text-xs text-muted-foreground/70">
+                  {Math.floor(Math.random() * 800) + 200}+ learners active
+                </p>
               </div>
             )}
           </div>
@@ -213,7 +227,8 @@ export default function AnimatedDomains() {
             className="absolute inset-0 rounded-3xl border-2 border-transparent opacity-0 group-hover:opacity-100"
             style={{
               background: `linear-gradient(135deg, ${color}, ${color}60) border-box`,
-              WebkitMask: "linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)",
+              WebkitMask:
+                "linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)",
               WebkitMaskComposite: "subtract",
             }}
             animate={{
@@ -223,12 +238,12 @@ export default function AnimatedDomains() {
                 `linear-gradient(180deg, ${color}, ${color}60) border-box`,
                 `linear-gradient(270deg, ${color}, ${color}60) border-box`,
                 `linear-gradient(360deg, ${color}, ${color}60) border-box`,
-              ]
+              ],
             }}
             transition={{
               duration: 4, // Moderate border animation
               repeat: Infinity,
-              ease: "linear"
+              ease: "linear",
             }}
           />
         </div>
@@ -298,17 +313,17 @@ export default function AnimatedDomains() {
           <p className="text-2xl md:text-3xl text-muted-foreground mb-8 font-light">
             Discover your path in technology and creative fields
           </p>
-          
+
           {/* Simple decorative animation */}
           <motion.div
-            animate={{ 
+            animate={{
               scaleX: [0.8, 1.2, 0.8],
               opacity: [0.6, 1, 0.6],
             }}
-            transition={{ 
-              duration: 4, 
+            transition={{
+              duration: 4,
               repeat: Infinity,
-              ease: "easeInOut"
+              ease: "easeInOut",
             }}
             className="w-32 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full"
           />
@@ -326,7 +341,8 @@ export default function AnimatedDomains() {
               Technology Domains
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Build your career in cutting-edge technology fields with expert mentorship
+              Build your career in cutting-edge technology fields with expert
+              mentorship
             </p>
           </motion.div>
 
@@ -391,7 +407,8 @@ export default function AnimatedDomains() {
               Creative Domains
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-4">
-              Express your creativity and build skills in diverse artistic fields
+              Express your creativity and build skills in diverse artistic
+              fields
             </p>
             <motion.div
               animate={{ opacity: [0.6, 1, 0.6] }}
@@ -443,14 +460,14 @@ export default function AnimatedDomains() {
             Ready to start your learning journey?
           </p>
           <motion.div
-            animate={{ 
+            animate={{
               scale: [1, 1.08, 1],
               rotate: [0, 5, -5, 0],
             }}
-            transition={{ 
-              duration: 4, 
+            transition={{
+              duration: 4,
               repeat: Infinity,
-              ease: "easeInOut"
+              ease: "easeInOut",
             }}
             className="mt-4"
           >

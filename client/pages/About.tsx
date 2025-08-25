@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
-import { 
-  Users, 
-  Target, 
-  Rocket, 
-  Heart, 
-  BookOpen, 
-  Zap, 
-  Globe, 
+import {
+  Users,
+  Target,
+  Rocket,
+  Heart,
+  BookOpen,
+  Zap,
+  Globe,
   Award,
   TrendingUp,
   Shield,
@@ -16,7 +16,7 @@ import {
   Star,
   Brain,
   Network,
-  Sparkles
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,69 +28,95 @@ export default function About() {
     {
       icon: <Brain className="w-6 h-6" />,
       title: "AI-Powered Matching",
-      description: "Our intelligent algorithm matches you with the perfect mentors and learning communities based on your goals, skills, and interests.",
-      color: "from-purple-500 to-indigo-500"
+      description:
+        "Our intelligent algorithm matches you with the perfect mentors and learning communities based on your goals, skills, and interests.",
+      color: "from-purple-500 to-indigo-500",
     },
     {
       icon: <Network className="w-6 h-6" />,
       title: "Peer-to-Peer Learning",
-      description: "Connect with fellow students across India to share knowledge, collaborate on projects, and grow together in a supportive environment.",
-      color: "from-blue-500 to-cyan-500"
+      description:
+        "Connect with fellow students across India to share knowledge, collaborate on projects, and grow together in a supportive environment.",
+      color: "from-blue-500 to-cyan-500",
     },
     {
       icon: <Award className="w-6 h-6" />,
       title: "Expert Mentorship",
-      description: "Learn from industry professionals and experienced students who provide personalized guidance and real-world insights.",
-      color: "from-orange-500 to-red-500"
+      description:
+        "Learn from industry professionals and experienced students who provide personalized guidance and real-world insights.",
+      color: "from-orange-500 to-red-500",
     },
     {
       icon: <Rocket className="w-6 h-6" />,
       title: "Project-Based Learning",
-      description: "Build real projects with guidance from mentors and peers. Create a portfolio that showcases your skills to potential employers.",
-      color: "from-green-500 to-emerald-500"
+      description:
+        "Build real projects with guidance from mentors and peers. Create a portfolio that showcases your skills to potential employers.",
+      color: "from-green-500 to-emerald-500",
     },
     {
       icon: <Globe className="w-6 h-6" />,
       title: "Diverse Domains",
-      description: "Explore tech and creative fields with specialized communities for everything from software development to digital art.",
-      color: "from-pink-500 to-purple-500"
+      description:
+        "Explore tech and creative fields with specialized communities for everything from software development to digital art.",
+      color: "from-pink-500 to-purple-500",
     },
     {
       icon: <Zap className="w-6 h-6" />,
       title: "Instant Connections",
-      description: "Get matched with relevant mentors and peers instantly. Start learning and collaborating without delays.",
-      color: "from-yellow-500 to-orange-500"
-    }
+      description:
+        "Get matched with relevant mentors and peers instantly. Start learning and collaborating without delays.",
+      color: "from-yellow-500 to-orange-500",
+    },
   ];
 
   const stats = [
-    { number: "50,000+", label: "Active Students", icon: <Users className="w-5 h-5" /> },
-    { number: "2,500+", label: "Expert Mentors", icon: <Award className="w-5 h-5" /> },
-    { number: "25+", label: "Learning Domains", icon: <BookOpen className="w-5 h-5" /> },
-    { number: "10,000+", label: "Projects Completed", icon: <CheckCircle className="w-5 h-5" /> }
+    {
+      number: "50,000+",
+      label: "Active Students",
+      icon: <Users className="w-5 h-5" />,
+    },
+    {
+      number: "2,500+",
+      label: "Expert Mentors",
+      icon: <Award className="w-5 h-5" />,
+    },
+    {
+      number: "25+",
+      label: "Learning Domains",
+      icon: <BookOpen className="w-5 h-5" />,
+    },
+    {
+      number: "10,000+",
+      label: "Projects Completed",
+      icon: <CheckCircle className="w-5 h-5" />,
+    },
   ];
 
   const values = [
     {
       title: "Accessibility",
-      description: "Quality education should be accessible to every student in India, regardless of their background or location.",
-      icon: <Heart className="w-6 h-6 text-red-500" />
+      description:
+        "Quality education should be accessible to every student in India, regardless of their background or location.",
+      icon: <Heart className="w-6 h-6 text-red-500" />,
     },
     {
       title: "Community First",
-      description: "We believe in the power of peer learning and building strong communities that support each other's growth.",
-      icon: <Users className="w-6 h-6 text-blue-500" />
+      description:
+        "We believe in the power of peer learning and building strong communities that support each other's growth.",
+      icon: <Users className="w-6 h-6 text-blue-500" />,
     },
     {
       title: "Innovation",
-      description: "We continuously innovate our platform to provide the best learning experience using cutting-edge technology.",
-      icon: <Lightbulb className="w-6 h-6 text-yellow-500" />
+      description:
+        "We continuously innovate our platform to provide the best learning experience using cutting-edge technology.",
+      icon: <Lightbulb className="w-6 h-6 text-yellow-500" />,
     },
     {
       title: "Excellence",
-      description: "We strive for excellence in everything we do, from mentor quality to platform features and user experience.",
-      icon: <Star className="w-6 h-6 text-purple-500" />
-    }
+      description:
+        "We strive for excellence in everything we do, from mentor quality to platform features and user experience.",
+      icon: <Star className="w-6 h-6 text-purple-500" />,
+    },
   ];
 
   return (
@@ -103,7 +129,7 @@ export default function About() {
         {/* Background effects */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent" />
-        
+
         <div className="relative z-10 max-w-6xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -118,25 +144,26 @@ export default function About() {
                 Dominic
               </h1>
             </div>
-            
+
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
               Empowering India's Next Generation of Learners
             </h2>
-            
+
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-4xl mx-auto leading-relaxed">
-              Building India's largest peer-led learning ecosystem where college students connect, 
-              learn from expert mentors, and collaborate on real-world projects across diverse domains.
+              Building India's largest peer-led learning ecosystem where college
+              students connect, learn from expert mentors, and collaborate on
+              real-world projects across diverse domains.
             </p>
 
             <motion.div
-              animate={{ 
+              animate={{
                 scale: [1, 1.05, 1],
                 rotate: [0, 5, -5, 0],
               }}
-              transition={{ 
-                duration: 4, 
+              transition={{
+                duration: 4,
                 repeat: Infinity,
-                ease: "easeInOut"
+                ease: "easeInOut",
               }}
               className="flex justify-center space-x-4 mb-12"
             >
@@ -178,7 +205,9 @@ export default function About() {
                           {stat.icon}
                         </div>
                       </div>
-                      <div className="text-3xl font-bold text-primary mb-2">{stat.number}</div>
+                      <div className="text-3xl font-bold text-primary mb-2">
+                        {stat.number}
+                      </div>
                       <div className="text-muted-foreground">{stat.label}</div>
                     </CardContent>
                   </Card>
@@ -203,10 +232,12 @@ export default function About() {
               Our Vision
             </h3>
             <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-              We envision a future where every Indian student has access to personalized mentorship, 
-              collaborative learning opportunities, and the resources needed to excel in their chosen field. 
-              By leveraging the power of peer-to-peer learning and expert guidance, we're creating an 
-              ecosystem that bridges the gap between academic learning and real-world application.
+              We envision a future where every Indian student has access to
+              personalized mentorship, collaborative learning opportunities, and
+              the resources needed to excel in their chosen field. By leveraging
+              the power of peer-to-peer learning and expert guidance, we're
+              creating an ecosystem that bridges the gap between academic
+              learning and real-world application.
             </p>
           </motion.div>
 
@@ -226,9 +257,10 @@ export default function About() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-lg text-muted-foreground leading-relaxed">
-                    To democratize quality education in India by creating the largest peer-led learning 
-                    community where students can find mentors, collaborate on projects, and build skills 
-                    that matter in today's rapidly evolving job market.
+                    To democratize quality education in India by creating the
+                    largest peer-led learning community where students can find
+                    mentors, collaborate on projects, and build skills that
+                    matter in today's rapidly evolving job market.
                   </p>
                 </CardContent>
               </Card>
@@ -249,9 +281,10 @@ export default function About() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-lg text-muted-foreground leading-relaxed">
-                    Transforming how students learn by providing direct access to industry experts, 
-                    fostering collaborative projects, and creating opportunities for practical skill 
-                    development that prepares them for successful careers.
+                    Transforming how students learn by providing direct access
+                    to industry experts, fostering collaborative projects, and
+                    creating opportunities for practical skill development that
+                    prepares them for successful careers.
                   </p>
                 </CardContent>
               </Card>
@@ -274,7 +307,8 @@ export default function About() {
               Platform Features
             </h3>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Discover how our innovative features are revolutionizing the learning experience for students across India
+              Discover how our innovative features are revolutionizing the
+              learning experience for students across India
             </p>
           </motion.div>
 
@@ -290,7 +324,9 @@ export default function About() {
               >
                 <Card className="h-full border-0 bg-card/50 backdrop-blur-sm hover:shadow-xl transition-all duration-300 group">
                   <CardContent className="p-6">
-                    <div className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center text-white mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                    <div
+                      className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center text-white mb-4 group-hover:scale-110 transition-transform duration-300`}
+                    >
                       {feature.icon}
                     </div>
                     <h4 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">
@@ -337,11 +373,11 @@ export default function About() {
                 <Card className="border-0 bg-card/30 backdrop-blur-sm h-full">
                   <CardContent className="p-6">
                     <div className="flex items-start space-x-4">
-                      <div className="flex-shrink-0">
-                        {value.icon}
-                      </div>
+                      <div className="flex-shrink-0">{value.icon}</div>
                       <div>
-                        <h4 className="text-xl font-bold mb-3">{value.title}</h4>
+                        <h4 className="text-xl font-bold mb-3">
+                          {value.title}
+                        </h4>
                         <p className="text-muted-foreground leading-relaxed">
                           {value.description}
                         </p>
@@ -368,35 +404,48 @@ export default function About() {
               <CardContent className="p-12">
                 <div className="flex justify-center mb-6">
                   <motion.div
-                    animate={{ 
+                    animate={{
                       rotate: 360,
                       scale: [1, 1.1, 1],
                     }}
-                    transition={{ 
-                      rotate: { duration: 10, repeat: Infinity, ease: "linear" },
-                      scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                    transition={{
+                      rotate: {
+                        duration: 10,
+                        repeat: Infinity,
+                        ease: "linear",
+                      },
+                      scale: {
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      },
                     }}
                     className="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center"
                   >
                     <Sparkles className="w-10 h-10 text-white" />
                   </motion.div>
                 </div>
-                
+
                 <h3 className="text-3xl md:text-4xl font-bold mb-6 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                   Ready to Transform Your Learning Journey?
                 </h3>
-                
+
                 <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-                  Join thousands of students who are already accelerating their careers through 
-                  peer learning and expert mentorship on Dominic.
+                  Join thousands of students who are already accelerating their
+                  careers through peer learning and expert mentorship on
+                  Dominic.
                 </p>
-                
+
                 <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
                   <Button size="lg" className="px-8 py-4 text-lg">
                     Start Learning Today
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>
-                  <Button variant="outline" size="lg" className="px-8 py-4 text-lg">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="px-8 py-4 text-lg"
+                  >
                     Explore Communities
                   </Button>
                 </div>
