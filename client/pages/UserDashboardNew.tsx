@@ -86,6 +86,7 @@ export default function UserDashboard() {
     joinedCommunities: storeCommunities,
     joinCommunity: storeJoinCommunity,
     leaveCommunity: storeLeaveCommunity,
+    addTrendingCommunity,
     currentCommunity,
     setCurrentCommunity
   } = useCommunityStore();
@@ -1822,31 +1823,14 @@ export default function UserDashboard() {
                                 });
                               }
                             } else {
-                              // Create new community if it doesn't exist
-                              const newCommunity = {
+                              // Add trending community to store
+                              addTrendingCommunity({
+                                id: `trending_${index}`,
                                 name: community.name,
+                                members: community.members,
                                 description: `A vibrant community for ${community.name.toLowerCase()} enthusiasts`,
-                                category: 'tech',
-                                privacy: 'public' as const,
-                                rules: ['Be respectful', 'Stay on topic', 'Help others'],
-                                tags: [community.name.toLowerCase().replace(/[^a-z0-9]/g, '-')],
-                                members: parseInt(community.members.replace(/[^0-9]/g, '')) || 1000,
-                                posts: Math.floor(Math.random() * 100) + 20,
-                                isOwner: false,
-                                membersList: [],
-                                onlineUsers: [],
-                                recentPosts: [],
-                                events: [],
-                                projects: [],
-                                hackathons: [],
-                                queries: [],
-                                chatMessages: [],
-                                pinnedMessages: [],
-                                domain: userOnboardingData?.domains?.[0] || 'general',
-                                lastActivity: new Date().toISOString()
-                              };
-                              // Add the community via store
-                              // Note: We'd need to modify the store to handle this
+                                domain: userOnboardingData?.domains?.[0] || 'general'
+                              });
                               addActivity({
                                 type: "community_joined",
                                 action: `Joined community: ${community.name}`,
