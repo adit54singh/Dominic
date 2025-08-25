@@ -257,6 +257,9 @@ export default function EnhancedCommunityView({
   return (
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className={`max-w-7xl h-[90vh] p-0 ${isFullscreen ? 'max-w-full h-screen' : ''}`}>
+        <DialogHeader className="sr-only">
+          <DialogTitle>{community.name} - Community View</DialogTitle>
+        </DialogHeader>
         {/* Header */}
         <div className={`bg-gradient-to-r ${theme.gradient} text-white p-6`}>
           <div className="flex items-center justify-between">
