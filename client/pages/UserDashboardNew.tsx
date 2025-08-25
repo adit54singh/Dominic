@@ -70,9 +70,7 @@ export default function UserDashboard() {
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
   const [joinedProjects, setJoinedProjects] = useState<Array<any>>([]);
-  const [joinedCommunities, setJoinedCommunities] = useState<Set<string>>(
-    new Set(),
-  );
+  // Removed joinedCommunities local state - now using store
   const [userActivity, setUserActivity] = useState<Array<any>>([]);
   const [discoveryTimeSpent, setDiscoveryTimeSpent] = useState(0); // in minutes
   const [discoverySessionStart, setDiscoverySessionStart] =
@@ -115,10 +113,7 @@ export default function UserDashboard() {
         setJoinedProjects(JSON.parse(savedJoinedProjects));
       }
 
-      const savedJoinedCommunities = localStorage.getItem("joinedCommunities");
-      if (savedJoinedCommunities) {
-        setJoinedCommunities(new Set(JSON.parse(savedJoinedCommunities)));
-      }
+      // joinedCommunities now handled by store persistence
 
       const savedUserActivity = localStorage.getItem("userActivity");
       if (savedUserActivity) {
@@ -151,21 +146,7 @@ export default function UserDashboard() {
     return () => clearTimeout(timeoutId);
   }, [joinedProjects]);
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      try {
-        if (joinedCommunities.size > 0) {
-          localStorage.setItem(
-            "joinedCommunities",
-            JSON.stringify(Array.from(joinedCommunities)),
-          );
-        }
-      } catch (error) {
-        console.error("Error saving joinedCommunities to localStorage:", error);
-      }
-    }, 500);
-    return () => clearTimeout(timeoutId);
-  }, [joinedCommunities]);
+  // Community persistence now handled by store
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -2273,6 +2254,19 @@ export default function UserDashboard() {
     setSelectedCommunityForView(community);
     setCurrentCommunity(community);
   };
+
+  // Effect to sync store with initial communities
+  useEffect(() => {
+    // Auto-join domain-based communities for new users
+    if (userOnboardingData?.domains && communities.length > 0) {
+      const userDomains = userOnboardingData.domains;
+      communities.forEach(community => {
+        if (userDomains.includes(community.domain) && !community.isJoined) {
+          storeJoinCommunity(community.id);
+        }
+      });
+    }
+  }, [userOnboardingData, communities, storeJoinCommunity]);
 
   // Enhanced Community View Modal
   if (selectedCommunityForView) {
