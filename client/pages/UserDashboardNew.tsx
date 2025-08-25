@@ -180,13 +180,23 @@ export default function UserDashboard() {
 
   // Load discovery time from localStorage
   useEffect(() => {
-    const savedDiscoveryTime = localStorage.getItem("discoveryTimeSpent");
-    if (savedDiscoveryTime) {
-      setDiscoveryTimeSpent(parseInt(savedDiscoveryTime));
-    }
-    const savedProjectsCompleted = localStorage.getItem("projectsCompleted");
-    if (savedProjectsCompleted) {
-      setProjectsCompleted(parseInt(savedProjectsCompleted));
+    try {
+      const savedDiscoveryTime = localStorage.getItem("discoveryTimeSpent");
+      if (savedDiscoveryTime) {
+        const parsedTime = parseInt(savedDiscoveryTime);
+        if (!isNaN(parsedTime)) {
+          setDiscoveryTimeSpent(parsedTime);
+        }
+      }
+      const savedProjectsCompleted = localStorage.getItem("projectsCompleted");
+      if (savedProjectsCompleted) {
+        const parsedProjects = parseInt(savedProjectsCompleted);
+        if (!isNaN(parsedProjects)) {
+          setProjectsCompleted(parsedProjects);
+        }
+      }
+    } catch (error) {
+      console.error("Error loading discovery data from localStorage:", error);
     }
   }, []);
 
