@@ -299,7 +299,7 @@ export default function UserDashboard() {
     const discoveryScore = Math.min(discoveryTimeSpent / 60, 50); // Max 50 points for 60+ minutes
     const projectScore = projectsCompleted * 15; // 15 points per completed project
     const followingScore = followedUsers.size * 2; // 2 points per person followed
-    const communityScore = joinedCommunities.size * 5; // 5 points per community
+    const communityScore = storeCommunities.length * 5; // 5 points per community
 
     const totalScore =
       discoveryScore + projectScore + followingScore + communityScore;
