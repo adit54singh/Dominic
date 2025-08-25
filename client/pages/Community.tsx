@@ -370,6 +370,9 @@ export default function Community() {
           </div>
         </div>
 
+        {/* Featured Communities Showcase */}
+        <AnimatedCommunityShowcase />
+
         {/* Main Content */}
         <Tabs defaultValue="your-communities" className="w-full">
           <TabsList className="grid w-full grid-cols-3 mb-8">
