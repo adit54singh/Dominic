@@ -132,14 +132,14 @@ export default function AnimatedCommunityShowcase() {
 
       setTimeout(() => {
         setVisible(false);
-      }, 8000); // Show for 8 seconds (increased from 4)
+      }, 1800); // Show for 1.8 seconds
     };
 
     // Initial display
     showRandomCommunities();
 
-    // Set interval for slower continuous animation
-    const interval = setInterval(showRandomCommunities, 12000); // Change every 12 seconds (increased from 7)
+    // Set interval for fast continuous animation
+    const interval = setInterval(showRandomCommunities, 2000); // Change every 2 seconds
 
     return () => clearInterval(interval);
   }, []);
@@ -148,38 +148,35 @@ export default function AnimatedCommunityShowcase() {
     <motion.div
       initial={{ 
         opacity: 0, 
-        y: 60,
-        rotateX: -20,
+        x: -60,
         scale: 0.9,
       }}
       animate={{ 
         opacity: 1, 
-        y: 0,
-        rotateX: 0,
+        x: 0,
         scale: 1,
         transition: {
-          delay: index * 0.3, // Increased delay between cards
-          duration: 1.2, // Slower entrance
+          delay: index * 0.1, // Fast stagger for 2-second refresh
+          duration: 0.6, // Fast entrance
           ease: [0.25, 0.46, 0.45, 0.94], // Smooth easing
         }
       }}
       exit={{ 
         opacity: 0, 
-        y: -40,
+        x: 60,
         scale: 0.95,
-        rotateX: 10,
         transition: {
-          delay: (3 - index) * 0.2,
-          duration: 0.8, // Slower exit
+          delay: (3 - index) * 0.05,
+          duration: 0.4,
           ease: "easeInOut",
         }
       }}
       whileHover={{ 
-        scale: 1.03,
-        y: -8,
-        transition: { duration: 0.5, ease: "easeOut" }
+        scale: 1.02,
+        x: 8,
+        transition: { duration: 0.3, ease: "easeOut" }
       }}
-      className="relative group cursor-pointer"
+      className="relative group cursor-pointer w-full"
       style={{ transformStyle: "preserve-3d" }}
     >
       {/* Enhanced glowing background */}
@@ -190,10 +187,10 @@ export default function AnimatedCommunityShowcase() {
           filter: "blur(25px)",
         }}
         animate={{
-          scale: [1, 1.15, 1],
+          scale: [1, 1.1, 1],
         }}
         transition={{
-          duration: 4, // Slower glow animation
+          duration: 3,
           repeat: Infinity,
           ease: "easeInOut",
         }}
@@ -214,7 +211,7 @@ export default function AnimatedCommunityShowcase() {
             {community.icon}
           </motion.div>
           <div className="flex-1">
-            <h3 className="text-xl font-bold group-hover:text-primary transition-all duration-700">
+            <h3 className="text-xl font-bold group-hover:text-primary transition-all duration-500">
               {community.name}
             </h3>
             <div className="flex items-center space-x-3 mt-1">
@@ -243,17 +240,17 @@ export default function AnimatedCommunityShowcase() {
             {community.topMentors.map((mentor, mentorIndex) => (
               <motion.div
                 key={`${mentor.name}-${mentorIndex}`}
-                initial={{ opacity: 0, x: -30 }}
+                initial={{ opacity: 0, x: -20 }}
                 animate={{ 
                   opacity: 1, 
                   x: 0,
                   transition: {
-                    delay: index * 0.3 + mentorIndex * 0.2, // Slower stagger
-                    duration: 0.8, // Slower animation
+                    delay: index * 0.1 + mentorIndex * 0.1,
+                    duration: 0.5,
                     ease: "easeOut",
                   }
                 }}
-                className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50 transition-all duration-500"
+                className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50 transition-all duration-300"
               >
                 <Avatar className="w-8 h-8">
                   <AvatarFallback className="text-xs font-semibold">
@@ -278,7 +275,7 @@ export default function AnimatedCommunityShowcase() {
           </div>
         </div>
 
-        {/* Slower animated border */}
+        {/* Animated border */}
         <motion.div
           className="absolute inset-0 rounded-2xl border-2 border-transparent opacity-0 group-hover:opacity-100"
           style={{
@@ -296,7 +293,7 @@ export default function AnimatedCommunityShowcase() {
             ]
           }}
           transition={{
-            duration: 6, // Slower border animation
+            duration: 4,
             repeat: Infinity,
             ease: "linear"
           }}
@@ -306,110 +303,134 @@ export default function AnimatedCommunityShowcase() {
   );
 
   return (
-    <div className="relative py-16">
+    <div className="min-h-screen w-full bg-gradient-to-br from-background via-background to-muted/10 relative overflow-hidden">
       {/* Background effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 rounded-3xl" />
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-accent/5 via-transparent to-transparent"></div>
+      </div>
       
-      {/* Slower floating particles */}
+      {/* Floating particles */}
       <div className="absolute inset-0 pointer-events-none">
-        {Array.from({ length: 12 }).map((_, i) => (
+        {Array.from({ length: 8 }).map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 bg-primary/25 rounded-full"
+            className="absolute w-1 h-1 bg-primary/20 rounded-full"
             animate={{
-              opacity: [0.2, 0.6, 0.2],
+              opacity: [0.2, 0.5, 0.2],
               scale: [1, 1.3, 1],
-              y: [0, -25, 0],
+              y: [0, -30, 0],
             }}
             transition={{
-              duration: 6 + Math.random() * 3, // Much slower particles
+              duration: 5 + Math.random() * 2,
               repeat: Infinity,
               delay: i * 0.4,
               ease: "easeInOut",
             }}
             style={{
-              left: `${15 + i * 6}%`,
-              top: `${25 + (i % 3) * 20}%`,
+              left: `${15 + i * 8}%`,
+              top: `${25 + (i % 3) * 25}%`,
             }}
           />
         ))}
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4">
+      <div className="relative z-10 pt-24 pb-12 px-6">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-          className="text-center mb-12"
+          transition={{ duration: 1.0, ease: "easeOut" }}
+          className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-            Featured Communities & Top Mentors
-          </h2>
-          <p className="text-xl text-muted-foreground mb-6">
-            Discover thriving communities and learn from industry experts
+          <h1 className="text-6xl md:text-8xl font-bold mb-8 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent leading-tight">
+            Learning Communities
+          </h1>
+          <p className="text-2xl md:text-3xl text-muted-foreground mb-8 font-light">
+            Connect with like-minded learners and industry experts
+          </p>
+          
+          <motion.div
+            animate={{ 
+              scaleX: [0.8, 1.2, 0.8],
+              opacity: [0.6, 1, 0.6],
+            }}
+            transition={{ 
+              duration: 4, 
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="w-32 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full"
+          />
+        </motion.div>
+
+        {/* Communities showcase - Vertical layout */}
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 1.0 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              Featured Communities & Top Mentors
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Discover thriving communities and learn from industry experts
+            </p>
+          </motion.div>
+
+          <div className="relative min-h-[800px] flex items-center justify-center">
+            <AnimatePresence mode="wait">
+              {visible && currentCommunities.length > 0 && (
+                <motion.div
+                  key={`communities-${currentCommunities.map(c => c.id).join()}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="w-full"
+                >
+                  {/* Vertical layout */}
+                  <div className="space-y-8">
+                    {currentCommunities.map((community, index) => (
+                      <CommunityCard
+                        key={`${community.id}-${index}`}
+                        community={community}
+                        index={index}
+                      />
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.0, duration: 1.0 }}
+          className="text-center mt-20"
+        >
+          <p className="text-muted-foreground text-lg mb-4">
+            Ready to join a thriving learning community?
           </p>
           <motion.div
             animate={{ 
               scale: [1, 1.08, 1],
-              rotate: [0, 180, 360],
+              rotate: [0, 5, -5, 0],
             }}
             transition={{ 
-              duration: 8, // Much slower header icon animation
+              duration: 4, 
               repeat: Infinity,
               ease: "easeInOut"
             }}
-            className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-full mx-auto"
-          />
-        </motion.div>
-
-        {/* Communities showcase */}
-        <div className="relative min-h-[650px] flex items-center justify-center">
-          <AnimatePresence mode="wait">
-            {visible && currentCommunities.length > 0 && (
-              <motion.div
-                key={`communities-${currentCommunities.map(c => c.id).join()}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1.0 }} // Slower transition
-                className="w-full"
-              >
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                  {currentCommunities.map((community, index) => (
-                    <CommunityCard
-                      key={`${community.id}-${index}`}
-                      community={community}
-                      index={index}
-                    />
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* Footer indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1.0 }}
-          className="text-center mt-12"
-        >
-          <motion.p
-            animate={{ 
-              opacity: [0.4, 1, 0.4],
-              y: [0, -8, 0],
-            }}
-            transition={{ 
-              duration: 4, // Slower footer animation
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            className="text-muted-foreground text-lg"
+            className="mt-4"
           >
-            Communities rotating every 12 seconds to showcase amazing mentors... ✨
-          </motion.p>
+            <span className="text-3xl">🌟</span>
+          </motion.div>
         </motion.div>
       </div>
     </div>
