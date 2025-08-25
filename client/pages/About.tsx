@@ -95,6 +95,9 @@ export default function About() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      {/* Navigation */}
+      <NavBar />
+
       {/* Hero Section */}
       <section className="relative py-20 px-4 overflow-hidden">
         {/* Background effects */}
