@@ -1,6 +1,28 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+export interface ChatMessage {
+  id: string;
+  senderId: string;
+  senderName: string;
+  senderAvatar: string;
+  content: string;
+  timestamp: string;
+  type: 'text' | 'image' | 'file' | 'project' | 'event';
+  replyTo?: string;
+  reactions: { emoji: string; users: string[] }[];
+  isPinned: boolean;
+  isEdited: boolean;
+}
+
+export interface OnlineUser {
+  id: string;
+  name: string;
+  avatar: string;
+  status: 'online' | 'away' | 'busy';
+  lastSeen: string;
+}
+
 export interface Community {
   id: string;
   name: string;
@@ -18,11 +40,16 @@ export interface Community {
   isOwner: boolean;
   isJoined: boolean;
   membersList: Member[];
+  onlineUsers: OnlineUser[];
   recentPosts: CommunityPost[];
   events: CommunityEvent[];
   projects: CommunityProject[];
   hackathons: Hackathon[];
   queries: Query[];
+  chatMessages: ChatMessage[];
+  pinnedMessages: ChatMessage[];
+  domain: string;
+  lastActivity: string;
 }
 
 export interface Member {
@@ -34,6 +61,10 @@ export interface Member {
   lastActive: string;
   joinedAt: string;
   role: 'owner' | 'admin' | 'member';
+  isOnline: boolean;
+  status: 'online' | 'away' | 'busy';
+  skills: string[];
+  connections: string[];
 }
 
 export interface CommunityPost {
@@ -41,13 +72,17 @@ export interface CommunityPost {
   author: Member;
   content: string;
   image?: string;
+  files?: { name: string; url: string; type: string }[];
   timestamp: string;
   likes: number;
   comments: number;
   shares: number;
   isLiked: boolean;
-  type: 'general' | 'project' | 'hackathon' | 'query';
+  type: 'general' | 'project' | 'hackathon' | 'query' | 'announcement' | 'poll';
   tags: string[];
+  isPinned: boolean;
+  visibility: 'public' | 'members' | 'followers';
+  reactions: { emoji: string; count: number; users: string[] }[];
 }
 
 export interface CommunityEvent {
@@ -112,7 +147,8 @@ interface CommunityStore {
   joinedCommunities: Community[];
   currentCommunity: Community | null;
   followedUsers: Set<string>;
-  
+  onlineUsers: OnlineUser[];
+
   // Actions
   addCommunity: (community: Omit<Community, 'id' | 'createdAt' | 'isJoined'>) => void;
   joinCommunity: (communityId: string) => void;
@@ -130,6 +166,19 @@ interface CommunityStore {
   markInterested: (communityId: string, projectId: string) => void;
   upvoteQuery: (communityId: string, queryId: string) => void;
   updateCommunityStats: (communityId: string) => void;
+
+  // New chat and real-time features
+  sendMessage: (communityId: string, message: Omit<ChatMessage, 'id' | 'timestamp'>) => void;
+  pinMessage: (communityId: string, messageId: string) => void;
+  unpinMessage: (communityId: string, messageId: string) => void;
+  reactToMessage: (communityId: string, messageId: string, emoji: string, userId: string) => void;
+  setUserOnlineStatus: (userId: string, status: 'online' | 'away' | 'busy') => void;
+  updateOnlineUsers: (communityId: string, users: OnlineUser[]) => void;
+  pinPost: (communityId: string, postId: string) => void;
+  unpinPost: (communityId: string, postId: string) => void;
+  addReaction: (communityId: string, postId: string, emoji: string, userId: string) => void;
+  uploadFile: (communityId: string, file: File) => Promise<string>;
+  getAllUpcomingEvents: () => CommunityEvent[];
 }
 
 // Sample data for development
@@ -155,6 +204,8 @@ const sampleCommunities: Community[] = [
     posts: 89,
     isOwner: false,
     isJoined: true,
+    domain: 'software-dev',
+    lastActivity: new Date().toISOString(),
     membersList: [
       {
         id: '1',
@@ -164,7 +215,11 @@ const sampleCommunities: Community[] = [
         isFollowed: true,
         lastActive: '2 hours ago',
         joinedAt: '2024-01-16T08:00:00Z',
-        role: 'member'
+        role: 'member',
+        isOnline: true,
+        status: 'online',
+        skills: ['React', 'TypeScript', 'Node.js'],
+        connections: ['2', '3']
       },
       {
         id: '2',
@@ -174,10 +229,33 @@ const sampleCommunities: Community[] = [
         isFollowed: false,
         lastActive: '1 hour ago',
         joinedAt: '2024-01-20T12:30:00Z',
-        role: 'admin'
+        role: 'admin',
+        isOnline: true,
+        status: 'online',
+        skills: ['React', 'Vue.js', 'Design Systems'],
+        connections: ['1', '4']
       }
     ],
+    onlineUsers: [
+      { id: '1', name: 'Rajesh Kumar', avatar: 'RK', status: 'online', lastSeen: new Date().toISOString() },
+      { id: '2', name: 'Priya Sharma', avatar: 'PS', status: 'online', lastSeen: new Date().toISOString() }
+    ],
     recentPosts: [],
+    chatMessages: [
+      {
+        id: '1',
+        senderId: '1',
+        senderName: 'Rajesh Kumar',
+        senderAvatar: 'RK',
+        content: 'Hey everyone! Just finished implementing the new React 18 features in our project. Happy to share insights!',
+        timestamp: new Date(Date.now() - 3600000).toISOString(),
+        type: 'text',
+        reactions: [{ emoji: '👍', users: ['2'] }],
+        isPinned: false,
+        isEdited: false
+      }
+    ],
+    pinnedMessages: [],
     events: [
       {
         id: '1',
@@ -285,12 +363,29 @@ const sampleCommunities: Community[] = [
     posts: 156,
     isOwner: false,
     isJoined: false,
+    domain: 'data-science',
+    lastActivity: new Date(Date.now() - 7200000).toISOString(),
     membersList: [],
+    onlineUsers: [],
     recentPosts: [],
-    events: [],
+    events: [
+      {
+        id: '2',
+        title: 'AI Ethics Workshop',
+        description: 'Discussing ethical implications of AI in modern society',
+        date: '2024-02-20',
+        time: '19:00',
+        type: 'workshop',
+        attendees: 120,
+        maxAttendees: 150,
+        isAttending: false
+      }
+    ],
     projects: [],
     hackathons: [],
-    queries: []
+    queries: [],
+    chatMessages: [],
+    pinnedMessages: []
   }
 ];
 
@@ -302,6 +397,7 @@ export const useCommunityStore = create<CommunityStore>()(
       joinedCommunities: sampleCommunities.filter(c => c.isJoined),
       currentCommunity: null,
       followedUsers: new Set(['1']),
+      onlineUsers: [],
 
       // Actions
       addCommunity: (communityData) => {
@@ -328,12 +424,12 @@ export const useCommunityStore = create<CommunityStore>()(
         set((state) => {
           const updatedCommunities = state.communities.map(community =>
             community.id === communityId
-              ? { ...community, isJoined: true, members: community.members + 1 }
+              ? { ...community, isJoined: true, members: community.members + 1, lastActivity: new Date().toISOString() }
               : community
           );
-          
+
           const joinedCommunity = updatedCommunities.find(c => c.id === communityId);
-          const updatedJoinedCommunities = joinedCommunity 
+          const updatedJoinedCommunities = joinedCommunity
             ? [...state.joinedCommunities, joinedCommunity]
             : state.joinedCommunities;
 
@@ -549,6 +645,198 @@ export const useCommunityStore = create<CommunityStore>()(
         // This would typically sync with backend
         // For now, we'll just trigger a re-render
         set((state) => ({ ...state }));
+      },
+
+      // New chat and real-time features
+      sendMessage: (communityId, messageData) => {
+        const newMessage: ChatMessage = {
+          ...messageData,
+          id: Date.now().toString(),
+          timestamp: new Date().toISOString()
+        };
+
+        set((state) => ({
+          communities: state.communities.map(community =>
+            community.id === communityId
+              ? {
+                  ...community,
+                  chatMessages: [...community.chatMessages, newMessage],
+                  lastActivity: new Date().toISOString()
+                }
+              : community
+          )
+        }));
+      },
+
+      pinMessage: (communityId, messageId) => {
+        set((state) => ({
+          communities: state.communities.map(community =>
+            community.id === communityId
+              ? {
+                  ...community,
+                  chatMessages: community.chatMessages.map(msg =>
+                    msg.id === messageId ? { ...msg, isPinned: true } : msg
+                  ),
+                  pinnedMessages: [
+                    ...community.pinnedMessages,
+                    community.chatMessages.find(msg => msg.id === messageId)!
+                  ]
+                }
+              : community
+          )
+        }));
+      },
+
+      unpinMessage: (communityId, messageId) => {
+        set((state) => ({
+          communities: state.communities.map(community =>
+            community.id === communityId
+              ? {
+                  ...community,
+                  chatMessages: community.chatMessages.map(msg =>
+                    msg.id === messageId ? { ...msg, isPinned: false } : msg
+                  ),
+                  pinnedMessages: community.pinnedMessages.filter(msg => msg.id !== messageId)
+                }
+              : community
+          )
+        }));
+      },
+
+      reactToMessage: (communityId, messageId, emoji, userId) => {
+        set((state) => ({
+          communities: state.communities.map(community =>
+            community.id === communityId
+              ? {
+                  ...community,
+                  chatMessages: community.chatMessages.map(msg =>
+                    msg.id === messageId
+                      ? {
+                          ...msg,
+                          reactions: msg.reactions.map(reaction =>
+                            reaction.emoji === emoji
+                              ? {
+                                  ...reaction,
+                                  users: reaction.users.includes(userId)
+                                    ? reaction.users.filter(id => id !== userId)
+                                    : [...reaction.users, userId]
+                                }
+                              : reaction
+                          ).filter(reaction => reaction.users.length > 0)
+                            .concat(
+                              msg.reactions.find(r => r.emoji === emoji) ? [] : [{ emoji, users: [userId] }]
+                            )
+                        }
+                      : msg
+                  )
+                }
+              : community
+          )
+        }));
+      },
+
+      setUserOnlineStatus: (userId, status) => {
+        set((state) => ({
+          onlineUsers: state.onlineUsers.map(user =>
+            user.id === userId ? { ...user, status, lastSeen: new Date().toISOString() } : user
+          )
+        }));
+      },
+
+      updateOnlineUsers: (communityId, users) => {
+        set((state) => ({
+          communities: state.communities.map(community =>
+            community.id === communityId
+              ? { ...community, onlineUsers: users }
+              : community
+          )
+        }));
+      },
+
+      pinPost: (communityId, postId) => {
+        set((state) => ({
+          communities: state.communities.map(community =>
+            community.id === communityId
+              ? {
+                  ...community,
+                  recentPosts: community.recentPosts.map(post =>
+                    post.id === postId ? { ...post, isPinned: true } : post
+                  )
+                }
+              : community
+          )
+        }));
+      },
+
+      unpinPost: (communityId, postId) => {
+        set((state) => ({
+          communities: state.communities.map(community =>
+            community.id === communityId
+              ? {
+                  ...community,
+                  recentPosts: community.recentPosts.map(post =>
+                    post.id === postId ? { ...post, isPinned: false } : post
+                  )
+                }
+              : community
+          )
+        }));
+      },
+
+      addReaction: (communityId, postId, emoji, userId) => {
+        set((state) => ({
+          communities: state.communities.map(community =>
+            community.id === communityId
+              ? {
+                  ...community,
+                  recentPosts: community.recentPosts.map(post =>
+                    post.id === postId
+                      ? {
+                          ...post,
+                          reactions: post.reactions.map(reaction =>
+                            reaction.emoji === emoji
+                              ? {
+                                  ...reaction,
+                                  count: reaction.users.includes(userId) ? reaction.count - 1 : reaction.count + 1,
+                                  users: reaction.users.includes(userId)
+                                    ? reaction.users.filter(id => id !== userId)
+                                    : [...reaction.users, userId]
+                                }
+                              : reaction
+                          ).filter(reaction => reaction.count > 0)
+                            .concat(
+                              post.reactions.find(r => r.emoji === emoji) ? [] : [{ emoji, count: 1, users: [userId] }]
+                            )
+                        }
+                      : post
+                  )
+                }
+              : community
+          )
+        }));
+      },
+
+      uploadFile: async (communityId, file) => {
+        // Simulate file upload - in real app this would upload to cloud storage
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            const fileUrl = URL.createObjectURL(file);
+            resolve(fileUrl);
+          }, 1000);
+        });
+      },
+
+      getAllUpcomingEvents: () => {
+        const { joinedCommunities } = get();
+        const allEvents: CommunityEvent[] = [];
+
+        joinedCommunities.forEach(community => {
+          community.events.forEach(event => {
+            allEvents.push(event);
+          });
+        });
+
+        return allEvents.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
       }
     }),
     {
@@ -556,11 +844,14 @@ export const useCommunityStore = create<CommunityStore>()(
       partialize: (state) => ({
         communities: state.communities,
         joinedCommunities: state.joinedCommunities,
-        followedUsers: Array.from(state.followedUsers)
+        followedUsers: Array.from(state.followedUsers),
+        onlineUsers: state.onlineUsers
       }),
       onRehydrateStorage: () => (state) => {
         if (state) {
           state.followedUsers = new Set(state.followedUsers as any);
+          // Simulate some users being online
+          state.onlineUsers = state.onlineUsers || [];
         }
       }
     }
