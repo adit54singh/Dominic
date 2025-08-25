@@ -706,6 +706,58 @@ export const useCommunityStore = create<CommunityStore>()(
         set((state) => ({ ...state }));
       },
 
+      addTrendingCommunity: (trendingData: any) => {
+        const newCommunity: Community = {
+          id: trendingData.id || Date.now().toString(),
+          name: trendingData.name,
+          description: trendingData.description || `A vibrant community for ${trendingData.name.toLowerCase()} enthusiasts`,
+          category: 'tech',
+          privacy: 'public',
+          rules: ['Be respectful', 'Stay on topic', 'Help others'],
+          tags: [trendingData.name.toLowerCase().replace(/[^a-z0-9]/g, '-')],
+          members: parseInt(trendingData.members?.replace(/[^0-9]/g, '')) || 1000,
+          posts: Math.floor(Math.random() * 100) + 20,
+          isOwner: false,
+          isJoined: true,
+          membersList: [],
+          onlineUsers: [],
+          recentPosts: [],
+          events: [],
+          projects: [],
+          hackathons: [],
+          queries: [],
+          chatMessages: [],
+          pinnedMessages: [],
+          domain: trendingData.domain || 'general',
+          lastActivity: new Date().toISOString(),
+          createdAt: new Date().toISOString()
+        };
+
+        set((state) => {
+          // Check if community already exists
+          const exists = state.communities.find(c => c.name === newCommunity.name);
+          if (exists) {
+            // Just join the existing community
+            const updatedCommunities = state.communities.map(community =>
+              community.id === exists.id
+                ? { ...community, isJoined: true, members: community.members + 1 }
+                : community
+            );
+            const joinedCommunity = updatedCommunities.find(c => c.id === exists.id);
+            return {
+              communities: updatedCommunities,
+              joinedCommunities: joinedCommunity ? [...state.joinedCommunities.filter(c => c.id !== exists.id), joinedCommunity] : state.joinedCommunities
+            };
+          } else {
+            // Add new community
+            return {
+              communities: [newCommunity, ...state.communities],
+              joinedCommunities: [newCommunity, ...state.joinedCommunities]
+            };
+          }
+        });
+      },
+
       // New chat and real-time features
       sendMessage: (communityId, messageData) => {
         const newMessage: ChatMessage = {
