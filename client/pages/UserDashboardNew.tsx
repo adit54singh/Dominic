@@ -91,6 +91,9 @@ export default function UserDashboard() {
     setCurrentCommunity
   } = useCommunityStore();
 
+  // Ref to prevent infinite loop in community sync
+  const hasInitializedCommunities = useRef(false);
+
   // Load user onboarding data from localStorage
   useEffect(() => {
     const savedData = localStorage.getItem("userOnboardingData");
