@@ -18,7 +18,8 @@ import {
   Eye,
   CheckCircle,
   Send,
-  Smile
+  Smile,
+  Plus
 } from "lucide-react";
 
 interface Post {
