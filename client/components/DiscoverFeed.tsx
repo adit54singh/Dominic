@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
 import {
   Heart,
   MessageCircle,
@@ -21,9 +20,6 @@ import {
   Calendar,
   Target,
   ExternalLink,
-  Send,
-  ChevronDown,
-  ChevronUp,
   Code,
   Database,
   Smartphone,
@@ -39,7 +35,7 @@ import {
 
 interface Post {
   id: string;
-  type: "reel" | "post" | "carousel" | "project";
+  type: "reel" | "post" | "project";
   author: {
     name: string;
     title: string;
@@ -51,7 +47,6 @@ interface Post {
   content: {
     title: string;
     description: string;
-    media?: string;
     tags: string[];
     location?: string;
     duration?: string;
@@ -82,55 +77,141 @@ interface DiscoverFeedProps {
   onJoinProject?: (project: any) => void;
 }
 
-const getDifficultyColor = (difficulty: string) => {
-  switch (difficulty) {
-    case "Beginner":
-      return "bg-green-500/10 text-green-700 dark:text-green-400";
-    case "Intermediate":
-      return "bg-yellow-500/10 text-yellow-700 dark:text-yellow-400";
-    case "Advanced":
-      return "bg-red-500/10 text-red-700 dark:text-red-400";
-    default:
-      return "bg-gray-500/10 text-gray-700 dark:text-gray-400";
-  }
-};
-
 const formatNumber = (num: number): string => {
   if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
   if (num >= 1000) return `${(num / 1000).toFixed(1)}k`;
   return num.toString();
 };
 
-const getDomainIcon = (domain: string) => {
-  switch (domain) {
-    case "web-dev":
-    case "software-dev":
-      return Code;
-    case "mobile-dev":
-      return Smartphone;
-    case "data-science":
-      return Database;
-    case "design":
-      return Palette;
-    case "cybersecurity":
-      return Shield;
-    case "game-dev":
-      return Gamepad;
-    case "cloud-computing":
-      return Cloud;
-    case "blockchain":
-      return Zap;
-    case "quantum-computing":
-      return Cpu;
-    case "ar-vr":
-      return Monitor;
-    case "iot":
-    case "robotics":
-      return Bot;
-    default:
-      return Code;
-  }
+const getDomainName = (domain: string): string => {
+  const domainNames: Record<string, string> = {
+    "web-dev": "Web Development",
+    "mobile-dev": "Mobile Development", 
+    "data-science": "Data Science & AI",
+    "design": "UI/UX Design",
+    "cybersecurity": "Cybersecurity",
+    "game-dev": "Game Development",
+    "cloud-computing": "Cloud Computing",
+    "blockchain": "Blockchain & Web3",
+    "quantum-computing": "Quantum Computing",
+    "ar-vr": "AR/VR Development",
+    "iot": "IoT & Embedded Systems",
+    "robotics": "Robotics & Automation",
+    "devops": "DevOps & Infrastructure",
+    "software-dev": "Software Development",
+  };
+  return domainNames[domain] || domain.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 };
+
+const getDomainIcon = (domain: string) => {
+  const icons: Record<string, any> = {
+    "web-dev": Code,
+    "software-dev": Code,
+    "mobile-dev": Smartphone,
+    "data-science": Database,
+    "design": Palette,
+    "cybersecurity": Shield,
+    "game-dev": Gamepad,
+    "cloud-computing": Cloud,
+    "blockchain": Zap,
+    "quantum-computing": Cpu,
+    "ar-vr": Monitor,
+    "iot": Bot,
+    "robotics": Bot,
+    "devops": Cloud,
+  };
+  return icons[domain] || Code;
+};
+
+// Static sample posts to avoid performance issues
+const SAMPLE_POSTS: Post[] = [
+  {
+    id: "sample-1",
+    type: "reel",
+    author: {
+      name: "Tech Expert",
+      title: "Senior Developer",
+      avatar: "TE",
+      verified: true,
+      company: "TechCorp",
+      followers: "12.5k",
+    },
+    content: {
+      title: "Day in the life of a developer 🚀",
+      description: "Join me for a typical day working with cutting-edge technologies. From morning standups to solving complex challenges!",
+      tags: ["Tech Life", "Development", "Career"],
+      location: "Tech Hub, India",
+      duration: "2:15",
+    },
+    engagement: {
+      likes: 2847,
+      comments: 156,
+      shares: 89,
+      views: 45280,
+    },
+    timestamp: "2 hours ago",
+    domain: "web-dev",
+  },
+  {
+    id: "sample-2",
+    type: "post",
+    author: {
+      name: "Innovation Leader",
+      title: "Tech Architect",
+      avatar: "IL",
+      verified: true,
+      company: "Innovation Labs",
+      followers: "8.2k",
+    },
+    content: {
+      title: "Breaking: New breakthrough in modern technology! 🎉",
+      description: "Just implemented a revolutionary approach that increased performance by 300%! Here's what we learned and how you can apply these principles in your own projects.",
+      tags: ["Innovation", "Performance", "Best Practices"],
+      location: "Bangalore, India",
+    },
+    engagement: {
+      likes: 5624,
+      comments: 342,
+      shares: 278,
+    },
+    timestamp: "4 hours ago",
+    domain: "web-dev",
+  },
+  {
+    id: "sample-3",
+    type: "project",
+    author: {
+      name: "Project Leader",
+      title: "Tech Specialist",
+      avatar: "PL",
+      verified: false,
+      company: "Open Source Contributor",
+      followers: "3.4k",
+    },
+    content: {
+      title: "Revolutionary Tech Project",
+      description: "Building an innovative solution that will change how we approach modern development. Join our passionate team!",
+      tags: ["Open Source", "Innovation", "Collaboration"],
+    },
+    project: {
+      techStack: ["React", "TypeScript", "Node.js", "MongoDB"],
+      teamSize: 5,
+      duration: "4 months",
+      difficulty: "Intermediate",
+      lookingFor: ["Frontend Developer", "Backend Developer", "UI/UX Designer"],
+      repository: "github.com/tech-project/app",
+      openPositions: 3,
+    },
+    engagement: {
+      likes: 234,
+      comments: 56,
+      shares: 43,
+      collaborators: 12,
+    },
+    timestamp: "6 hours ago",
+    domain: "web-dev",
+  },
+];
 
 export default function DiscoverFeed({
   selectedDomain,
@@ -139,157 +220,20 @@ export default function DiscoverFeed({
 }: DiscoverFeedProps) {
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
   const [savedPosts, setSavedPosts] = useState<Set<string>>(new Set());
-  const [showComments, setShowComments] = useState<Set<string>>(new Set());
-  const [newComment, setNewComment] = useState<Record<string, string>>({});
 
-  // Dynamic posts generation based on selected domain
-  const posts = useMemo((): Post[] => {
-    const generateDomainSpecificPosts = (domain: string): Post[] => {
-      const DomainIcon = getDomainIcon(domain);
-      
-      const basePosts: Post[] = [
-        {
-          id: `${domain}-1`,
-          type: "reel",
-          author: {
-            name: "Tech Expert",
-            title: `Senior ${domain.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Engineer`,
-            avatar: "TE",
-            verified: true,
-            company: "TechCorp",
-            followers: "12.5k",
-          },
-          content: {
-            title: `Day in the life: ${domain.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Developer 🚀`,
-            description: `Join me for a typical day working with cutting-edge ${domain.replace(/-/g, ' ')} technologies. From morning standups to solving complex challenges!`,
-            media: "reel_placeholder",
-            tags: [domain.replace(/-/g, ' '), "Tech Life", "Development", "Career"],
-            location: "Tech Hub, India",
-            duration: "2:15",
-          },
-          engagement: {
-            likes: Math.floor(Math.random() * 3000) + 1000,
-            comments: Math.floor(Math.random() * 200) + 50,
-            shares: Math.floor(Math.random() * 100) + 20,
-            views: Math.floor(Math.random() * 50000) + 10000,
-          },
-          timestamp: "2 hours ago",
-          domain: domain,
-        },
-        {
-          id: `${domain}-2`,
-          type: "post",
-          author: {
-            name: "Innovation Leader",
-            title: `${domain.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Architect`,
-            avatar: "IL",
-            verified: true,
-            company: "Innovation Labs",
-            followers: "8.2k",
-          },
-          content: {
-            title: `Breaking: New breakthrough in ${domain.replace(/-/g, ' ')} technology! 🎉`,
-            description: `Just implemented a revolutionary approach in ${domain.replace(/-/g, ' ')} that increased performance by 300%! Here's what we learned and how you can apply these principles in your own projects.`,
-            tags: [domain.replace(/-/g, ' '), "Innovation", "Performance", "Best Practices"],
-            location: "Bangalore, India",
-          },
-          engagement: {
-            likes: Math.floor(Math.random() * 5000) + 2000,
-            comments: Math.floor(Math.random() * 300) + 100,
-            shares: Math.floor(Math.random() * 200) + 50,
-          },
-          timestamp: "4 hours ago",
-          domain: domain,
-        },
-        {
-          id: `${domain}-project`,
-          type: "project",
-          author: {
-            name: "Project Leader",
-            title: `${domain.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Specialist`,
-            avatar: "PL",
-            verified: false,
-            company: "Open Source Contributor",
-            followers: "3.4k",
-          },
-          content: {
-            title: `Revolutionary ${domain.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Project`,
-            description: `Building an innovative ${domain.replace(/-/g, ' ')} solution that will change how we approach modern development. Join our passionate team!`,
-            tags: [domain.replace(/-/g, ' '), "Open Source", "Innovation", "Collaboration"],
-          },
-          project: {
-            techStack: getDomainTechStack(domain),
-            teamSize: Math.floor(Math.random() * 8) + 3,
-            duration: `${Math.floor(Math.random() * 6) + 2} months`,
-            difficulty: ["Beginner", "Intermediate", "Advanced"][Math.floor(Math.random() * 3)] as "Beginner" | "Intermediate" | "Advanced",
-            lookingFor: getDomainRoles(domain),
-            repository: `github.com/${domain}-project/app`,
-            openPositions: Math.floor(Math.random() * 5) + 1,
-          },
-          engagement: {
-            likes: Math.floor(Math.random() * 500) + 100,
-            comments: Math.floor(Math.random() * 100) + 20,
-            shares: Math.floor(Math.random() * 50) + 10,
-            collaborators: Math.floor(Math.random() * 20) + 5,
-          },
-          timestamp: "6 hours ago",
-          domain: domain,
-        },
-      ];
-
-      return basePosts;
-    };
-
-    const getDomainTechStack = (domain: string): string[] => {
-      const techStacks: Record<string, string[]> = {
-        "web-dev": ["React", "Next.js", "TypeScript", "Node.js", "MongoDB"],
-        "mobile-dev": ["React Native", "Flutter", "Swift", "Kotlin", "Firebase"],
-        "data-science": ["Python", "TensorFlow", "PyTorch", "Jupyter", "Pandas"],
-        "design": ["Figma", "Adobe XD", "Sketch", "Principle", "After Effects"],
-        "cybersecurity": ["Kali Linux", "Metasploit", "Wireshark", "OWASP", "Python"],
-        "game-dev": ["Unity", "Unreal Engine", "C#", "C++", "Blender"],
-        "cloud-computing": ["AWS", "Azure", "Docker", "Kubernetes", "Terraform"],
-        "blockchain": ["Solidity", "Web3.js", "Hardhat", "Ethereum", "Smart Contracts"],
-        "quantum-computing": ["Qiskit", "Cirq", "Q#", "Python", "Linear Algebra"],
-        "ar-vr": ["Unity", "Unreal Engine", "ARKit", "ARCore", "WebXR"],
-        "iot": ["Arduino", "Raspberry Pi", "Python", "C++", "MQTT"],
-        "robotics": ["ROS", "Python", "C++", "MATLAB", "Computer Vision"],
-        "devops": ["Docker", "Kubernetes", "Jenkins", "AWS", "Terraform"],
-        "software-dev": ["Java", "Python", "React", "Spring Boot", "PostgreSQL"],
-      };
-      return techStacks[domain] || ["JavaScript", "React", "Node.js", "MongoDB"];
-    };
-
-    const getDomainRoles = (domain: string): string[] => {
-      const roles: Record<string, string[]> = {
-        "web-dev": ["Frontend Developer", "Backend Developer", "UI/UX Designer"],
-        "mobile-dev": ["iOS Developer", "Android Developer", "UI/UX Designer"],
-        "data-science": ["Data Scientist", "ML Engineer", "Data Analyst"],
-        "design": ["UI Designer", "UX Researcher", "Visual Designer"],
-        "cybersecurity": ["Security Analyst", "Penetration Tester", "Security Engineer"],
-        "game-dev": ["Game Developer", "3D Artist", "Game Designer"],
-        "cloud-computing": ["Cloud Architect", "DevOps Engineer", "SRE"],
-        "blockchain": ["Blockchain Developer", "Smart Contract Developer", "Web3 Developer"],
-        "quantum-computing": ["Quantum Developer", "Research Scientist", "Algorithm Designer"],
-        "ar-vr": ["AR/VR Developer", "3D Developer", "Unity Developer"],
-        "iot": ["Embedded Developer", "Hardware Engineer", "Firmware Developer"],
-        "robotics": ["Robotics Engineer", "Computer Vision Engineer", "Control Systems Engineer"],
-        "devops": ["DevOps Engineer", "SRE", "Platform Engineer"],
-        "software-dev": ["Full Stack Developer", "Backend Developer", "Software Architect"],
-      };
-      return roles[domain] || ["Software Developer", "Full Stack Developer"];
-    };
-
-    // Generate posts for the selected domain
-    if (selectedDomain && selectedDomain !== "all") {
-      return generateDomainSpecificPosts(selectedDomain);
-    }
-
-    // If no domain selected or "all", show a mix of popular posts
-    const allDomains = ["web-dev", "mobile-dev", "data-science", "design", "cybersecurity", "game-dev"];
-    const mixedPosts = allDomains.flatMap(domain => generateDomainSpecificPosts(domain).slice(0, 1));
-    
-    return mixedPosts;
+  // Use static posts to avoid performance issues
+  const posts = useMemo(() => {
+    return SAMPLE_POSTS.map(post => ({
+      ...post,
+      content: {
+        ...post.content,
+        title: post.content.title.includes("tech") 
+          ? post.content.title.replace("tech", getDomainName(selectedDomain).toLowerCase())
+          : `${getDomainName(selectedDomain)} - ${post.content.title}`,
+        tags: [getDomainName(selectedDomain), ...post.content.tags.slice(1)]
+      },
+      domain: selectedDomain
+    }));
   }, [selectedDomain]);
 
   const handleLike = useCallback((postId: string) => {
@@ -316,33 +260,6 @@ export default function DiscoverFeed({
     });
   }, []);
 
-  const handleToggleComments = useCallback((postId: string) => {
-    setShowComments((prev) => {
-      const newShow = new Set(prev);
-      if (newShow.has(postId)) {
-        newShow.delete(postId);
-      } else {
-        newShow.add(postId);
-      }
-      return newShow;
-    });
-  }, []);
-
-  const handleAddComment = useCallback(
-    (postId: string) => {
-      const comment = newComment[postId];
-      if (comment && comment.trim()) {
-        console.log("Adding comment:", comment, "to post:", postId);
-        setNewComment((prev) => ({ ...prev, [postId]: "" }));
-      }
-    },
-    [newComment],
-  );
-
-  const handleCommentChange = useCallback((postId: string, value: string) => {
-    setNewComment((prev) => ({ ...prev, [postId]: value }));
-  }, []);
-
   const handleJoinProject = useCallback(
     (post: Post) => {
       if (!onJoinProject || !post.project) return;
@@ -356,9 +273,7 @@ export default function DiscoverFeed({
         duration: post.project.duration,
         difficulty: post.project.difficulty,
         author: post.author,
-        dueDate: new Date(
-          Date.now() + Math.random() * 90 * 24 * 60 * 60 * 1000,
-        ).toISOString(),
+        dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
         progress: 0,
       };
 
@@ -374,7 +289,6 @@ export default function DiscoverFeed({
     [joinedProjects],
   );
 
-  // This should never happen now with dynamic generation, but keep as fallback
   if (!posts.length) {
     return (
       <div className="max-w-2xl mx-auto">
@@ -384,8 +298,7 @@ export default function DiscoverFeed({
               <TrendingUp className="w-12 h-12 mx-auto mb-4 opacity-50" />
               <h3 className="text-lg font-semibold mb-2">No posts available</h3>
               <p className="text-sm">
-                Check back later for more content in the {selectedDomain}{" "}
-                domain.
+                Check back later for more content in the {getDomainName(selectedDomain)} domain.
               </p>
             </div>
           </CardContent>
@@ -394,6 +307,8 @@ export default function DiscoverFeed({
     );
   }
 
+  const DomainIcon = getDomainIcon(selectedDomain);
+
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       {/* Domain Header */}
@@ -401,15 +316,13 @@ export default function DiscoverFeed({
         <Card className="border-0 shadow-sm bg-gradient-to-r from-primary/10 to-accent/10">
           <CardContent className="p-6">
             <div className="flex items-center space-x-3">
-              {React.createElement(getDomainIcon(selectedDomain), {
-                className: "w-8 h-8 text-primary"
-              })}
+              <DomainIcon className="w-8 h-8 text-primary" />
               <div>
                 <h3 className="text-xl font-bold">
-                  {selectedDomain.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Community
+                  {getDomainName(selectedDomain)} Community
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  Discover latest insights, projects, and opportunities in {selectedDomain.replace(/-/g, ' ')}
+                  Discover latest insights, projects, and opportunities in {getDomainName(selectedDomain).toLowerCase()}
                 </p>
               </div>
             </div>
@@ -459,7 +372,7 @@ export default function DiscoverFeed({
           <CardContent className="p-0">
             {/* Reel Content */}
             {post.type === "reel" && (
-              <div className="relative bg-slate-900 aspect-[9/16] max-h-[500px] flex items-center justify-center">
+              <div className="relative bg-slate-900 aspect-[9/16] max-h-[400px] flex items-center justify-center">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20"></div>
                 <div className="relative text-center text-white p-8">
                   <Play className="w-16 h-16 mx-auto mb-4 opacity-80" />
@@ -511,9 +424,7 @@ export default function DiscoverFeed({
                     <h3 className="font-semibold text-lg text-primary">
                       {post.content.title}
                     </h3>
-                    <Badge
-                      className={getDifficultyColor(post.project.difficulty)}
-                    >
+                    <Badge variant="secondary">
                       {post.project.difficulty}
                     </Badge>
                   </div>
@@ -542,11 +453,7 @@ export default function DiscoverFeed({
                     <div className="text-xs font-medium mb-1">Tech Stack:</div>
                     <div className="flex flex-wrap gap-1">
                       {post.project.techStack.map((tech, index) => (
-                        <Badge
-                          key={index}
-                          variant="secondary"
-                          className="text-xs"
-                        >
+                        <Badge key={index} variant="secondary" className="text-xs">
                           {tech}
                         </Badge>
                       ))}
@@ -555,22 +462,10 @@ export default function DiscoverFeed({
 
                   {/* Looking For */}
                   <div className="mb-3">
-                    <div className="text-xs font-medium mb-1 flex items-center space-x-2">
-                      <span>Looking for:</span>
-                      <Badge
-                        variant="outline"
-                        className="text-xs text-green-600"
-                      >
-                        Open to Join
-                      </Badge>
-                    </div>
+                    <div className="text-xs font-medium mb-1">Looking for:</div>
                     <div className="flex flex-wrap gap-1">
                       {post.project.lookingFor.map((role, index) => (
-                        <Badge
-                          key={index}
-                          variant="outline"
-                          className="text-xs border-primary/50"
-                        >
+                        <Badge key={index} variant="outline" className="text-xs">
                           {role}
                         </Badge>
                       ))}
@@ -629,48 +524,30 @@ export default function DiscoverFeed({
                     </span>
                   </Button>
 
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleToggleComments(post.id)}
-                    className="p-0 h-auto hover:scale-105 transition-transform"
-                  >
+                  <Button variant="ghost" size="sm" className="p-0 h-auto">
                     <MessageCircle className="w-5 h-5 mr-1 hover:text-blue-500 transition-colors" />
                     <span className="text-sm">
                       {formatNumber(post.engagement.comments)}
                     </span>
                   </Button>
 
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="p-0 h-auto hover:scale-105 transition-transform"
-                  >
+                  <Button variant="ghost" size="sm" className="p-0 h-auto">
                     <Share className="w-5 h-5 mr-1 hover:text-green-500 transition-colors" />
                     <span className="text-sm">
                       {formatNumber(post.engagement.shares)}
                     </span>
                   </Button>
-
-                  {post.type === "project" && post.engagement.collaborators && (
-                    <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-                      <Users className="w-4 h-4" />
-                      <span>{post.engagement.collaborators} collaborators</span>
-                    </div>
-                  )}
                 </div>
 
                 <div className="flex items-center space-x-2">
                   {post.type === "project" && onJoinProject && (
                     <Button
                       size="sm"
-                      className="bg-primary hover:bg-primary/90 text-xs transition-all duration-200"
+                      className="bg-primary hover:bg-primary/90 text-xs"
                       disabled={isProjectJoined(post.content.title)}
                       onClick={() => handleJoinProject(post)}
                     >
-                      {isProjectJoined(post.content.title)
-                        ? "Joined"
-                        : "Join Project"}
+                      {isProjectJoined(post.content.title) ? "Joined" : "Join Project"}
                     </Button>
                   )}
                   <Button
@@ -691,50 +568,23 @@ export default function DiscoverFeed({
               </div>
             </div>
 
-            {/* Enhanced Engagement Summary */}
+            {/* Engagement Summary */}
             <div className="px-4 pb-4 border-t pt-3">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs">
-                  <div className="flex items-center space-x-4">
-                    <span className="flex items-center space-x-1 text-red-500">
-                      <Heart className="w-3 h-3" />
-                      <span className="font-medium">
-                        {formatNumber(post.engagement.likes)} likes
-                      </span>
-                    </span>
-                    <span className="flex items-center space-x-1 text-blue-500">
-                      <MessageCircle className="w-3 h-3" />
-                      <span className="font-medium">
-                        {formatNumber(post.engagement.comments)} comments
-                      </span>
-                    </span>
-                    {post.engagement.views && (
-                      <span className="flex items-center space-x-1 text-green-500">
-                        <Eye className="w-3 h-3" />
-                        <span className="font-medium">
-                          {formatNumber(post.engagement.views)} views
-                        </span>
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <div className="flex items-center space-x-3">
-                    <span className="flex items-center space-x-1">
-                      <TrendingUp className="w-3 h-3" />
-                      <span>Trending in {post.domain.replace(/-/g, ' ')}</span>
-                    </span>
-                    <span className="flex items-center space-x-1">
-                      <Users className="w-3 h-3" />
-                      <span>{post.author.followers} followers</span>
-                    </span>
-                  </div>
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <div className="flex items-center space-x-3">
                   <span className="flex items-center space-x-1">
-                    <Clock className="w-3 h-3" />
-                    <span>{post.timestamp}</span>
+                    <TrendingUp className="w-3 h-3" />
+                    <span>Trending in {getDomainName(selectedDomain).toLowerCase()}</span>
+                  </span>
+                  <span className="flex items-center space-x-1">
+                    <Users className="w-3 h-3" />
+                    <span>{post.author.followers} followers</span>
                   </span>
                 </div>
+                <span className="flex items-center space-x-1">
+                  <Clock className="w-3 h-3" />
+                  <span>{post.timestamp}</span>
+                </span>
               </div>
             </div>
           </CardContent>
@@ -743,10 +593,7 @@ export default function DiscoverFeed({
 
       {/* Load More */}
       <div className="text-center py-8">
-        <Button
-          variant="outline"
-          className="w-full hover:bg-primary/10 transition-colors"
-        >
+        <Button variant="outline" className="w-full hover:bg-primary/10 transition-colors">
           Load More Posts
         </Button>
       </div>
