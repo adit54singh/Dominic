@@ -28,7 +28,7 @@ import {
   Database,
   Smartphone,
   Shield,
-  Gamepad2,
+  Gamepad,
   Cloud,
   Zap,
   Bot,
