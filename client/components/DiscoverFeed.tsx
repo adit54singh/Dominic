@@ -24,6 +24,17 @@ import {
   Send,
   ChevronDown,
   ChevronUp,
+  Code,
+  Database,
+  Smartphone,
+  Shield,
+  Gamepad2,
+  Cloud,
+  Zap,
+  Bot,
+  VrHeadset,
+  Cpu,
+  Palette,
 } from "lucide-react";
 
 interface Post {
@@ -43,7 +54,7 @@ interface Post {
     media?: string;
     tags: string[];
     location?: string;
-    duration?: string; // for reels
+    duration?: string;
   };
   project?: {
     techStack: string[];
@@ -58,8 +69,8 @@ interface Post {
     likes: number;
     comments: number;
     shares: number;
-    views?: number; // for reels
-    collaborators?: number; // for projects
+    views?: number;
+    collaborators?: number;
   };
   timestamp: string;
   domain: string;
@@ -90,6 +101,37 @@ const formatNumber = (num: number): string => {
   return num.toString();
 };
 
+const getDomainIcon = (domain: string) => {
+  switch (domain) {
+    case "web-dev":
+    case "software-dev":
+      return Code;
+    case "mobile-dev":
+      return Smartphone;
+    case "data-science":
+      return Database;
+    case "design":
+      return Palette;
+    case "cybersecurity":
+      return Shield;
+    case "game-dev":
+      return Gamepad2;
+    case "cloud-computing":
+      return Cloud;
+    case "blockchain":
+      return Zap;
+    case "quantum-computing":
+      return Cpu;
+    case "ar-vr":
+      return VrHeadset;
+    case "iot":
+    case "robotics":
+      return Bot;
+    default:
+      return Code;
+  }
+};
+
 export default function DiscoverFeed({
   selectedDomain,
   joinedProjects = [],
@@ -100,280 +142,154 @@ export default function DiscoverFeed({
   const [showComments, setShowComments] = useState<Set<string>>(new Set());
   const [newComment, setNewComment] = useState<Record<string, string>>({});
 
-  // Memoized posts generation to prevent unnecessary re-renders
+  // Dynamic posts generation based on selected domain
   const posts = useMemo((): Post[] => {
-    const allPosts: Post[] = [
-      {
-        id: "1",
-        type: "reel",
-        author: {
-          name: "Rajesh Kumar",
-          title: "Senior SDE at Google",
-          avatar: "RK",
-          verified: true,
-          company: "Google",
-          followers: "12.5k",
+    const generateDomainSpecificPosts = (domain: string): Post[] => {
+      const DomainIcon = getDomainIcon(domain);
+      
+      const basePosts: Post[] = [
+        {
+          id: `${domain}-1`,
+          type: "reel",
+          author: {
+            name: "Tech Expert",
+            title: `Senior ${domain.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Engineer`,
+            avatar: "TE",
+            verified: true,
+            company: "TechCorp",
+            followers: "12.5k",
+          },
+          content: {
+            title: `Day in the life: ${domain.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Developer 🚀`,
+            description: `Join me for a typical day working with cutting-edge ${domain.replace(/-/g, ' ')} technologies. From morning standups to solving complex challenges!`,
+            media: "reel_placeholder",
+            tags: [domain.replace(/-/g, ' '), "Tech Life", "Development", "Career"],
+            location: "Tech Hub, India",
+            duration: "2:15",
+          },
+          engagement: {
+            likes: Math.floor(Math.random() * 3000) + 1000,
+            comments: Math.floor(Math.random() * 200) + 50,
+            shares: Math.floor(Math.random() * 100) + 20,
+            views: Math.floor(Math.random() * 50000) + 10000,
+          },
+          timestamp: "2 hours ago",
+          domain: domain,
         },
-        content: {
-          title: "Day in the life at Google Bangalore 🏢",
-          description:
-            "From morning standups to late night coding sessions, here's what a typical day looks like at one of the world's top tech companies. The culture here is amazing! #GoogleLife #TechLife",
-          media: "reel_placeholder",
-          tags: ["Google", "Work Culture", "Tech Life", "Bangalore"],
-          location: "Google, Bangalore",
-          duration: "2:15",
+        {
+          id: `${domain}-2`,
+          type: "post",
+          author: {
+            name: "Innovation Leader",
+            title: `${domain.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Architect`,
+            avatar: "IL",
+            verified: true,
+            company: "Innovation Labs",
+            followers: "8.2k",
+          },
+          content: {
+            title: `Breaking: New breakthrough in ${domain.replace(/-/g, ' ')} technology! 🎉`,
+            description: `Just implemented a revolutionary approach in ${domain.replace(/-/g, ' ')} that increased performance by 300%! Here's what we learned and how you can apply these principles in your own projects.`,
+            tags: [domain.replace(/-/g, ' '), "Innovation", "Performance", "Best Practices"],
+            location: "Bangalore, India",
+          },
+          engagement: {
+            likes: Math.floor(Math.random() * 5000) + 2000,
+            comments: Math.floor(Math.random() * 300) + 100,
+            shares: Math.floor(Math.random() * 200) + 50,
+          },
+          timestamp: "4 hours ago",
+          domain: domain,
         },
-        engagement: {
-          likes: 2847,
-          comments: 156,
-          shares: 89,
-          views: 45280,
+        {
+          id: `${domain}-project`,
+          type: "project",
+          author: {
+            name: "Project Leader",
+            title: `${domain.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Specialist`,
+            avatar: "PL",
+            verified: false,
+            company: "Open Source Contributor",
+            followers: "3.4k",
+          },
+          content: {
+            title: `Revolutionary ${domain.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Project`,
+            description: `Building an innovative ${domain.replace(/-/g, ' ')} solution that will change how we approach modern development. Join our passionate team!`,
+            tags: [domain.replace(/-/g, ' '), "Open Source", "Innovation", "Collaboration"],
+          },
+          project: {
+            techStack: getDomainTechStack(domain),
+            teamSize: Math.floor(Math.random() * 8) + 3,
+            duration: `${Math.floor(Math.random() * 6) + 2} months`,
+            difficulty: ["Beginner", "Intermediate", "Advanced"][Math.floor(Math.random() * 3)] as "Beginner" | "Intermediate" | "Advanced",
+            lookingFor: getDomainRoles(domain),
+            repository: `github.com/${domain}-project/app`,
+            openPositions: Math.floor(Math.random() * 5) + 1,
+          },
+          engagement: {
+            likes: Math.floor(Math.random() * 500) + 100,
+            comments: Math.floor(Math.random() * 100) + 20,
+            shares: Math.floor(Math.random() * 50) + 10,
+            collaborators: Math.floor(Math.random() * 20) + 5,
+          },
+          timestamp: "6 hours ago",
+          domain: domain,
         },
-        timestamp: "2 hours ago",
-        domain: "web-dev",
-      },
-      {
-        id: "2",
-        type: "post",
-        author: {
-          name: "Priya Sharma",
-          title: "Flutter Developer at Paytm",
-          avatar: "PS",
-          verified: true,
-          company: "Paytm",
-          followers: "8.2k",
-        },
-        content: {
-          title: "From College Dropout to Senior Developer 🚀",
-          description:
-            "My journey wasn't conventional. Dropped out in 2nd year, taught myself to code, failed 20+ interviews, but never gave up. Today I'm leading a team of 8 developers at Paytm. Your background doesn't define your future! AMA in comments 💪",
-          tags: ["Success Story", "Self Taught", "Motivation", "Flutter"],
-          location: "Mumbai",
-        },
-        engagement: {
-          likes: 5624,
-          comments: 342,
-          shares: 278,
-        },
-        timestamp: "4 hours ago",
-        domain: "mobile-dev",
-      },
-      {
-        id: "3",
-        type: "carousel",
-        author: {
-          name: "Arjun Patel",
-          title: "ML Engineer at Microsoft",
-          avatar: "AP",
-          verified: true,
-          company: "Microsoft",
-          followers: "15.8k",
-        },
-        content: {
-          title: "Building my first ML model that's now serving 10M+ users! 🤖",
-          description:
-            "Started as a college project, refined it over 6 months, and now it's powering Microsoft's recommendation engine. Here's the complete breakdown of the architecture, challenges faced, and lessons learned.",
-          tags: ["Machine Learning", "Microsoft", "AI", "Success Story"],
-          location: "Hyderabad",
-        },
-        engagement: {
-          likes: 3429,
-          comments: 198,
-          shares: 156,
-        },
-        timestamp: "6 hours ago",
-        domain: "data-science",
-      },
-      {
-        id: "4",
-        type: "reel",
-        author: {
-          name: "Sneha Gupta",
-          title: "Senior UX Designer at Figma",
-          avatar: "SG",
-          verified: true,
-          company: "Figma",
-          followers: "9.7k",
-        },
-        content: {
-          title: "Design process behind Figma's latest feature ✨",
-          description:
-            "Take a peek into how we design at Figma! From user research to prototyping to final implementation. The collaboration between design and engineering teams is incredible here 🎨",
-          media: "reel_placeholder",
-          tags: ["UX Design", "Figma", "Design Process", "Behind The Scenes"],
-          location: "San Francisco (Remote)",
-          duration: "1:45",
-        },
-        engagement: {
-          likes: 4156,
-          comments: 203,
-          shares: 124,
-          views: 28490,
-        },
-        timestamp: "8 hours ago",
-        domain: "design",
-      },
-      {
-        id: "5",
-        type: "post",
-        author: {
-          name: "Karthik Reddy",
-          title: "DevOps Lead at Swiggy",
-          avatar: "KR",
-          verified: true,
-          company: "Swiggy",
-          followers: "6.3k",
-        },
-        content: {
-          title: "How we handle 50 million orders during peak hours 📊",
-          description:
-            "Behind the scenes of Swiggy's infrastructure during IPL finals! Our systems processed 50M orders without a single downtime. Here's the complete architecture breakdown, monitoring setup, and crisis management strategies we used.",
-          tags: ["DevOps", "Scale", "Infrastructure", "Swiggy"],
-          location: "Bangalore",
-        },
-        engagement: {
-          likes: 2876,
-          comments: 167,
-          shares: 298,
-        },
-        timestamp: "12 hours ago",
-        domain: "web-dev",
-      },
-      {
-        id: "p1",
-        type: "project",
-        author: {
-          name: "Vikash Kumar",
-          title: "Full Stack Developer",
-          avatar: "VK",
-          verified: false,
-          company: "Startup Founder",
-          followers: "2.1k",
-        },
-        content: {
-          title: "EcoTracker - Carbon Footprint Monitoring App",
-          description:
-            "Building a comprehensive app to help individuals and businesses track their carbon footprint. Features include real-time monitoring, AI-powered suggestions, and community challenges. Join us in making the world greener!",
-          tags: ["Environment", "Mobile App", "AI", "Sustainability"],
-        },
-        project: {
-          techStack: ["React Native", "Node.js", "TensorFlow", "MongoDB"],
-          teamSize: 5,
-          duration: "4 months",
-          difficulty: "Intermediate",
-          lookingFor: ["UI/UX Designer", "Data Scientist", "DevOps Engineer"],
-          repository: "github.com/ecotracker/app",
-          openPositions: 3,
-        },
-        engagement: {
-          likes: 234,
-          comments: 56,
-          shares: 43,
-          collaborators: 12,
-        },
-        timestamp: "6 hours ago",
-        domain: "mobile-dev",
-      },
-      {
-        id: "p2",
-        type: "project",
-        author: {
-          name: "Sanya Patel",
-          title: "AI/ML Engineer",
-          avatar: "SP",
-          verified: false,
-          company: "Freelancer",
-          followers: "3.4k",
-        },
-        content: {
-          title: "MediBot - AI Healthcare Assistant",
-          description:
-            "Developing an AI-powered chatbot to provide preliminary health advice and appointment scheduling. Using NLP and medical knowledge graphs to assist users. Looking for passionate developers to join!",
-          tags: ["Healthcare", "AI", "Chatbot", "NLP"],
-        },
-        project: {
-          techStack: ["Python", "TensorFlow", "NLTK", "FastAPI", "React"],
-          teamSize: 6,
-          duration: "6 months",
-          difficulty: "Advanced",
-          lookingFor: [
-            "Backend Developer",
-            "Frontend Developer",
-            "Medical Expert",
-          ],
-          repository: "github.com/medibot/ai-assistant",
-          openPositions: 3,
-        },
-        engagement: {
-          likes: 345,
-          comments: 78,
-          shares: 52,
-          collaborators: 18,
-        },
-        timestamp: "12 hours ago",
-        domain: "data-science",
-      },
-      {
-        id: "p3",
-        type: "project",
-        author: {
-          name: "Rahul Sharma",
-          title: "Web Developer",
-          avatar: "RS",
-          verified: false,
-          company: "Student",
-          followers: "856",
-        },
-        content: {
-          title: "StudySync - Collaborative Learning Platform",
-          description:
-            "Creating a platform where students can form study groups, share notes, take quizzes together, and track progress. Think Discord meets Google Classroom with gamification elements!",
-          tags: ["Education", "Collaboration", "Gamification", "Web App"],
-        },
-        project: {
-          techStack: ["Next.js", "TypeScript", "PostgreSQL", "Socket.io"],
-          teamSize: 4,
-          duration: "3 months",
-          difficulty: "Beginner",
-          lookingFor: ["Frontend Developer", "UI/UX Designer"],
-          repository: "github.com/studysync/platform",
-          openPositions: 2,
-        },
-        engagement: {
-          likes: 189,
-          comments: 34,
-          shares: 28,
-          collaborators: 8,
-        },
-        timestamp: "1 day ago",
-        domain: "web-dev",
-      },
-    ];
+      ];
 
-    // Filter by domain efficiently
-    if (selectedDomain === "all") {
-      return allPosts;
+      return basePosts;
+    };
+
+    const getDomainTechStack = (domain: string): string[] => {
+      const techStacks: Record<string, string[]> = {
+        "web-dev": ["React", "Next.js", "TypeScript", "Node.js", "MongoDB"],
+        "mobile-dev": ["React Native", "Flutter", "Swift", "Kotlin", "Firebase"],
+        "data-science": ["Python", "TensorFlow", "PyTorch", "Jupyter", "Pandas"],
+        "design": ["Figma", "Adobe XD", "Sketch", "Principle", "After Effects"],
+        "cybersecurity": ["Kali Linux", "Metasploit", "Wireshark", "OWASP", "Python"],
+        "game-dev": ["Unity", "Unreal Engine", "C#", "C++", "Blender"],
+        "cloud-computing": ["AWS", "Azure", "Docker", "Kubernetes", "Terraform"],
+        "blockchain": ["Solidity", "Web3.js", "Hardhat", "Ethereum", "Smart Contracts"],
+        "quantum-computing": ["Qiskit", "Cirq", "Q#", "Python", "Linear Algebra"],
+        "ar-vr": ["Unity", "Unreal Engine", "ARKit", "ARCore", "WebXR"],
+        "iot": ["Arduino", "Raspberry Pi", "Python", "C++", "MQTT"],
+        "robotics": ["ROS", "Python", "C++", "MATLAB", "Computer Vision"],
+        "devops": ["Docker", "Kubernetes", "Jenkins", "AWS", "Terraform"],
+        "software-dev": ["Java", "Python", "React", "Spring Boot", "PostgreSQL"],
+      };
+      return techStacks[domain] || ["JavaScript", "React", "Node.js", "MongoDB"];
+    };
+
+    const getDomainRoles = (domain: string): string[] => {
+      const roles: Record<string, string[]> = {
+        "web-dev": ["Frontend Developer", "Backend Developer", "UI/UX Designer"],
+        "mobile-dev": ["iOS Developer", "Android Developer", "UI/UX Designer"],
+        "data-science": ["Data Scientist", "ML Engineer", "Data Analyst"],
+        "design": ["UI Designer", "UX Researcher", "Visual Designer"],
+        "cybersecurity": ["Security Analyst", "Penetration Tester", "Security Engineer"],
+        "game-dev": ["Game Developer", "3D Artist", "Game Designer"],
+        "cloud-computing": ["Cloud Architect", "DevOps Engineer", "SRE"],
+        "blockchain": ["Blockchain Developer", "Smart Contract Developer", "Web3 Developer"],
+        "quantum-computing": ["Quantum Developer", "Research Scientist", "Algorithm Designer"],
+        "ar-vr": ["AR/VR Developer", "3D Developer", "Unity Developer"],
+        "iot": ["Embedded Developer", "Hardware Engineer", "Firmware Developer"],
+        "robotics": ["Robotics Engineer", "Computer Vision Engineer", "Control Systems Engineer"],
+        "devops": ["DevOps Engineer", "SRE", "Platform Engineer"],
+        "software-dev": ["Full Stack Developer", "Backend Developer", "Software Architect"],
+      };
+      return roles[domain] || ["Software Developer", "Full Stack Developer"];
+    };
+
+    // Generate posts for the selected domain
+    if (selectedDomain && selectedDomain !== "all") {
+      return generateDomainSpecificPosts(selectedDomain);
     }
 
-    return allPosts.filter((post) => {
-      if (post.domain === selectedDomain) return true;
-
-      // Cross-domain compatibility
-      if (
-        selectedDomain === "web-dev" &&
-        ["design", "security"].includes(post.domain)
-      ) {
-        return true;
-      }
-      if (selectedDomain === "mobile-dev" && post.domain === "design") {
-        return true;
-      }
-      if (selectedDomain === "data-science" && post.domain === "business") {
-        return true;
-      }
-
-      return false;
-    });
+    // If no domain selected or "all", show a mix of popular posts
+    const allDomains = ["web-dev", "mobile-dev", "data-science", "design", "cybersecurity", "game-dev"];
+    const mixedPosts = allDomains.flatMap(domain => generateDomainSpecificPosts(domain).slice(0, 1));
+    
+    return mixedPosts;
   }, [selectedDomain]);
 
   const handleLike = useCallback((postId: string) => {
@@ -458,6 +374,7 @@ export default function DiscoverFeed({
     [joinedProjects],
   );
 
+  // This should never happen now with dynamic generation, but keep as fallback
   if (!posts.length) {
     return (
       <div className="max-w-2xl mx-auto">
@@ -479,6 +396,27 @@ export default function DiscoverFeed({
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
+      {/* Domain Header */}
+      {selectedDomain && selectedDomain !== "all" && (
+        <Card className="border-0 shadow-sm bg-gradient-to-r from-primary/10 to-accent/10">
+          <CardContent className="p-6">
+            <div className="flex items-center space-x-3">
+              {React.createElement(getDomainIcon(selectedDomain), {
+                className: "w-8 h-8 text-primary"
+              })}
+              <div>
+                <h3 className="text-xl font-bold">
+                  {selectedDomain.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Community
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Discover latest insights, projects, and opportunities in {selectedDomain.replace(/-/g, ' ')}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {posts.map((post) => (
         <Card
           key={post.id}
@@ -558,26 +496,6 @@ export default function DiscoverFeed({
                 </p>
                 {post.content.location && (
                   <div className="flex items-center space-x-1 text-xs text-muted-foreground mb-3">
-                    <MapPin className="w-3 h-3" />
-                    <span>{post.content.location}</span>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Carousel Content */}
-            {post.type === "carousel" && (
-              <div className="px-4 pb-3">
-                <div className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg p-4 mb-3">
-                  <h3 className="font-semibold text-lg mb-2">
-                    {post.content.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    {post.content.description}
-                  </p>
-                </div>
-                {post.content.location && (
-                  <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                     <MapPin className="w-3 h-3" />
                     <span>{post.content.location}</span>
                   </div>
@@ -805,7 +723,7 @@ export default function DiscoverFeed({
                   <div className="flex items-center space-x-3">
                     <span className="flex items-center space-x-1">
                       <TrendingUp className="w-3 h-3" />
-                      <span>Trending in {post.domain}</span>
+                      <span>Trending in {post.domain.replace(/-/g, ' ')}</span>
                     </span>
                     <span className="flex items-center space-x-1">
                       <Users className="w-3 h-3" />
