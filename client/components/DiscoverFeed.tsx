@@ -115,7 +115,7 @@ const getDomainIcon = (domain: string) => {
     case "cybersecurity":
       return Shield;
     case "game-dev":
-      return Gamepad2;
+      return Gamepad;
     case "cloud-computing":
       return Cloud;
     case "blockchain":
