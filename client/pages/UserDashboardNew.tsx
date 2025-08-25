@@ -50,6 +50,8 @@ import UserProfileView from "@/components/UserProfileView";
 import FollowingProjectsFeed from "@/components/FollowingProjectsFeed";
 import EditProfile from "@/components/EditProfile";
 import ConnectSection from "@/components/ConnectSection";
+import PostCreator from "@/components/PostCreator";
+import ReelsAndPosts from "@/components/ReelsAndPosts";
 
 export default function UserDashboard() {
   const [activeTab, setActiveTab] = useState("profile");
