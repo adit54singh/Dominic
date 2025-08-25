@@ -46,11 +46,12 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import ProfileCard from "@/components/ProfileCard";
-import DiscoverFeed from "@/components/DiscoverFeed";
 import UserProfileView from "@/components/UserProfileView";
 import FollowingProjectsFeed from "@/components/FollowingProjectsFeed";
 import EditProfile from "@/components/EditProfile";
 import ConnectSection from "@/components/ConnectSection";
+import PostCreator from "@/components/PostCreator";
+import ReelsAndPosts from "@/components/ReelsAndPosts";
 
 export default function UserDashboard() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -81,63 +82,102 @@ export default function UserDashboard() {
   useEffect(() => {
     const savedData = localStorage.getItem("userOnboardingData");
     if (savedData) {
-      const data = JSON.parse(savedData);
-      setUserOnboardingData(data);
-      // Set domain immediately during initial load to prevent later useEffect
-      if (data.domains && data.domains.length > 0 && !selectedDomain) {
-        setSelectedDomain(data.domains[0]);
+      try {
+        const data = JSON.parse(savedData);
+        setUserOnboardingData(data);
+        // Set domain immediately during initial load if none is selected
+        if (data.domains && data.domains.length > 0 && !selectedDomain) {
+          setSelectedDomain(data.domains[0]);
+        }
+      } catch (error) {
+        console.error("Error parsing userOnboardingData:", error);
       }
     }
 
     // Load saved joined projects, communities, and activity
-    const savedJoinedProjects = localStorage.getItem("joinedProjects");
-    if (savedJoinedProjects) {
-      setJoinedProjects(JSON.parse(savedJoinedProjects));
-    }
+    try {
+      const savedJoinedProjects = localStorage.getItem("joinedProjects");
+      if (savedJoinedProjects) {
+        setJoinedProjects(JSON.parse(savedJoinedProjects));
+      }
 
-    const savedJoinedCommunities = localStorage.getItem("joinedCommunities");
-    if (savedJoinedCommunities) {
-      setJoinedCommunities(new Set(JSON.parse(savedJoinedCommunities)));
-    }
+      const savedJoinedCommunities = localStorage.getItem("joinedCommunities");
+      if (savedJoinedCommunities) {
+        setJoinedCommunities(new Set(JSON.parse(savedJoinedCommunities)));
+      }
 
-    const savedUserActivity = localStorage.getItem("userActivity");
-    if (savedUserActivity) {
-      setUserActivity(JSON.parse(savedUserActivity));
-    }
+      const savedUserActivity = localStorage.getItem("userActivity");
+      if (savedUserActivity) {
+        setUserActivity(JSON.parse(savedUserActivity));
+      }
 
-    const savedFollowedUsers = localStorage.getItem("followedUsers");
-    if (savedFollowedUsers) {
-      setFollowedUsers(new Set(JSON.parse(savedFollowedUsers)));
+      const savedFollowedUsers = localStorage.getItem("followedUsers");
+      if (savedFollowedUsers) {
+        setFollowedUsers(new Set(JSON.parse(savedFollowedUsers)));
+      }
+    } catch (error) {
+      console.error("Error loading data from localStorage:", error);
     }
   }, []);
 
   // Save to localStorage when state changes (debounced to prevent excessive saves)
   useEffect(() => {
-    if (joinedProjects.length > 0) {
-      localStorage.setItem("joinedProjects", JSON.stringify(joinedProjects));
-    }
+    const timeoutId = setTimeout(() => {
+      try {
+        if (joinedProjects.length > 0) {
+          localStorage.setItem(
+            "joinedProjects",
+            JSON.stringify(joinedProjects),
+          );
+        }
+      } catch (error) {
+        console.error("Error saving joinedProjects to localStorage:", error);
+      }
+    }, 500);
+    return () => clearTimeout(timeoutId);
   }, [joinedProjects]);
 
   useEffect(() => {
-    if (joinedCommunities.size > 0) {
-      localStorage.setItem(
-        "joinedCommunities",
-        JSON.stringify(Array.from(joinedCommunities)),
-      );
-    }
+    const timeoutId = setTimeout(() => {
+      try {
+        if (joinedCommunities.size > 0) {
+          localStorage.setItem(
+            "joinedCommunities",
+            JSON.stringify(Array.from(joinedCommunities)),
+          );
+        }
+      } catch (error) {
+        console.error("Error saving joinedCommunities to localStorage:", error);
+      }
+    }, 500);
+    return () => clearTimeout(timeoutId);
   }, [joinedCommunities]);
 
   useEffect(() => {
-    if (userActivity.length > 0) {
-      localStorage.setItem("userActivity", JSON.stringify(userActivity));
-    }
+    const timeoutId = setTimeout(() => {
+      try {
+        if (userActivity.length > 0) {
+          localStorage.setItem("userActivity", JSON.stringify(userActivity));
+        }
+      } catch (error) {
+        console.error("Error saving userActivity to localStorage:", error);
+      }
+    }, 500);
+    return () => clearTimeout(timeoutId);
   }, [userActivity]);
 
   useEffect(() => {
-    localStorage.setItem(
-      "followedUsers",
-      JSON.stringify(Array.from(followedUsers)),
-    );
+    const timeoutId = setTimeout(() => {
+      try {
+        localStorage.setItem(
+          "followedUsers",
+          JSON.stringify(Array.from(followedUsers)),
+        );
+      } catch (error) {
+        console.error("Error saving followedUsers to localStorage:", error);
+      }
+    }, 500);
+    return () => clearTimeout(timeoutId);
   }, [followedUsers]);
 
   // Function to add activity - memoized with useCallback to prevent infinite re-renders
@@ -152,18 +192,41 @@ export default function UserDashboard() {
 
   // Save discovery time to localStorage
   useEffect(() => {
-    localStorage.setItem("discoveryTimeSpent", discoveryTimeSpent.toString());
+    const timeoutId = setTimeout(() => {
+      try {
+        localStorage.setItem(
+          "discoveryTimeSpent",
+          discoveryTimeSpent.toString(),
+        );
+      } catch (error) {
+        console.error(
+          "Error saving discoveryTimeSpent to localStorage:",
+          error,
+        );
+      }
+    }, 1000);
+    return () => clearTimeout(timeoutId);
   }, [discoveryTimeSpent]);
 
   // Load discovery time from localStorage
   useEffect(() => {
-    const savedDiscoveryTime = localStorage.getItem("discoveryTimeSpent");
-    if (savedDiscoveryTime) {
-      setDiscoveryTimeSpent(parseInt(savedDiscoveryTime));
-    }
-    const savedProjectsCompleted = localStorage.getItem("projectsCompleted");
-    if (savedProjectsCompleted) {
-      setProjectsCompleted(parseInt(savedProjectsCompleted));
+    try {
+      const savedDiscoveryTime = localStorage.getItem("discoveryTimeSpent");
+      if (savedDiscoveryTime) {
+        const parsedTime = parseInt(savedDiscoveryTime);
+        if (!isNaN(parsedTime)) {
+          setDiscoveryTimeSpent(parsedTime);
+        }
+      }
+      const savedProjectsCompleted = localStorage.getItem("projectsCompleted");
+      if (savedProjectsCompleted) {
+        const parsedProjects = parseInt(savedProjectsCompleted);
+        if (!isNaN(parsedProjects)) {
+          setProjectsCompleted(parsedProjects);
+        }
+      }
+    } catch (error) {
+      console.error("Error loading discovery data from localStorage:", error);
     }
   }, []);
 
@@ -186,12 +249,16 @@ export default function UserDashboard() {
       }
       setDiscoverySessionStart(null);
     }
-  }, [activeTab, discoverySessionStart]);
+  }, [activeTab, discoverySessionStart, addActivity]);
 
   // Save user onboarding data to localStorage when explicitly updated
   const saveUserOnboardingData = useCallback((data: any) => {
-    if (data) {
-      localStorage.setItem("userOnboardingData", JSON.stringify(data));
+    try {
+      if (data) {
+        localStorage.setItem("userOnboardingData", JSON.stringify(data));
+      }
+    } catch (error) {
+      console.error("Error saving userOnboardingData to localStorage:", error);
     }
   }, []);
 
@@ -217,7 +284,11 @@ export default function UserDashboard() {
   const completeProject = (projectId: string) => {
     setProjectsCompleted((prev) => {
       const newCount = prev + 1;
-      localStorage.setItem("projectsCompleted", newCount.toString());
+      try {
+        localStorage.setItem("projectsCompleted", newCount.toString());
+      } catch (error) {
+        console.error("Error saving projectsCompleted to localStorage:", error);
+      }
       return newCount;
     });
     addActivity({
@@ -1450,14 +1521,61 @@ export default function UserDashboard() {
           <div className="text-center mb-8">
             <h2 className="text-2xl sm:text-3xl font-bold mb-2">Discover</h2>
             <p className="text-muted-foreground">
-              Get inspired by verified professionals sharing their journey, work
-              culture, and collaborative projects you can join
+              Share your journey, connect with peers, and discover amazing
+              content from the community
             </p>
           </div>
-          <DiscoverFeed
-            selectedDomain={selectedDomain}
-            joinedProjects={joinedProjects}
-            onJoinProject={joinProject}
+
+          {/* Post Creator Section */}
+          <PostCreator
+            user={{
+              name: user.name,
+              avatar: user.avatar,
+            }}
+            onCreatePost={(post) => {
+              addActivity({
+                type: "post_created",
+                action: "Created a new post",
+                details: post.content.substring(0, 50) + "...",
+                timestamp: new Date().toISOString(),
+              });
+            }}
+          />
+
+          {/* Reels and Posts Feed */}
+          <ReelsAndPosts
+            onLike={(postId) => {
+              addActivity({
+                type: "post_liked",
+                action: "Liked a post",
+                details: `Liked post ${postId}`,
+                timestamp: new Date().toISOString(),
+              });
+            }}
+            onComment={(postId, comment) => {
+              addActivity({
+                type: "post_commented",
+                action: "Commented on a post",
+                details: comment.substring(0, 50) + "...",
+                timestamp: new Date().toISOString(),
+              });
+            }}
+            onShare={(postId) => {
+              addActivity({
+                type: "post_shared",
+                action: "Shared a post",
+                details: `Shared post ${postId}`,
+                timestamp: new Date().toISOString(),
+              });
+            }}
+            onSave={(postId) => {
+              addActivity({
+                type: "post_saved",
+                action: "Saved a post",
+                details: `Saved post ${postId}`,
+                timestamp: new Date().toISOString(),
+              });
+            }}
           />
         </div>
       );

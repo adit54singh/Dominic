@@ -19,16 +19,18 @@ import {
   Calendar,
   Target
 } from "lucide-react";
+import { useCommunityStore } from "@/lib/community-store";
 
 interface CommunityCreationModalProps {
   onClose: () => void;
   onCreateCommunity: (community: any) => void;
 }
 
-export default function CommunityCreationModal({ 
-  onClose, 
-  onCreateCommunity 
+export default function CommunityCreationModal({
+  onClose,
+  onCreateCommunity
 }: CommunityCreationModalProps) {
+  const { addCommunity } = useCommunityStore();
   const [step, setStep] = useState(1);
   const [communityData, setCommunityData] = useState({
     name: "",
@@ -108,15 +110,19 @@ export default function CommunityCreationModal({
   };
 
   const handleCreate = () => {
-    const community = {
-      id: Date.now().toString(),
+    addCommunity({
       ...communityData,
-      createdAt: new Date().toISOString(),
       members: 1,
       posts: 0,
-      isOwner: true
-    };
-    onCreateCommunity(community);
+      isOwner: true,
+      membersList: [],
+      recentPosts: [],
+      events: [],
+      projects: [],
+      hackathons: [],
+      queries: []
+    });
+    onCreateCommunity(communityData);
     onClose();
   };
 
