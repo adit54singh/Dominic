@@ -123,7 +123,7 @@ const getDomainIcon = (domain: string) => {
     case "quantum-computing":
       return Cpu;
     case "ar-vr":
-      return VrHeadset;
+      return Monitor;
     case "iot":
     case "robotics":
       return Bot;
