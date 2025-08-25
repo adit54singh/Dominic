@@ -11,7 +11,7 @@ import {
   Bookmark,
   MoreHorizontal,
   Play,
-  Verified,
+  CheckCircle,
   MapPin,
   Clock,
   Users,
