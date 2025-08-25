@@ -125,7 +125,10 @@ export default function UserDashboard() {
     const timeoutId = setTimeout(() => {
       try {
         if (joinedProjects.length > 0) {
-          localStorage.setItem("joinedProjects", JSON.stringify(joinedProjects));
+          localStorage.setItem(
+            "joinedProjects",
+            JSON.stringify(joinedProjects),
+          );
         }
       } catch (error) {
         console.error("Error saving joinedProjects to localStorage:", error);
@@ -191,9 +194,15 @@ export default function UserDashboard() {
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       try {
-        localStorage.setItem("discoveryTimeSpent", discoveryTimeSpent.toString());
+        localStorage.setItem(
+          "discoveryTimeSpent",
+          discoveryTimeSpent.toString(),
+        );
       } catch (error) {
-        console.error("Error saving discoveryTimeSpent to localStorage:", error);
+        console.error(
+          "Error saving discoveryTimeSpent to localStorage:",
+          error,
+        );
       }
     }, 1000);
     return () => clearTimeout(timeoutId);
@@ -1512,7 +1521,8 @@ export default function UserDashboard() {
           <div className="text-center mb-8">
             <h2 className="text-2xl sm:text-3xl font-bold mb-2">Discover</h2>
             <p className="text-muted-foreground">
-              Share your journey, connect with peers, and discover amazing content from the community
+              Share your journey, connect with peers, and discover amazing
+              content from the community
             </p>
           </div>
 
@@ -1520,7 +1530,7 @@ export default function UserDashboard() {
           <PostCreator
             user={{
               name: user.name,
-              avatar: user.avatar
+              avatar: user.avatar,
             }}
             onCreatePost={(post) => {
               addActivity({

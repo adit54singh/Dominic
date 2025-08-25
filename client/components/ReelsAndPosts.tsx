@@ -19,7 +19,7 @@ import {
   CheckCircle,
   Send,
   Smile,
-  Plus
+  Plus,
 } from "lucide-react";
 
 interface Post {
@@ -65,24 +65,24 @@ const SAMPLE_POSTS: Post[] = [
       name: "Tech Creator",
       username: "@techcreator",
       avatar: "TC",
-      verified: true
+      verified: true,
     },
     content: {
       text: "Building the future with code! 🚀 Check out this amazing React animation I created",
       media: ["reel_video_1"],
-      thumbnail: "/placeholder.svg"
+      thumbnail: "/placeholder.svg",
     },
     engagement: {
       likes: 15420,
       comments: 342,
       shares: 89,
-      views: 128500
+      views: 128500,
     },
     timestamp: "2h",
     liked: false,
     saved: false,
     location: "Bangalore, India",
-    tags: ["react", "animation", "coding", "tutorial"]
+    tags: ["react", "animation", "coding", "tutorial"],
   },
   {
     id: "2",
@@ -91,21 +91,21 @@ const SAMPLE_POSTS: Post[] = [
       name: "Design Guru",
       username: "@designguru",
       avatar: "DG",
-      verified: true
+      verified: true,
     },
     content: {
       text: "Just finished this UI design for a fintech app. What do you think? 💳✨",
-      media: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg"]
+      media: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
     },
     engagement: {
       likes: 8750,
       comments: 156,
-      shares: 45
+      shares: 45,
     },
     timestamp: "4h",
     liked: true,
     saved: false,
-    tags: ["design", "ui", "fintech", "mobile"]
+    tags: ["design", "ui", "fintech", "mobile"],
   },
   {
     id: "3",
@@ -114,23 +114,23 @@ const SAMPLE_POSTS: Post[] = [
       name: "Code Master",
       username: "@codemaster",
       avatar: "CM",
-      verified: false
+      verified: false,
     },
     content: {
       text: "30-second JavaScript tip that will blow your mind! 🤯",
       media: ["reel_video_2"],
-      thumbnail: "/placeholder.svg"
+      thumbnail: "/placeholder.svg",
     },
     engagement: {
       likes: 23100,
       comments: 567,
       shares: 234,
-      views: 245000
+      views: 245000,
     },
     timestamp: "6h",
     liked: false,
     saved: true,
-    tags: ["javascript", "tips", "programming", "webdev"]
+    tags: ["javascript", "tips", "programming", "webdev"],
   },
   {
     id: "4",
@@ -139,23 +139,28 @@ const SAMPLE_POSTS: Post[] = [
       name: "Startup Life",
       username: "@startuplife",
       avatar: "SL",
-      verified: true
+      verified: true,
     },
     content: {
       text: "Behind the scenes of our latest product launch! Swipe to see the journey 👉",
-      media: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg", "/placeholder.svg"]
+      media: [
+        "/placeholder.svg",
+        "/placeholder.svg",
+        "/placeholder.svg",
+        "/placeholder.svg",
+      ],
     },
     engagement: {
       likes: 12340,
       comments: 289,
-      shares: 156
+      shares: 156,
     },
     timestamp: "8h",
     liked: false,
     saved: false,
     location: "San Francisco, CA",
-    tags: ["startup", "product", "launch", "tech"]
-  }
+    tags: ["startup", "product", "launch", "tech"],
+  },
 ];
 
 const formatNumber = (num: number): string => {
@@ -164,53 +169,61 @@ const formatNumber = (num: number): string => {
   return num.toString();
 };
 
-export default function ReelsAndPosts({ 
+export default function ReelsAndPosts({
   userPosts = [],
   onLike,
   onComment,
   onShare,
-  onSave 
+  onSave,
 }: ReelsAndPostsProps) {
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
   const [savedPosts, setSavedPosts] = useState<Set<string>>(new Set());
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
   const [mutedVideos, setMutedVideos] = useState<Set<string>>(new Set());
-  const [currentCarouselIndex, setCurrentCarouselIndex] = useState<Record<string, number>>({});
+  const [currentCarouselIndex, setCurrentCarouselIndex] = useState<
+    Record<string, number>
+  >({});
 
   const allPosts = [...userPosts, ...SAMPLE_POSTS];
 
-  const handleLike = useCallback((postId: string) => {
-    setLikedPosts(prev => {
-      const newLiked = new Set(prev);
-      if (newLiked.has(postId)) {
-        newLiked.delete(postId);
-      } else {
-        newLiked.add(postId);
-      }
-      return newLiked;
-    });
-    onLike?.(postId);
-  }, [onLike]);
+  const handleLike = useCallback(
+    (postId: string) => {
+      setLikedPosts((prev) => {
+        const newLiked = new Set(prev);
+        if (newLiked.has(postId)) {
+          newLiked.delete(postId);
+        } else {
+          newLiked.add(postId);
+        }
+        return newLiked;
+      });
+      onLike?.(postId);
+    },
+    [onLike],
+  );
 
-  const handleSave = useCallback((postId: string) => {
-    setSavedPosts(prev => {
-      const newSaved = new Set(prev);
-      if (newSaved.has(postId)) {
-        newSaved.delete(postId);
-      } else {
-        newSaved.add(postId);
-      }
-      return newSaved;
-    });
-    onSave?.(postId);
-  }, [onSave]);
+  const handleSave = useCallback(
+    (postId: string) => {
+      setSavedPosts((prev) => {
+        const newSaved = new Set(prev);
+        if (newSaved.has(postId)) {
+          newSaved.delete(postId);
+        } else {
+          newSaved.add(postId);
+        }
+        return newSaved;
+      });
+      onSave?.(postId);
+    },
+    [onSave],
+  );
 
   const toggleVideoPlay = (postId: string) => {
-    setPlayingVideo(prev => prev === postId ? null : postId);
+    setPlayingVideo((prev) => (prev === postId ? null : postId));
   };
 
   const toggleVideoMute = (postId: string) => {
-    setMutedVideos(prev => {
+    setMutedVideos((prev) => {
       const newMuted = new Set(prev);
       if (newMuted.has(postId)) {
         newMuted.delete(postId);
@@ -222,16 +235,16 @@ export default function ReelsAndPosts({
   };
 
   const nextCarouselImage = (postId: string, maxIndex: number) => {
-    setCurrentCarouselIndex(prev => ({
+    setCurrentCarouselIndex((prev) => ({
       ...prev,
-      [postId]: ((prev[postId] || 0) + 1) % maxIndex
+      [postId]: ((prev[postId] || 0) + 1) % maxIndex,
     }));
   };
 
   const prevCarouselImage = (postId: string, maxIndex: number) => {
-    setCurrentCarouselIndex(prev => ({
+    setCurrentCarouselIndex((prev) => ({
       ...prev,
-      [postId]: ((prev[postId] || 0) - 1 + maxIndex) % maxIndex
+      [postId]: ((prev[postId] || 0) - 1 + maxIndex) % maxIndex,
     }));
   };
 
@@ -251,7 +264,10 @@ export default function ReelsAndPosts({
 
             {/* Sample Stories */}
             {[1, 2, 3, 4, 5, 6, 7].map((i) => (
-              <div key={i} className="flex flex-col items-center space-y-2 min-w-[80px]">
+              <div
+                key={i}
+                className="flex flex-col items-center space-y-2 min-w-[80px]"
+              >
                 <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 p-0.5 cursor-pointer">
                   <div className="w-full h-full rounded-full bg-background flex items-center justify-center">
                     <Avatar className="w-14 h-14">
@@ -271,7 +287,10 @@ export default function ReelsAndPosts({
       {/* Posts Feed */}
       <div className="space-y-6">
         {allPosts.map((post) => (
-          <Card key={post.id} className="border-0 shadow-sm bg-background/80 backdrop-blur-sm overflow-hidden">
+          <Card
+            key={post.id}
+            className="border-0 shadow-sm bg-background/80 backdrop-blur-sm overflow-hidden"
+          >
             <CardContent className="p-0">
               {/* Post Header */}
               <div className="p-4 flex items-center justify-between">
@@ -283,7 +302,9 @@ export default function ReelsAndPosts({
                   </Avatar>
                   <div>
                     <div className="flex items-center space-x-1">
-                      <span className="font-semibold text-sm">{post.author.name}</span>
+                      <span className="font-semibold text-sm">
+                        {post.author.name}
+                      </span>
                       {post.author.verified && (
                         <CheckCircle className="w-4 h-4 text-blue-500 fill-blue-500" />
                       )}
@@ -316,17 +337,19 @@ export default function ReelsAndPosts({
               {/* Media Content */}
               <div className="relative">
                 {post.type === "reel" && (
-                  <div className="relative bg-black aspect-[9/16] max-h-[600px] flex items-center justify-center group cursor-pointer"
-                       onClick={() => toggleVideoPlay(post.id)}>
+                  <div
+                    className="relative bg-black aspect-[9/16] max-h-[600px] flex items-center justify-center group cursor-pointer"
+                    onClick={() => toggleVideoPlay(post.id)}
+                  >
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/30"></div>
                     {post.content.thumbnail && (
-                      <img 
-                        src={post.content.thumbnail} 
-                        alt="Video thumbnail" 
+                      <img
+                        src={post.content.thumbnail}
+                        alt="Video thumbnail"
                         className="w-full h-full object-cover"
                       />
                     )}
-                    
+
                     {/* Video Controls */}
                     <div className="absolute inset-0 flex items-center justify-center">
                       {playingVideo === post.id ? (
@@ -365,9 +388,9 @@ export default function ReelsAndPosts({
 
                 {post.type === "post" && post.content.media.length === 1 && (
                   <div className="aspect-square max-h-[600px] bg-gray-100">
-                    <img 
-                      src={post.content.media[0]} 
-                      alt="Post image" 
+                    <img
+                      src={post.content.media[0]}
+                      alt="Post image"
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -375,19 +398,26 @@ export default function ReelsAndPosts({
 
                 {post.type === "carousel" && (
                   <div className="relative aspect-square max-h-[600px] bg-gray-100">
-                    <img 
-                      src={post.content.media[currentCarouselIndex[post.id] || 0]} 
-                      alt="Carousel image" 
+                    <img
+                      src={
+                        post.content.media[currentCarouselIndex[post.id] || 0]
+                      }
+                      alt="Carousel image"
                       className="w-full h-full object-cover"
                     />
-                    
+
                     {/* Carousel Navigation */}
                     {post.content.media.length > 1 && (
                       <>
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => prevCarouselImage(post.id, post.content.media.length)}
+                          onClick={() =>
+                            prevCarouselImage(
+                              post.id,
+                              post.content.media.length,
+                            )
+                          }
                           className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white hover:bg-black/70 rounded-full w-8 h-8 p-0"
                         >
                           <ChevronLeft className="w-4 h-4" />
@@ -395,21 +425,26 @@ export default function ReelsAndPosts({
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => nextCarouselImage(post.id, post.content.media.length)}
+                          onClick={() =>
+                            nextCarouselImage(
+                              post.id,
+                              post.content.media.length,
+                            )
+                          }
                           className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 text-white hover:bg-black/70 rounded-full w-8 h-8 p-0"
                         >
                           <ChevronRight className="w-4 h-4" />
                         </Button>
-                        
+
                         {/* Carousel Indicators */}
                         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-1">
                           {post.content.media.map((_, index) => (
                             <div
                               key={index}
                               className={`w-2 h-2 rounded-full ${
-                                index === (currentCarouselIndex[post.id] || 0) 
-                                  ? 'bg-white' 
-                                  : 'bg-white/50'
+                                index === (currentCarouselIndex[post.id] || 0)
+                                  ? "bg-white"
+                                  : "bg-white/50"
                               }`}
                             />
                           ))}
@@ -430,18 +465,26 @@ export default function ReelsAndPosts({
                       onClick={() => handleLike(post.id)}
                       className="p-0 hover:scale-110 transition-transform"
                     >
-                      <Heart 
+                      <Heart
                         className={`w-6 h-6 ${
                           likedPosts.has(post.id) || post.liked
-                            ? 'fill-red-500 text-red-500' 
-                            : 'text-foreground hover:text-red-500'
+                            ? "fill-red-500 text-red-500"
+                            : "text-foreground hover:text-red-500"
                         } transition-colors`}
                       />
                     </Button>
-                    <Button variant="ghost" size="sm" className="p-0 hover:scale-110 transition-transform">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="p-0 hover:scale-110 transition-transform"
+                    >
                       <MessageCircle className="w-6 h-6 text-foreground hover:text-blue-500 transition-colors" />
                     </Button>
-                    <Button variant="ghost" size="sm" className="p-0 hover:scale-110 transition-transform">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="p-0 hover:scale-110 transition-transform"
+                    >
                       <Share className="w-6 h-6 text-foreground hover:text-green-500 transition-colors" />
                     </Button>
                   </div>
@@ -451,11 +494,11 @@ export default function ReelsAndPosts({
                     onClick={() => handleSave(post.id)}
                     className="p-0 hover:scale-110 transition-transform"
                   >
-                    <Bookmark 
+                    <Bookmark
                       className={`w-6 h-6 ${
                         savedPosts.has(post.id) || post.saved
-                          ? 'fill-current text-primary' 
-                          : 'text-foreground hover:text-primary'
+                          ? "fill-current text-primary"
+                          : "text-foreground hover:text-primary"
                       } transition-colors`}
                     />
                   </Button>
@@ -468,7 +511,10 @@ export default function ReelsAndPosts({
 
                 {/* Comments Count */}
                 {post.engagement.comments > 0 && (
-                  <Button variant="ghost" className="p-0 h-auto text-sm text-muted-foreground hover:text-foreground">
+                  <Button
+                    variant="ghost"
+                    className="p-0 h-auto text-sm text-muted-foreground hover:text-foreground"
+                  >
                     View all {formatNumber(post.engagement.comments)} comments
                   </Button>
                 )}
@@ -477,7 +523,10 @@ export default function ReelsAndPosts({
                 {post.tags.length > 0 && (
                   <div className="flex flex-wrap gap-1 mt-2">
                     {post.tags.map((tag, index) => (
-                      <span key={index} className="text-sm text-blue-600 hover:underline cursor-pointer">
+                      <span
+                        key={index}
+                        className="text-sm text-blue-600 hover:underline cursor-pointer"
+                      >
                         #{tag}
                       </span>
                     ))}

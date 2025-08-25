@@ -3,7 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Image,
   Video,
@@ -14,7 +20,7 @@ import {
   X,
   Camera,
   Mic,
-  Hash
+  Hash,
 } from "lucide-react";
 
 interface PostCreatorProps {
@@ -42,9 +48,9 @@ export default function PostCreator({ user, onCreatePost }: PostCreatorProps) {
         likes: 0,
         comments: 0,
         shares: 0,
-        type: selectedMedia ? "media" : "text"
+        type: selectedMedia ? "media" : "text",
       };
-      
+
       onCreatePost?.(newPost);
       setPostContent("");
       setSelectedMedia(null);
@@ -73,11 +79,13 @@ export default function PostCreator({ user, onCreatePost }: PostCreatorProps) {
               {user?.avatar || "YU"}
             </AvatarFallback>
           </Avatar>
-          <div 
+          <div
             className="flex-1 bg-muted/50 rounded-full px-4 py-3 cursor-pointer hover:bg-muted/70 transition-colors"
             onClick={() => setShowFullEditor(true)}
           >
-            <span className="text-muted-foreground">What's on your mind, {user?.name || "there"}?</span>
+            <span className="text-muted-foreground">
+              What's on your mind, {user?.name || "there"}?
+            </span>
           </div>
         </div>
 
@@ -91,7 +99,11 @@ export default function PostCreator({ user, onCreatePost }: PostCreatorProps) {
                 onChange={handleImageUpload}
                 className="hidden"
               />
-              <Button variant="ghost" className="flex items-center space-x-2 text-green-600 hover:bg-green-50" asChild>
+              <Button
+                variant="ghost"
+                className="flex items-center space-x-2 text-green-600 hover:bg-green-50"
+                asChild
+              >
                 <span>
                   <Image className="w-5 h-5" />
                   <span className="hidden sm:block">Photo</span>
@@ -99,21 +111,29 @@ export default function PostCreator({ user, onCreatePost }: PostCreatorProps) {
               </Button>
             </label>
 
-            <Button variant="ghost" className="flex items-center space-x-2 text-blue-600 hover:bg-blue-50">
+            <Button
+              variant="ghost"
+              className="flex items-center space-x-2 text-blue-600 hover:bg-blue-50"
+            >
               <Video className="w-5 h-5" />
               <span className="hidden sm:block">Video</span>
             </Button>
 
-            <Button 
-              variant="ghost" 
-              className={`flex items-center space-x-2 ${isRecording ? 'text-red-600' : 'text-purple-600'} hover:bg-purple-50`}
+            <Button
+              variant="ghost"
+              className={`flex items-center space-x-2 ${isRecording ? "text-red-600" : "text-purple-600"} hover:bg-purple-50`}
               onClick={() => setIsRecording(!isRecording)}
             >
               <Mic className="w-5 h-5" />
-              <span className="hidden sm:block">{isRecording ? "Stop" : "Audio"}</span>
+              <span className="hidden sm:block">
+                {isRecording ? "Stop" : "Audio"}
+              </span>
             </Button>
 
-            <Button variant="ghost" className="flex items-center space-x-2 text-orange-600 hover:bg-orange-50">
+            <Button
+              variant="ghost"
+              className="flex items-center space-x-2 text-orange-600 hover:bg-orange-50"
+            >
               <Users className="w-5 h-5" />
               <span className="hidden sm:block">Tag</span>
             </Button>
@@ -127,7 +147,7 @@ export default function PostCreator({ user, onCreatePost }: PostCreatorProps) {
               <DialogHeader>
                 <DialogTitle>Create New Post</DialogTitle>
               </DialogHeader>
-              
+
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">
                   <Avatar className="w-10 h-10">
@@ -137,7 +157,9 @@ export default function PostCreator({ user, onCreatePost }: PostCreatorProps) {
                   </Avatar>
                   <div>
                     <div className="font-semibold">{user?.name || "You"}</div>
-                    <div className="text-sm text-muted-foreground">Public post</div>
+                    <div className="text-sm text-muted-foreground">
+                      Public post
+                    </div>
                   </div>
                 </div>
 
@@ -150,9 +172,9 @@ export default function PostCreator({ user, onCreatePost }: PostCreatorProps) {
 
                 {selectedMedia && (
                   <div className="relative">
-                    <img 
-                      src={selectedMedia} 
-                      alt="Selected media" 
+                    <img
+                      src={selectedMedia}
+                      alt="Selected media"
                       className="w-full max-h-96 object-cover rounded-lg"
                     />
                     <Button
@@ -197,7 +219,7 @@ export default function PostCreator({ user, onCreatePost }: PostCreatorProps) {
                     </Button>
                   </div>
 
-                  <Button 
+                  <Button
                     onClick={handleCreatePost}
                     disabled={!postContent.trim() && !selectedMedia}
                     className="px-6"
