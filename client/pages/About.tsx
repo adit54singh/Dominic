@@ -21,6 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import NavBar from "@/components/NavBar";
 
 export default function About() {
   const features = [
