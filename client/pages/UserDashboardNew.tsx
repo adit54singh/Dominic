@@ -52,6 +52,9 @@ import EditProfile from "@/components/EditProfile";
 import ConnectSection from "@/components/ConnectSection";
 import PostCreator from "@/components/PostCreator";
 import ReelsAndPosts from "@/components/ReelsAndPosts";
+import EnhancedCommunityView from "@/components/EnhancedCommunityView";
+import UpcomingCommunityEvents from "@/components/UpcomingCommunityEvents";
+import { useCommunityStore } from "@/lib/community-store";
 
 export default function UserDashboard() {
   const [activeTab, setActiveTab] = useState("profile");
