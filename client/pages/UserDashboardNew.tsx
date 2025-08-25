@@ -274,7 +274,11 @@ export default function UserDashboard() {
   const completeProject = (projectId: string) => {
     setProjectsCompleted((prev) => {
       const newCount = prev + 1;
-      localStorage.setItem("projectsCompleted", newCount.toString());
+      try {
+        localStorage.setItem("projectsCompleted", newCount.toString());
+      } catch (error) {
+        console.error("Error saving projectsCompleted to localStorage:", error);
+      }
       return newCount;
     });
     addActivity({
