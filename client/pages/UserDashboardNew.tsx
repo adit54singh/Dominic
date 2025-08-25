@@ -2244,13 +2244,24 @@ export default function UserDashboard() {
     // Auto-join domain-based communities for new users
     if (userOnboardingData?.domains && communities.length > 0) {
       const userDomains = userOnboardingData.domains;
+      let hasChanges = false;
+
       communities.forEach(community => {
         if (userDomains.includes(community.domain) && !community.isJoined) {
-          storeJoinCommunity(community.id);
+          hasChanges = true;
         }
       });
+
+      // Only proceed if there are actual changes to make
+      if (hasChanges) {
+        communities.forEach(community => {
+          if (userDomains.includes(community.domain) && !community.isJoined) {
+            storeJoinCommunity(community.id);
+          }
+        });
+      }
     }
-  }, [userOnboardingData, communities, storeJoinCommunity]);
+  }, [userOnboardingData?.domains]); // Remove communities and storeJoinCommunity from dependencies
 
   // Enhanced Community View Modal
   if (selectedCommunityForView) {
