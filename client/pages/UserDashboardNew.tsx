@@ -2226,6 +2226,26 @@ export default function UserDashboard() {
     return null;
   };
 
+  // Function to open enhanced community view
+  const openCommunityView = (community: any) => {
+    setSelectedCommunityForView(community);
+    setCurrentCommunity(community);
+  };
+
+  // Enhanced Community View Modal
+  if (selectedCommunityForView) {
+    return (
+      <EnhancedCommunityView
+        community={selectedCommunityForView}
+        onClose={() => {
+          setSelectedCommunityForView(null);
+          setCurrentCommunity(null);
+        }}
+        currentUserId={user.name}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5">
       {/* Enhanced Top Navigation */}
