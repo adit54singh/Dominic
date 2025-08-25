@@ -113,31 +113,43 @@ export default function UserDashboard() {
 
   // Save to localStorage when state changes (debounced to prevent excessive saves)
   useEffect(() => {
-    if (joinedProjects.length > 0) {
-      localStorage.setItem("joinedProjects", JSON.stringify(joinedProjects));
-    }
+    const timeoutId = setTimeout(() => {
+      if (joinedProjects.length > 0) {
+        localStorage.setItem("joinedProjects", JSON.stringify(joinedProjects));
+      }
+    }, 500);
+    return () => clearTimeout(timeoutId);
   }, [joinedProjects]);
 
   useEffect(() => {
-    if (joinedCommunities.size > 0) {
-      localStorage.setItem(
-        "joinedCommunities",
-        JSON.stringify(Array.from(joinedCommunities)),
-      );
-    }
+    const timeoutId = setTimeout(() => {
+      if (joinedCommunities.size > 0) {
+        localStorage.setItem(
+          "joinedCommunities",
+          JSON.stringify(Array.from(joinedCommunities)),
+        );
+      }
+    }, 500);
+    return () => clearTimeout(timeoutId);
   }, [joinedCommunities]);
 
   useEffect(() => {
-    if (userActivity.length > 0) {
-      localStorage.setItem("userActivity", JSON.stringify(userActivity));
-    }
+    const timeoutId = setTimeout(() => {
+      if (userActivity.length > 0) {
+        localStorage.setItem("userActivity", JSON.stringify(userActivity));
+      }
+    }, 500);
+    return () => clearTimeout(timeoutId);
   }, [userActivity]);
 
   useEffect(() => {
-    localStorage.setItem(
-      "followedUsers",
-      JSON.stringify(Array.from(followedUsers)),
-    );
+    const timeoutId = setTimeout(() => {
+      localStorage.setItem(
+        "followedUsers",
+        JSON.stringify(Array.from(followedUsers)),
+      );
+    }, 500);
+    return () => clearTimeout(timeoutId);
   }, [followedUsers]);
 
   // Function to add activity - memoized with useCallback to prevent infinite re-renders
