@@ -580,7 +580,7 @@ export default function DiscoverFeed({
                   {/* Repository */}
                   {post.project.repository && (
                     <div className="flex items-center space-x-2 text-xs">
-                      <GitFork className="w-3 h-3 text-muted-foreground" />
+                      <Github className="w-3 h-3 text-muted-foreground" />
                       <a
                         href={`https://${post.project.repository}`}
                         target="_blank"
