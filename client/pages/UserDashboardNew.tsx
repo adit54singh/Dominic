@@ -81,11 +81,15 @@ export default function UserDashboard() {
   useEffect(() => {
     const savedData = localStorage.getItem("userOnboardingData");
     if (savedData) {
-      const data = JSON.parse(savedData);
-      setUserOnboardingData(data);
-      // Set domain immediately during initial load to prevent later useEffect
-      if (data.domains && data.domains.length > 0 && !selectedDomain) {
-        setSelectedDomain(data.domains[0]);
+      try {
+        const data = JSON.parse(savedData);
+        setUserOnboardingData(data);
+        // Set domain immediately during initial load if none is selected
+        if (data.domains && data.domains.length > 0 && !selectedDomain) {
+          setSelectedDomain(data.domains[0]);
+        }
+      } catch (error) {
+        console.error("Error parsing userOnboardingData:", error);
       }
     }
 
