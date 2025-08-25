@@ -30,6 +30,7 @@ import CommunityCreationModal from "@/components/CommunityCreationModal";
 import CommunityDetailView from "@/components/CommunityDetailView";
 import CommunityStats from "@/components/CommunityStats";
 import TrendingTopics from "@/components/TrendingTopics";
+import AnimatedCommunityShowcase from "@/components/AnimatedCommunityShowcase";
 
 export default function Community() {
   const {
