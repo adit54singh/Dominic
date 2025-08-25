@@ -249,44 +249,53 @@ export default function ReelsAndPosts({
   };
 
   // State for comments
-  const [commentInputs, setCommentInputs] = useState<Record<string, string>>({});
+  const [commentInputs, setCommentInputs] = useState<Record<string, string>>(
+    {},
+  );
   const [showComments, setShowComments] = useState<Record<string, boolean>>({});
-  const [comments, setComments] = useState<Record<string, Array<{id: string, author: string, text: string, timestamp: string}>>>({});
+  const [comments, setComments] = useState<
+    Record<
+      string,
+      Array<{ id: string; author: string; text: string; timestamp: string }>
+    >
+  >({});
 
-  const handleAddComment = useCallback((postId: string) => {
-    const commentText = commentInputs[postId]?.trim();
-    if (commentText) {
-      const newComment = {
-        id: Date.now().toString(),
-        author: "You",
-        text: commentText,
-        timestamp: "now"
-      };
+  const handleAddComment = useCallback(
+    (postId: string) => {
+      const commentText = commentInputs[postId]?.trim();
+      if (commentText) {
+        const newComment = {
+          id: Date.now().toString(),
+          author: "You",
+          text: commentText,
+          timestamp: "now",
+        };
 
-      setComments(prev => ({
-        ...prev,
-        [postId]: [...(prev[postId] || []), newComment]
-      }));
+        setComments((prev) => ({
+          ...prev,
+          [postId]: [...(prev[postId] || []), newComment],
+        }));
 
-      setCommentInputs(prev => ({
-        ...prev,
-        [postId]: ""
-      }));
+        setCommentInputs((prev) => ({
+          ...prev,
+          [postId]: "",
+        }));
 
-      onComment?.(postId, commentText);
-    }
-  }, [commentInputs, onComment]);
+        onComment?.(postId, commentText);
+      }
+    },
+    [commentInputs, onComment],
+  );
 
   const toggleComments = useCallback((postId: string) => {
-    setShowComments(prev => ({
+    setShowComments((prev) => ({
       ...prev,
-      [postId]: !prev[postId]
+      [postId]: !prev[postId],
     }));
   }, []);
 
   return (
     <div className="w-full max-w-2xl mx-auto">
-
       {/* Posts Feed */}
       <div className="space-y-6">
         {allPosts.map((post) => (
@@ -514,13 +523,19 @@ export default function ReelsAndPosts({
                 </div>
 
                 {/* Comments Count */}
-                {(post.engagement.comments > 0 || (comments[post.id] && comments[post.id].length > 0)) && (
+                {(post.engagement.comments > 0 ||
+                  (comments[post.id] && comments[post.id].length > 0)) && (
                   <Button
                     variant="ghost"
                     onClick={() => toggleComments(post.id)}
                     className="p-0 h-auto text-sm text-muted-foreground hover:text-foreground"
                   >
-                    View all {formatNumber(post.engagement.comments + (comments[post.id]?.length || 0))} comments
+                    View all{" "}
+                    {formatNumber(
+                      post.engagement.comments +
+                        (comments[post.id]?.length || 0),
+                    )}{" "}
+                    comments
                   </Button>
                 )}
 
@@ -532,21 +547,31 @@ export default function ReelsAndPosts({
                       <div className="space-y-2">
                         <div className="flex items-start space-x-3 p-2 bg-muted/30 rounded-lg">
                           <Avatar className="w-8 h-8">
-                            <AvatarFallback className="bg-secondary text-xs">U1</AvatarFallback>
+                            <AvatarFallback className="bg-secondary text-xs">
+                              U1
+                            </AvatarFallback>
                           </Avatar>
                           <div className="flex-1">
                             <div className="text-sm font-medium">user_123</div>
-                            <p className="text-sm text-muted-foreground">Amazing work! 🔥</p>
+                            <p className="text-sm text-muted-foreground">
+                              Amazing work! 🔥
+                            </p>
                           </div>
                         </div>
                         {post.engagement.comments > 1 && (
                           <div className="flex items-start space-x-3 p-2 bg-muted/30 rounded-lg">
                             <Avatar className="w-8 h-8">
-                              <AvatarFallback className="bg-secondary text-xs">U2</AvatarFallback>
+                              <AvatarFallback className="bg-secondary text-xs">
+                                U2
+                              </AvatarFallback>
                             </Avatar>
                             <div className="flex-1">
-                              <div className="text-sm font-medium">dev_guru</div>
-                              <p className="text-sm text-muted-foreground">Can you share the source code?</p>
+                              <div className="text-sm font-medium">
+                                dev_guru
+                              </div>
+                              <p className="text-sm text-muted-foreground">
+                                Can you share the source code?
+                              </p>
                             </div>
                           </div>
                         )}
@@ -554,30 +579,49 @@ export default function ReelsAndPosts({
                     )}
 
                     {/* User comments */}
-                    {comments[post.id] && comments[post.id].map((comment) => (
-                      <div key={comment.id} className="flex items-start space-x-3 p-2 bg-muted/30 rounded-lg">
-                        <Avatar className="w-8 h-8">
-                          <AvatarFallback className="bg-primary text-white text-xs">Y</AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1">
-                          <div className="text-sm font-medium">{comment.author}</div>
-                          <p className="text-sm text-muted-foreground">{comment.text}</p>
+                    {comments[post.id] &&
+                      comments[post.id].map((comment) => (
+                        <div
+                          key={comment.id}
+                          className="flex items-start space-x-3 p-2 bg-muted/30 rounded-lg"
+                        >
+                          <Avatar className="w-8 h-8">
+                            <AvatarFallback className="bg-primary text-white text-xs">
+                              Y
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1">
+                            <div className="text-sm font-medium">
+                              {comment.author}
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                              {comment.text}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
 
                     {/* Add comment input */}
                     <div className="flex items-center space-x-3 mt-3">
                       <Avatar className="w-8 h-8">
-                        <AvatarFallback className="bg-primary text-white text-xs">Y</AvatarFallback>
+                        <AvatarFallback className="bg-primary text-white text-xs">
+                          Y
+                        </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 flex space-x-2">
                         <input
                           type="text"
                           placeholder="Add a comment..."
                           value={commentInputs[post.id] || ""}
-                          onChange={(e) => setCommentInputs(prev => ({ ...prev, [post.id]: e.target.value }))}
-                          onKeyPress={(e) => e.key === 'Enter' && handleAddComment(post.id)}
+                          onChange={(e) =>
+                            setCommentInputs((prev) => ({
+                              ...prev,
+                              [post.id]: e.target.value,
+                            }))
+                          }
+                          onKeyPress={(e) =>
+                            e.key === "Enter" && handleAddComment(post.id)
+                          }
                           className="flex-1 px-3 py-2 text-sm bg-muted/50 border border-border rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50"
                         />
                         <Button

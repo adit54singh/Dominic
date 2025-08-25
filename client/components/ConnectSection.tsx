@@ -393,9 +393,17 @@ const ConnectSection = memo(
           companies: ["Amazon", "Microsoft"],
           isOnline: true,
           communities: [
-            { name: "Web Development Hub", role: "Core Member", members: "2.3k" },
+            {
+              name: "Web Development Hub",
+              role: "Core Member",
+              members: "2.3k",
+            },
             { name: "React Enthusiasts", role: "Moderator", members: "1.8k" },
-            { name: "Open Source Contributors", role: "Active Contributor", members: "950" },
+            {
+              name: "Open Source Contributors",
+              role: "Active Contributor",
+              members: "950",
+            },
           ],
           projects: [
             {
@@ -436,8 +444,16 @@ const ConnectSection = memo(
           companies: ["Google", "Flipkart"],
           isOnline: false,
           communities: [
-            { name: "Data Science Hub India", role: "Technical Lead", members: "4.2k" },
-            { name: "AI/ML Researchers", role: "Research Contributor", members: "2.7k" },
+            {
+              name: "Data Science Hub India",
+              role: "Technical Lead",
+              members: "4.2k",
+            },
+            {
+              name: "AI/ML Researchers",
+              role: "Research Contributor",
+              members: "2.7k",
+            },
             { name: "Python Developers", role: "Core Member", members: "5.8k" },
           ],
           projects: [
@@ -465,8 +481,16 @@ const ConnectSection = memo(
           bio: "Senior iOS developer with 5+ years experience. Love mentoring aspiring mobile developers.",
           isOnline: true,
           communities: [
-            { name: "Flutter Developers India", role: "Community Lead", members: "3.1k" },
-            { name: "Mobile UI/UX Designers", role: "Active Member", members: "1.2k" },
+            {
+              name: "Flutter Developers India",
+              role: "Community Lead",
+              members: "3.1k",
+            },
+            {
+              name: "Mobile UI/UX Designers",
+              role: "Active Member",
+              members: "1.2k",
+            },
           ],
         },
         {
@@ -491,9 +515,17 @@ const ConnectSection = memo(
           companies: ["Zomato", "Swiggy"],
           isOnline: true,
           communities: [
-            { name: "UX Designers India", role: "Community Manager", members: "3.8k" },
+            {
+              name: "UX Designers India",
+              role: "Community Manager",
+              members: "3.8k",
+            },
             { name: "Product Design Hub", role: "Mentor", members: "2.4k" },
-            { name: "Design Systems Coalition", role: "Active Member", members: "1.9k" },
+            {
+              name: "Design Systems Coalition",
+              role: "Active Member",
+              members: "1.9k",
+            },
           ],
           projects: [
             {
@@ -521,8 +553,16 @@ const ConnectSection = memo(
           bio: "DevOps expert at Microsoft. Passionate about cloud technologies and automation.",
           isOnline: false,
           communities: [
-            { name: "DevOps Engineers India", role: "Core Member", members: "4.5k" },
-            { name: "Cloud Native Developers", role: "Technical Lead", members: "2.1k" },
+            {
+              name: "DevOps Engineers India",
+              role: "Core Member",
+              members: "4.5k",
+            },
+            {
+              name: "Cloud Native Developers",
+              role: "Technical Lead",
+              members: "2.1k",
+            },
           ],
         },
         {
@@ -543,8 +583,16 @@ const ConnectSection = memo(
           bio: "Senior PM at Flipkart. Guiding students on product thinking and career transitions.",
           isOnline: true,
           communities: [
-            { name: "Product Managers Network", role: "Senior Member", members: "2.8k" },
-            { name: "Startup Product Leaders", role: "Advisor", members: "1.5k" },
+            {
+              name: "Product Managers Network",
+              role: "Senior Member",
+              members: "2.8k",
+            },
+            {
+              name: "Startup Product Leaders",
+              role: "Advisor",
+              members: "1.5k",
+            },
           ],
         },
       ],
@@ -715,7 +763,9 @@ const ConnectSection = memo(
           }}
           onFollow={handleFollow}
           onMessage={handleMessage}
-          isFollowing={selectedUser ? followedUsers.has(selectedUser.id) : false}
+          isFollowing={
+            selectedUser ? followedUsers.has(selectedUser.id) : false
+          }
         />
       </div>
     );

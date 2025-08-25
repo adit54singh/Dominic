@@ -51,108 +51,111 @@ const EVENT_COLORS = {
 };
 
 const DOMAIN_SPECIFIC_EVENTS = {
-  'software-dev': [
+  "software-dev": [
     {
-      id: '1',
-      title: 'React 19 Features Deep Dive',
-      description: 'Explore the latest React 19 features and best practices',
-      date: '2024-02-20',
-      time: '18:00',
-      type: 'workshop' as const,
+      id: "1",
+      title: "React 19 Features Deep Dive",
+      description: "Explore the latest React 19 features and best practices",
+      date: "2024-02-20",
+      time: "18:00",
+      type: "workshop" as const,
       attendees: 156,
       maxAttendees: 200,
       isAttending: false,
-      community: 'React Developers Hub',
-      location: 'Virtual',
-      speaker: 'Dan Abramov',
-      difficulty: 'Intermediate',
-      tags: ['react', 'javascript', 'frontend'],
+      community: "React Developers Hub",
+      location: "Virtual",
+      speaker: "Dan Abramov",
+      difficulty: "Intermediate",
+      tags: ["react", "javascript", "frontend"],
     },
     {
-      id: '2',
-      title: 'Full Stack JavaScript Hackathon',
-      description: 'Build amazing applications in 48 hours using modern JS stack',
-      date: '2024-02-25',
-      time: '09:00',
-      type: 'hackathon' as const,
+      id: "2",
+      title: "Full Stack JavaScript Hackathon",
+      description:
+        "Build amazing applications in 48 hours using modern JS stack",
+      date: "2024-02-25",
+      time: "09:00",
+      type: "hackathon" as const,
       attendees: 89,
       maxAttendees: 150,
       isAttending: true,
-      community: 'JavaScript Enthusiasts',
-      location: 'Bangalore Tech Park',
-      prize: '$10,000 + MacBook Pro',
-      duration: '48 hours',
-      tags: ['javascript', 'hackathon', 'fullstack'],
+      community: "JavaScript Enthusiasts",
+      location: "Bangalore Tech Park",
+      prize: "$10,000 + MacBook Pro",
+      duration: "48 hours",
+      tags: ["javascript", "hackathon", "fullstack"],
     },
   ],
-  'data-science': [
+  "data-science": [
     {
-      id: '3',
-      title: 'AI Ethics in Practice',
-      description: 'Discussing ethical implications and responsible AI development',
-      date: '2024-02-18',
-      time: '19:30',
-      type: 'webinar' as const,
+      id: "3",
+      title: "AI Ethics in Practice",
+      description:
+        "Discussing ethical implications and responsible AI development",
+      date: "2024-02-18",
+      time: "19:30",
+      type: "webinar" as const,
       attendees: 234,
       maxAttendees: 500,
       isAttending: false,
-      community: 'AI/ML Researchers',
-      location: 'Virtual',
-      speaker: 'Dr. Fei-Fei Li',
-      difficulty: 'All Levels',
-      tags: ['ai', 'ethics', 'research'],
+      community: "AI/ML Researchers",
+      location: "Virtual",
+      speaker: "Dr. Fei-Fei Li",
+      difficulty: "All Levels",
+      tags: ["ai", "ethics", "research"],
     },
     {
-      id: '4',
-      title: 'Kaggle Competition Workshop',
-      description: 'Learn winning strategies for machine learning competitions',
-      date: '2024-02-22',
-      time: '16:00',
-      type: 'workshop' as const,
+      id: "4",
+      title: "Kaggle Competition Workshop",
+      description: "Learn winning strategies for machine learning competitions",
+      date: "2024-02-22",
+      time: "16:00",
+      type: "workshop" as const,
       attendees: 78,
       maxAttendees: 100,
       isAttending: true,
-      community: 'Data Science Hub',
-      location: 'IIT Bombay',
-      speaker: 'Kaggle Grandmaster Team',
-      difficulty: 'Advanced',
-      tags: ['kaggle', 'competition', 'ml'],
+      community: "Data Science Hub",
+      location: "IIT Bombay",
+      speaker: "Kaggle Grandmaster Team",
+      difficulty: "Advanced",
+      tags: ["kaggle", "competition", "ml"],
     },
   ],
-  'design': [
+  design: [
     {
-      id: '5',
-      title: 'Figma to Code Workshop',
-      description: 'Transform your designs into production-ready code',
-      date: '2024-02-21',
-      time: '15:00',
-      type: 'workshop' as const,
+      id: "5",
+      title: "Figma to Code Workshop",
+      description: "Transform your designs into production-ready code",
+      date: "2024-02-21",
+      time: "15:00",
+      type: "workshop" as const,
       attendees: 92,
       maxAttendees: 120,
       isAttending: false,
-      community: 'Design Systems Community',
-      location: 'Virtual',
-      speaker: 'Sarah Drasner',
-      difficulty: 'Intermediate',
-      tags: ['figma', 'design-systems', 'frontend'],
+      community: "Design Systems Community",
+      location: "Virtual",
+      speaker: "Sarah Drasner",
+      difficulty: "Intermediate",
+      tags: ["figma", "design-systems", "frontend"],
     },
   ],
-  'mobile-dev': [
+  "mobile-dev": [
     {
-      id: '6',
-      title: 'Flutter 3.0 Mobile Development',
-      description: 'Building cross-platform apps with the latest Flutter features',
-      date: '2024-02-24',
-      time: '17:00',
-      type: 'workshop' as const,
+      id: "6",
+      title: "Flutter 3.0 Mobile Development",
+      description:
+        "Building cross-platform apps with the latest Flutter features",
+      date: "2024-02-24",
+      time: "17:00",
+      type: "workshop" as const,
       attendees: 145,
       maxAttendees: 180,
       isAttending: true,
-      community: 'Flutter Developers India',
-      location: 'Virtual',
-      speaker: 'Google Flutter Team',
-      difficulty: 'Intermediate',
-      tags: ['flutter', 'mobile', 'dart'],
+      community: "Flutter Developers India",
+      location: "Virtual",
+      speaker: "Google Flutter Team",
+      difficulty: "Intermediate",
+      tags: ["flutter", "mobile", "dart"],
     },
   ],
 };
@@ -163,21 +166,26 @@ interface UpcomingCommunityEventsProps {
   showFilters?: boolean;
 }
 
-export default function UpcomingCommunityEvents({ 
-  userDomains = ['software-dev', 'data-science'], 
+export default function UpcomingCommunityEvents({
+  userDomains = ["software-dev", "data-science"],
   maxEvents = 8,
-  showFilters = true 
+  showFilters = true,
 }: UpcomingCommunityEventsProps) {
-  const { getAllUpcomingEvents, joinEvent, joinedCommunities } = useCommunityStore();
-  const [filter, setFilter] = React.useState<'all' | 'attending' | 'not-attending'>('all');
-  const [typeFilter, setTypeFilter] = React.useState<string>('all');
+  const { getAllUpcomingEvents, joinEvent, joinedCommunities } =
+    useCommunityStore();
+  const [filter, setFilter] = React.useState<
+    "all" | "attending" | "not-attending"
+  >("all");
+  const [typeFilter, setTypeFilter] = React.useState<string>("all");
 
   // Get events from store and combine with domain-specific events
   const storeEvents = getAllUpcomingEvents();
-  
+
   // Get domain-specific events based on user's domains
-  const domainEvents = userDomains.flatMap(domain => 
-    DOMAIN_SPECIFIC_EVENTS[domain as keyof typeof DOMAIN_SPECIFIC_EVENTS] || []
+  const domainEvents = userDomains.flatMap(
+    (domain) =>
+      DOMAIN_SPECIFIC_EVENTS[domain as keyof typeof DOMAIN_SPECIFIC_EVENTS] ||
+      [],
   );
 
   // Combine and sort all events
@@ -186,10 +194,10 @@ export default function UpcomingCommunityEvents({
     .slice(0, maxEvents);
 
   // Filter events based on current filters
-  const filteredEvents = allEvents.filter(event => {
-    if (filter === 'attending' && !event.isAttending) return false;
-    if (filter === 'not-attending' && event.isAttending) return false;
-    if (typeFilter !== 'all' && event.type !== typeFilter) return false;
+  const filteredEvents = allEvents.filter((event) => {
+    if (filter === "attending" && !event.isAttending) return false;
+    if (filter === "not-attending" && event.isAttending) return false;
+    if (typeFilter !== "all" && event.type !== typeFilter) return false;
     return true;
   });
 
@@ -204,21 +212,24 @@ export default function UpcomingCommunityEvents({
     const now = new Date();
     const diffMs = eventDateTime.getTime() - now.getTime();
     const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-    
-    if (diffDays === 0) return 'Today';
-    if (diffDays === 1) return 'Tomorrow';
+
+    if (diffDays === 0) return "Today";
+    if (diffDays === 1) return "Tomorrow";
     if (diffDays < 7) return `${diffDays} days`;
     if (diffDays < 30) return `${Math.ceil(diffDays / 7)} weeks`;
     return `${Math.ceil(diffDays / 30)} months`;
   };
 
   const getEventIcon = (type: string) => {
-    const IconComponent = EVENT_ICONS[type as keyof typeof EVENT_ICONS] || EVENT_ICONS.default;
+    const IconComponent =
+      EVENT_ICONS[type as keyof typeof EVENT_ICONS] || EVENT_ICONS.default;
     return IconComponent;
   };
 
   const getEventColorClass = (type: string) => {
-    return EVENT_COLORS[type as keyof typeof EVENT_COLORS] || EVENT_COLORS.default;
+    return (
+      EVENT_COLORS[type as keyof typeof EVENT_COLORS] || EVENT_COLORS.default
+    );
   };
 
   if (filteredEvents.length === 0) {
@@ -254,7 +265,7 @@ export default function UpcomingCommunityEvents({
               {filteredEvents.length} events
             </Badge>
           </CardTitle>
-          
+
           {showFilters && (
             <div className="flex items-center space-x-2">
               <select
@@ -266,7 +277,7 @@ export default function UpcomingCommunityEvents({
                 <option value="attending">Attending</option>
                 <option value="not-attending">Not Attending</option>
               </select>
-              
+
               <select
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
@@ -283,14 +294,14 @@ export default function UpcomingCommunityEvents({
           )}
         </div>
       </CardHeader>
-      
+
       <CardContent>
         <div className="space-y-4">
           {filteredEvents.map((event) => {
             const IconComponent = getEventIcon(event.type);
             const colorClass = getEventColorClass(event.type);
             const timeUntil = getTimeUntilEvent(event.date, event.time);
-            
+
             return (
               <div
                 key={event.id}
@@ -301,7 +312,7 @@ export default function UpcomingCommunityEvents({
                   <div className={`p-3 rounded-lg ${colorClass} flex-shrink-0`}>
                     <IconComponent className="w-6 h-6" />
                   </div>
-                  
+
                   {/* Event Details */}
                   <div className="flex-1 min-w-0 space-y-3">
                     {/* Header */}
@@ -314,20 +325,22 @@ export default function UpcomingCommunityEvents({
                           {event.description}
                         </p>
                       </div>
-                      
+
                       {/* Time until event */}
                       <Badge variant="outline" className="flex-shrink-0 ml-2">
                         {timeUntil}
                       </Badge>
                     </div>
-                    
+
                     {/* Community and Speaker */}
                     <div className="flex items-center space-x-4 text-sm">
                       <div className="flex items-center space-x-1 text-primary">
                         <Users className="w-4 h-4" />
-                        <span className="font-medium">{(event as any).community}</span>
+                        <span className="font-medium">
+                          {(event as any).community}
+                        </span>
                       </div>
-                      
+
                       {(event as any).speaker && (
                         <div className="flex items-center space-x-1 text-muted-foreground">
                           <Mic className="w-4 h-4" />
@@ -335,36 +348,38 @@ export default function UpcomingCommunityEvents({
                         </div>
                       )}
                     </div>
-                    
+
                     {/* Event metadata */}
                     <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                       <div className="flex items-center space-x-1">
                         <Calendar className="w-4 h-4" />
                         <span>{new Date(event.date).toLocaleDateString()}</span>
                       </div>
-                      
+
                       <div className="flex items-center space-x-1">
                         <Clock className="w-4 h-4" />
                         <span>{event.time}</span>
                       </div>
-                      
+
                       <div className="flex items-center space-x-1">
-                        {(event as any).location?.includes('Virtual') ? (
+                        {(event as any).location?.includes("Virtual") ? (
                           <Video className="w-4 h-4" />
                         ) : (
                           <MapPin className="w-4 h-4" />
                         )}
-                        <span>{(event as any).location || 'TBD'}</span>
+                        <span>{(event as any).location || "TBD"}</span>
                       </div>
-                      
+
                       <div className="flex items-center space-x-1">
                         <Users className="w-4 h-4" />
                         <span>{event.attendees} attending</span>
                         {event.maxAttendees && (
-                          <span className="text-xs">/ {event.maxAttendees} max</span>
+                          <span className="text-xs">
+                            / {event.maxAttendees} max
+                          </span>
                         )}
                       </div>
-                      
+
                       {(event as any).difficulty && (
                         <div className="flex items-center space-x-1">
                           <Target className="w-4 h-4" />
@@ -372,28 +387,34 @@ export default function UpcomingCommunityEvents({
                         </div>
                       )}
                     </div>
-                    
+
                     {/* Tags */}
                     {(event as any).tags && (
                       <div className="flex flex-wrap gap-1">
                         {(event as any).tags.map((tag: string) => (
-                          <Badge key={tag} variant="secondary" className="text-xs">
+                          <Badge
+                            key={tag}
+                            variant="secondary"
+                            className="text-xs"
+                          >
                             #{tag}
                           </Badge>
                         ))}
                       </div>
                     )}
-                    
+
                     {/* Prize/Duration for special events */}
                     {((event as any).prize || (event as any).duration) && (
                       <div className="flex items-center space-x-4 text-sm">
                         {(event as any).prize && (
                           <div className="flex items-center space-x-1 text-yellow-600">
                             <Award className="w-4 h-4" />
-                            <span className="font-medium">{(event as any).prize}</span>
+                            <span className="font-medium">
+                              {(event as any).prize}
+                            </span>
                           </div>
                         )}
-                        
+
                         {(event as any).duration && (
                           <div className="flex items-center space-x-1 text-blue-600">
                             <Clock className="w-4 h-4" />
@@ -402,14 +423,19 @@ export default function UpcomingCommunityEvents({
                         )}
                       </div>
                     )}
-                    
+
                     {/* Actions */}
                     <div className="flex items-center justify-between pt-2 border-t border-border/50">
                       <div className="flex items-center space-x-2">
                         <Button
                           size="sm"
                           variant={event.isAttending ? "secondary" : "default"}
-                          onClick={() => handleJoinEvent(event.id, (event as any).communityId)}
+                          onClick={() =>
+                            handleJoinEvent(
+                              event.id,
+                              (event as any).communityId,
+                            )
+                          }
                           className="flex items-center space-x-1"
                         >
                           {event.isAttending ? (
@@ -424,18 +450,22 @@ export default function UpcomingCommunityEvents({
                             </>
                           )}
                         </Button>
-                        
+
                         <Button variant="ghost" size="sm">
                           <Share className="w-4 h-4" />
                         </Button>
-                        
+
                         <Button variant="ghost" size="sm">
                           <Star className="w-4 h-4" />
                         </Button>
                       </div>
-                      
-                      {(event as any).location?.includes('Virtual') && (
-                        <Button variant="outline" size="sm" className="flex items-center space-x-1">
+
+                      {(event as any).location?.includes("Virtual") && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex items-center space-x-1"
+                        >
                           <ExternalLink className="w-4 h-4" />
                           <span>Join Call</span>
                         </Button>
@@ -447,7 +477,7 @@ export default function UpcomingCommunityEvents({
             );
           })}
         </div>
-        
+
         {/* Show more events button */}
         {allEvents.length > filteredEvents.length && (
           <div className="text-center mt-6">

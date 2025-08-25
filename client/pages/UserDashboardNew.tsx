@@ -78,7 +78,8 @@ export default function UserDashboard() {
   const [projectsCompleted, setProjectsCompleted] = useState(0);
   const [viewingCommunity, setViewingCommunity] = useState<string | null>(null);
   const [communityPosts, setCommunityPosts] = useState<Array<any>>([]);
-  const [selectedCommunityForView, setSelectedCommunityForView] = useState<any>(null);
+  const [selectedCommunityForView, setSelectedCommunityForView] =
+    useState<any>(null);
 
   // Use community store for real-time updates
   const {
@@ -88,7 +89,7 @@ export default function UserDashboard() {
     leaveCommunity: storeLeaveCommunity,
     addTrendingCommunity,
     currentCommunity,
-    setCurrentCommunity
+    setCurrentCommunity,
   } = useCommunityStore();
 
   // Ref to prevent infinite loop in community sync
@@ -1607,7 +1608,10 @@ export default function UserDashboard() {
               <CardTitle className="flex items-center space-x-2">
                 <Users className="w-5 h-5 text-primary" />
                 <span>Your Communities</span>
-                <Badge variant="secondary" className="bg-primary/10 text-primary animate-pulse">
+                <Badge
+                  variant="secondary"
+                  className="bg-primary/10 text-primary animate-pulse"
+                >
                   {storeCommunities.length} joined
                 </Badge>
               </CardTitle>
@@ -1625,24 +1629,32 @@ export default function UserDashboard() {
                         <div className="flex items-center space-x-3 mb-3">
                           <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary/80 rounded-lg flex items-center justify-center relative">
                             <Users className="w-6 h-6 text-white" />
-                            {community.onlineUsers && community.onlineUsers.length > 0 && (
-                              <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-background flex items-center justify-center">
-                                <span className="text-xs text-white font-bold">{community.onlineUsers.length}</span>
-                              </div>
-                            )}
+                            {community.onlineUsers &&
+                              community.onlineUsers.length > 0 && (
+                                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-background flex items-center justify-center">
+                                  <span className="text-xs text-white font-bold">
+                                    {community.onlineUsers.length}
+                                  </span>
+                                </div>
+                              )}
                           </div>
                           <div className="flex-1">
                             <h3 className="font-semibold group-hover:text-primary transition-colors">
                               {community.name}
                             </h3>
                             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                              <span>{community.members.toLocaleString()} members</span>
-                              {community.onlineUsers && community.onlineUsers.length > 0 && (
-                                <>
-                                  <span>•</span>
-                                  <span className="text-green-600 font-medium">{community.onlineUsers.length} online</span>
-                                </>
-                              )}
+                              <span>
+                                {community.members.toLocaleString()} members
+                              </span>
+                              {community.onlineUsers &&
+                                community.onlineUsers.length > 0 && (
+                                  <>
+                                    <span>•</span>
+                                    <span className="text-green-600 font-medium">
+                                      {community.onlineUsers.length} online
+                                    </span>
+                                  </>
+                                )}
                             </div>
                           </div>
                         </div>
@@ -1658,7 +1670,11 @@ export default function UserDashboard() {
                         </div>
                         <div className="flex flex-wrap gap-1 mt-2">
                           {community.tags.slice(0, 3).map((tag) => (
-                            <Badge key={tag} variant="outline" className="text-xs">
+                            <Badge
+                              key={tag}
+                              variant="outline"
+                              className="text-xs"
+                            >
                               #{tag}
                             </Badge>
                           ))}
@@ -1741,7 +1757,9 @@ export default function UserDashboard() {
                     className="hover:shadow-lg transition-all duration-200 cursor-pointer group"
                     onClick={() => {
                       // Try to find existing community or create a mock one for trending
-                      const existingCommunity = communities.find(c => c.name === community.name);
+                      const existingCommunity = communities.find(
+                        (c) => c.name === community.name,
+                      );
                       if (existingCommunity) {
                         openCommunityView(existingCommunity);
                       } else {
@@ -1750,11 +1768,22 @@ export default function UserDashboard() {
                           id: `trending_${index}`,
                           name: community.name,
                           description: `A vibrant community for ${community.name.toLowerCase()} enthusiasts`,
-                          category: 'tech',
-                          privacy: 'public' as const,
-                          rules: ['Be respectful', 'Stay on topic', 'Help others'],
-                          tags: [community.name.toLowerCase().replace(/[^a-z0-9]/g, '-')],
-                          members: parseInt(community.members.replace(/[^0-9]/g, '')) || 1000,
+                          category: "tech",
+                          privacy: "public" as const,
+                          rules: [
+                            "Be respectful",
+                            "Stay on topic",
+                            "Help others",
+                          ],
+                          tags: [
+                            community.name
+                              .toLowerCase()
+                              .replace(/[^a-z0-9]/g, "-"),
+                          ],
+                          members:
+                            parseInt(
+                              community.members.replace(/[^0-9]/g, ""),
+                            ) || 1000,
                           posts: Math.floor(Math.random() * 100) + 20,
                           isOwner: false,
                           isJoined: false,
@@ -1767,9 +1796,9 @@ export default function UserDashboard() {
                           queries: [],
                           chatMessages: [],
                           pinnedMessages: [],
-                          domain: userOnboardingData?.domains?.[0] || 'general',
+                          domain: userOnboardingData?.domains?.[0] || "general",
                           lastActivity: new Date().toISOString(),
-                          createdAt: new Date().toISOString()
+                          createdAt: new Date().toISOString(),
                         };
                         openCommunityView(mockCommunity);
                       }
@@ -1800,7 +1829,8 @@ export default function UserDashboard() {
                         </Badge>
                         <Button
                           variant={
-                            communities.find(c => c.name === community.name)?.isJoined
+                            communities.find((c) => c.name === community.name)
+                              ?.isJoined
                               ? "outline"
                               : "ghost"
                           }
@@ -1808,7 +1838,9 @@ export default function UserDashboard() {
                           className="text-xs"
                           onClick={(e) => {
                             e.stopPropagation();
-                            const existingCommunity = communities.find(c => c.name === community.name);
+                            const existingCommunity = communities.find(
+                              (c) => c.name === community.name,
+                            );
                             if (existingCommunity) {
                               if (existingCommunity.isJoined) {
                                 storeLeaveCommunity(existingCommunity.id);
@@ -1832,7 +1864,8 @@ export default function UserDashboard() {
                                 name: community.name,
                                 members: community.members,
                                 description: `A vibrant community for ${community.name.toLowerCase()} enthusiasts`,
-                                domain: userOnboardingData?.domains?.[0] || 'general'
+                                domain:
+                                  userOnboardingData?.domains?.[0] || "general",
                               });
                               addActivity({
                                 type: "community_joined",
@@ -1842,7 +1875,8 @@ export default function UserDashboard() {
                             }
                           }}
                         >
-                          {communities.find(c => c.name === community.name)?.isJoined
+                          {communities.find((c) => c.name === community.name)
+                            ?.isJoined
                             ? "Leave"
                             : "Join"}
                         </Button>
@@ -1856,7 +1890,9 @@ export default function UserDashboard() {
 
           {/* Enhanced Upcoming Community Events */}
           <UpcomingCommunityEvents
-            userDomains={userOnboardingData?.domains || ['software-dev', 'data-science']}
+            userDomains={
+              userOnboardingData?.domains || ["software-dev", "data-science"]
+            }
             maxEvents={6}
             showFilters={true}
           />
@@ -2253,7 +2289,7 @@ export default function UserDashboard() {
       const userDomains = userOnboardingData.domains;
       let hasChanges = false;
 
-      communities.forEach(community => {
+      communities.forEach((community) => {
         if (userDomains.includes(community.domain) && !community.isJoined) {
           hasChanges = true;
         }
@@ -2261,7 +2297,7 @@ export default function UserDashboard() {
 
       // Only proceed if there are actual changes to make
       if (hasChanges) {
-        communities.forEach(community => {
+        communities.forEach((community) => {
           if (userDomains.includes(community.domain) && !community.isJoined) {
             storeJoinCommunity(community.id);
           }

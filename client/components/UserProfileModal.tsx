@@ -101,7 +101,7 @@ export default function UserProfileModal({
                   <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-4 border-background"></div>
                 )}
               </div>
-              
+
               <div className="flex gap-2 mt-4">
                 <Button
                   onClick={() => onFollow?.(user.id)}
@@ -131,7 +131,9 @@ export default function UserProfileModal({
                     <span className="font-medium">{user.rating}</span>
                   </div>
                 </div>
-                <p className="text-xl text-primary font-medium mb-2">{user.title}</p>
+                <p className="text-xl text-primary font-medium mb-2">
+                  {user.title}
+                </p>
                 <div className="flex flex-wrap items-center gap-4 text-muted-foreground mb-4">
                   <div className="flex items-center gap-1">
                     <MapPin className="w-4 h-4" />
@@ -148,11 +150,13 @@ export default function UserProfileModal({
                     <span>Responds in {user.responseTime}</span>
                   </div>
                 </div>
-                
+
                 {user.companies && (
                   <div className="mb-4">
                     <span className="font-medium">Previous companies:</span>{" "}
-                    <span className="text-muted-foreground">{user.companies.join(", ")}</span>
+                    <span className="text-muted-foreground">
+                      {user.companies.join(", ")}
+                    </span>
                   </div>
                 )}
               </div>
@@ -160,16 +164,28 @@ export default function UserProfileModal({
               {/* Stats */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-500">{user.studentsHelped}</div>
-                  <div className="text-sm text-muted-foreground">Students Helped</div>
+                  <div className="text-2xl font-bold text-blue-500">
+                    {user.studentsHelped}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Students Helped
+                  </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-green-500">{user.projects?.length || 0}</div>
-                  <div className="text-sm text-muted-foreground">Active Projects</div>
+                  <div className="text-2xl font-bold text-green-500">
+                    {user.projects?.length || 0}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Active Projects
+                  </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-500">{user.communities?.length || 0}</div>
-                  <div className="text-sm text-muted-foreground">Communities</div>
+                  <div className="text-2xl font-bold text-purple-500">
+                    {user.communities?.length || 0}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Communities
+                  </div>
                 </div>
               </div>
             </div>
@@ -216,7 +232,9 @@ export default function UserProfileModal({
                           {community.members}
                         </Badge>
                       </div>
-                      <p className="text-sm text-muted-foreground">{community.role}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {community.role}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -234,7 +252,10 @@ export default function UserProfileModal({
                 </h3>
                 <div className="space-y-4">
                   {user.projects.map((project) => (
-                    <div key={project.id} className="p-4 bg-muted/30 rounded-lg">
+                    <div
+                      key={project.id}
+                      className="p-4 bg-muted/30 rounded-lg"
+                    >
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="font-medium">{project.title}</h4>
                         <div className="flex items-center text-sm text-muted-foreground">
@@ -242,17 +263,24 @@ export default function UserProfileModal({
                           <span>{project.membersCount}</span>
                         </div>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-3">{project.description}</p>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        {project.description}
+                      </p>
                       <div className="flex flex-wrap gap-1 mb-3">
                         {project.technologies.slice(0, 4).map((tech) => (
-                          <Badge key={tech} variant="outline" className="text-xs">
+                          <Badge
+                            key={tech}
+                            variant="outline"
+                            className="text-xs"
+                          >
                             {tech}
                           </Badge>
                         ))}
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="text-sm text-muted-foreground">
-                          <span className="font-medium">Seeking:</span> {project.seekingRoles.join(", ")}
+                          <span className="font-medium">Seeking:</span>{" "}
+                          {project.seekingRoles.join(", ")}
                         </div>
                         {project.deadline && (
                           <div className="flex items-center text-sm text-orange-600">
