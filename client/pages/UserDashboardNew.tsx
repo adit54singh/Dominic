@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -52,6 +52,9 @@ import EditProfile from "@/components/EditProfile";
 import ConnectSection from "@/components/ConnectSection";
 import PostCreator from "@/components/PostCreator";
 import ReelsAndPosts from "@/components/ReelsAndPosts";
+import EnhancedCommunityView from "@/components/EnhancedCommunityView";
+import UpcomingCommunityEvents from "@/components/UpcomingCommunityEvents";
+import { useCommunityStore } from "@/lib/community-store";
 
 export default function UserDashboard() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -67,9 +70,7 @@ export default function UserDashboard() {
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
   const [joinedProjects, setJoinedProjects] = useState<Array<any>>([]);
-  const [joinedCommunities, setJoinedCommunities] = useState<Set<string>>(
-    new Set(),
-  );
+  // Removed joinedCommunities local state - now using store
   const [userActivity, setUserActivity] = useState<Array<any>>([]);
   const [discoveryTimeSpent, setDiscoveryTimeSpent] = useState(0); // in minutes
   const [discoverySessionStart, setDiscoverySessionStart] =
@@ -77,6 +78,22 @@ export default function UserDashboard() {
   const [projectsCompleted, setProjectsCompleted] = useState(0);
   const [viewingCommunity, setViewingCommunity] = useState<string | null>(null);
   const [communityPosts, setCommunityPosts] = useState<Array<any>>([]);
+  const [selectedCommunityForView, setSelectedCommunityForView] =
+    useState<any>(null);
+
+  // Use community store for real-time updates
+  const {
+    communities,
+    joinedCommunities: storeCommunities,
+    joinCommunity: storeJoinCommunity,
+    leaveCommunity: storeLeaveCommunity,
+    addTrendingCommunity,
+    currentCommunity,
+    setCurrentCommunity,
+  } = useCommunityStore();
+
+  // Ref to prevent infinite loop in community sync
+  const hasInitializedCommunities = useRef(false);
 
   // Load user onboarding data from localStorage
   useEffect(() => {
@@ -101,10 +118,7 @@ export default function UserDashboard() {
         setJoinedProjects(JSON.parse(savedJoinedProjects));
       }
 
-      const savedJoinedCommunities = localStorage.getItem("joinedCommunities");
-      if (savedJoinedCommunities) {
-        setJoinedCommunities(new Set(JSON.parse(savedJoinedCommunities)));
-      }
+      // joinedCommunities now handled by store persistence
 
       const savedUserActivity = localStorage.getItem("userActivity");
       if (savedUserActivity) {
@@ -137,21 +151,7 @@ export default function UserDashboard() {
     return () => clearTimeout(timeoutId);
   }, [joinedProjects]);
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      try {
-        if (joinedCommunities.size > 0) {
-          localStorage.setItem(
-            "joinedCommunities",
-            JSON.stringify(Array.from(joinedCommunities)),
-          );
-        }
-      } catch (error) {
-        console.error("Error saving joinedCommunities to localStorage:", error);
-      }
-    }, 500);
-    return () => clearTimeout(timeoutId);
-  }, [joinedCommunities]);
+  // Community persistence now handled by store
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -303,7 +303,7 @@ export default function UserDashboard() {
     const discoveryScore = Math.min(discoveryTimeSpent / 60, 50); // Max 50 points for 60+ minutes
     const projectScore = projectsCompleted * 15; // 15 points per completed project
     const followingScore = followedUsers.size * 2; // 2 points per person followed
-    const communityScore = joinedCommunities.size * 5; // 5 points per community
+    const communityScore = storeCommunities.length * 5; // 5 points per community
 
     const totalScore =
       discoveryScore + projectScore + followingScore + communityScore;
@@ -334,9 +334,11 @@ export default function UserDashboard() {
     };
   };
 
-  // Function to join a community
+  // Function to join a community (integrated with store)
   const joinCommunity = (communityId: string, communityName: string) => {
-    setJoinedCommunities((prev) => new Set([...prev, communityId]));
+    // Update store
+    storeJoinCommunity(communityId);
+
     addActivity({
       type: "community_joined",
       action: `Joined community: ${communityName}`,
@@ -345,13 +347,11 @@ export default function UserDashboard() {
     });
   };
 
-  // Function to leave a community
+  // Function to leave a community (integrated with store)
   const leaveCommunity = (communityId: string, communityName: string) => {
-    setJoinedCommunities((prev) => {
-      const newSet = new Set(prev);
-      newSet.delete(communityId);
-      return newSet;
-    });
+    // Update store
+    storeLeaveCommunity(communityId);
+
     addActivity({
       type: "community_left",
       action: `Left community: ${communityName}`,
@@ -1050,7 +1050,7 @@ export default function UserDashboard() {
               <Card className="hover:shadow-lg transition-colors">
                 <CardContent className="p-6 text-center">
                   <div className="text-3xl font-bold text-purple-500 mb-2">
-                    {joinedCommunities.size}
+                    {storeCommunities.length}
                   </div>
                   <div className="text-sm text-muted-foreground">
                     Communities
@@ -1097,7 +1097,7 @@ export default function UserDashboard() {
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-yellow-500">
-                          {joinedCommunities.size}
+                          {storeCommunities.length}
                         </div>
                         <div className="text-xs text-muted-foreground">
                           Communities
@@ -1602,70 +1602,99 @@ export default function UserDashboard() {
             </div>
           </div>
 
-          {/* Your Communities */}
+          {/* Your Communities - Enhanced with Real-time Updates */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Users className="w-5 h-5 text-primary" />
                 <span>Your Communities</span>
+                <Badge
+                  variant="secondary"
+                  className="bg-primary/10 text-primary animate-pulse"
+                >
+                  {storeCommunities.length} joined
+                </Badge>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {userDomains?.map((domain, index) => (
-                  <Card
-                    key={domain.id}
-                    className="hover:shadow-lg transition-all duration-200 cursor-pointer group"
-                  >
-                    <CardContent className="p-4">
-                      <div className="flex items-center space-x-3 mb-3">
-                        <div
-                          className={`w-10 h-10 ${domain.color} rounded-lg flex items-center justify-center`}
-                        >
-                          <domain.icon className="w-5 h-5 text-white" />
+              {storeCommunities.length > 0 ? (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {storeCommunities.map((community) => (
+                    <Card
+                      key={community.id}
+                      className="hover:shadow-lg transition-all duration-200 cursor-pointer group border-l-4 border-l-primary/20 hover:border-l-primary"
+                      onClick={() => openCommunityView(community)}
+                    >
+                      <CardContent className="p-4">
+                        <div className="flex items-center space-x-3 mb-3">
+                          <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary/80 rounded-lg flex items-center justify-center relative">
+                            <Users className="w-6 h-6 text-white" />
+                            {community.onlineUsers &&
+                              community.onlineUsers.length > 0 && (
+                                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-background flex items-center justify-center">
+                                  <span className="text-xs text-white font-bold">
+                                    {community.onlineUsers.length}
+                                  </span>
+                                </div>
+                              )}
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-semibold group-hover:text-primary transition-colors">
+                              {community.name}
+                            </h3>
+                            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                              <span>
+                                {community.members.toLocaleString()} members
+                              </span>
+                              {community.onlineUsers &&
+                                community.onlineUsers.length > 0 && (
+                                  <>
+                                    <span>•</span>
+                                    <span className="text-green-600 font-medium">
+                                      {community.onlineUsers.length} online
+                                    </span>
+                                  </>
+                                )}
+                            </div>
+                          </div>
                         </div>
-                        <div>
-                          <h3 className="font-semibold text-sm group-hover:text-primary transition-colors">
-                            {domain.name} Hub
-                          </h3>
-                          <p className="text-xs text-muted-foreground">
-                            {Math.floor(Math.random() * 5000) + 1000} members
-                          </p>
+                        <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                          {community.description}
+                        </p>
+                        <div className="flex items-center justify-between text-xs text-muted-foreground">
+                          <span>{community.posts} posts</span>
+                          <div className="flex items-center space-x-1">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            <span>Active now</span>
+                          </div>
                         </div>
-                      </div>
-                      <p className="text-xs text-muted-foreground mb-3">
-                        Connect with {domain.name.toLowerCase()} enthusiasts and
-                        share knowledge
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <Badge variant="secondary" className="text-xs">
-                          Active
-                        </Badge>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-xs"
-                          onClick={() => {
-                            setViewingCommunity(domain.id);
-                            setActiveTab("community-hub");
-                            setActiveVerticalNav("community-hub");
-                          }}
-                        >
-                          View Hub
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )) || (
-                  <div className="col-span-full text-center py-8 text-muted-foreground">
-                    <Users className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p>
-                      Complete onboarding to join communities related to your
-                      domains!
-                    </p>
-                  </div>
-                )}
-              </div>
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {community.tags.slice(0, 3).map((tag) => (
+                            <Badge
+                              key={tag}
+                              variant="outline"
+                              className="text-xs"
+                            >
+                              #{tag}
+                            </Badge>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <Users className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                  <p className="text-muted-foreground mb-4">
+                    You haven't joined any communities yet
+                  </p>
+                  <Button variant="outline">
+                    <TrendingUp className="w-4 h-4 mr-2" />
+                    Explore Communities
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -1726,6 +1755,54 @@ export default function UserDashboard() {
                   <Card
                     key={index}
                     className="hover:shadow-lg transition-all duration-200 cursor-pointer group"
+                    onClick={() => {
+                      // Try to find existing community or create a mock one for trending
+                      const existingCommunity = communities.find(
+                        (c) => c.name === community.name,
+                      );
+                      if (existingCommunity) {
+                        openCommunityView(existingCommunity);
+                      } else {
+                        // Create a mock community for preview
+                        const mockCommunity = {
+                          id: `trending_${index}`,
+                          name: community.name,
+                          description: `A vibrant community for ${community.name.toLowerCase()} enthusiasts`,
+                          category: "tech",
+                          privacy: "public" as const,
+                          rules: [
+                            "Be respectful",
+                            "Stay on topic",
+                            "Help others",
+                          ],
+                          tags: [
+                            community.name
+                              .toLowerCase()
+                              .replace(/[^a-z0-9]/g, "-"),
+                          ],
+                          members:
+                            parseInt(
+                              community.members.replace(/[^0-9]/g, ""),
+                            ) || 1000,
+                          posts: Math.floor(Math.random() * 100) + 20,
+                          isOwner: false,
+                          isJoined: false,
+                          membersList: [],
+                          onlineUsers: [],
+                          recentPosts: [],
+                          events: [],
+                          projects: [],
+                          hackathons: [],
+                          queries: [],
+                          chatMessages: [],
+                          pinnedMessages: [],
+                          domain: userOnboardingData?.domains?.[0] || "general",
+                          lastActivity: new Date().toISOString(),
+                          createdAt: new Date().toISOString(),
+                        };
+                        openCommunityView(mockCommunity);
+                      }
+                    }}
                   >
                     <CardContent className="p-4">
                       <div className="flex items-center space-x-3 mb-3">
@@ -1752,22 +1829,54 @@ export default function UserDashboard() {
                         </Badge>
                         <Button
                           variant={
-                            joinedCommunities.has(`trending_${index}`)
+                            communities.find((c) => c.name === community.name)
+                              ?.isJoined
                               ? "outline"
                               : "ghost"
                           }
                           size="sm"
                           className="text-xs"
-                          onClick={() => {
-                            const communityId = `trending_${index}`;
-                            if (joinedCommunities.has(communityId)) {
-                              leaveCommunity(communityId, community.name);
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const existingCommunity = communities.find(
+                              (c) => c.name === community.name,
+                            );
+                            if (existingCommunity) {
+                              if (existingCommunity.isJoined) {
+                                storeLeaveCommunity(existingCommunity.id);
+                                addActivity({
+                                  type: "community_left",
+                                  action: `Left community: ${community.name}`,
+                                  details: `No longer part of ${community.name} community`,
+                                });
+                              } else {
+                                storeJoinCommunity(existingCommunity.id);
+                                addActivity({
+                                  type: "community_joined",
+                                  action: `Joined community: ${community.name}`,
+                                  details: `Now part of ${community.name} community`,
+                                });
+                              }
                             } else {
-                              joinCommunity(communityId, community.name);
+                              // Add trending community to store
+                              addTrendingCommunity({
+                                id: `trending_${index}`,
+                                name: community.name,
+                                members: community.members,
+                                description: `A vibrant community for ${community.name.toLowerCase()} enthusiasts`,
+                                domain:
+                                  userOnboardingData?.domains?.[0] || "general",
+                              });
+                              addActivity({
+                                type: "community_joined",
+                                action: `Joined community: ${community.name}`,
+                                details: `Now part of ${community.name} community`,
+                              });
                             }
                           }}
                         >
-                          {joinedCommunities.has(`trending_${index}`)
+                          {communities.find((c) => c.name === community.name)
+                            ?.isJoined
                             ? "Leave"
                             : "Join"}
                         </Button>
@@ -1779,63 +1888,14 @@ export default function UserDashboard() {
             </CardContent>
           </Card>
 
-          {/* Community Events */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Calendar className="w-5 h-5 text-green-500" />
-                <span>Upcoming Community Events</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {[
-                  {
-                    title: "Web3 Developer Meetup",
-                    community: "Blockchain Developers",
-                    date: "Tomorrow 7:00 PM",
-                    attendees: 245,
-                    type: "Virtual",
-                  },
-                  {
-                    title: "AI Ethics Discussion",
-                    community: "AI/ML Researchers",
-                    date: "Friday 6:00 PM",
-                    attendees: 180,
-                    type: "Hybrid",
-                  },
-                  {
-                    title: "Content Creation Workshop",
-                    community: "Content Creators",
-                    date: "Saturday 2:00 PM",
-                    attendees: 320,
-                    type: "Virtual",
-                  },
-                ].map((event, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
-                  >
-                    <div>
-                      <h4 className="font-medium text-sm">{event.title}</h4>
-                      <p className="text-xs text-muted-foreground">
-                        {event.community} • {event.date} • {event.attendees}{" "}
-                        attending
-                      </p>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Badge variant="outline" className="text-xs">
-                        {event.type}
-                      </Badge>
-                      <Button variant="ghost" size="sm" className="text-xs">
-                        Join Event
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          {/* Enhanced Upcoming Community Events */}
+          <UpcomingCommunityEvents
+            userDomains={
+              userOnboardingData?.domains || ["software-dev", "data-science"]
+            }
+            maxEvents={6}
+            showFilters={true}
+          />
         </div>
       );
     } else if (activeTab === "community-hub" && viewingCommunity) {
@@ -2211,6 +2271,55 @@ export default function UserDashboard() {
     }
     return null;
   };
+
+  // Function to open enhanced community view
+  const openCommunityView = (community: any) => {
+    setSelectedCommunityForView(community);
+    setCurrentCommunity(community);
+  };
+
+  // Effect to sync store with initial communities (run once)
+  useEffect(() => {
+    // Auto-join domain-based communities for new users (only once)
+    if (
+      userOnboardingData?.domains &&
+      communities.length > 0 &&
+      !hasInitializedCommunities.current
+    ) {
+      const userDomains = userOnboardingData.domains;
+      let hasChanges = false;
+
+      communities.forEach((community) => {
+        if (userDomains.includes(community.domain) && !community.isJoined) {
+          hasChanges = true;
+        }
+      });
+
+      // Only proceed if there are actual changes to make
+      if (hasChanges) {
+        communities.forEach((community) => {
+          if (userDomains.includes(community.domain) && !community.isJoined) {
+            storeJoinCommunity(community.id);
+          }
+        });
+        hasInitializedCommunities.current = true;
+      }
+    }
+  }, [userOnboardingData?.domains, communities.length]); // Safe dependencies
+
+  // Enhanced Community View Modal
+  if (selectedCommunityForView) {
+    return (
+      <EnhancedCommunityView
+        community={selectedCommunityForView}
+        onClose={() => {
+          setSelectedCommunityForView(null);
+          setCurrentCommunity(null);
+        }}
+        currentUserId={user.name}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5">

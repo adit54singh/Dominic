@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import UserProfileModal from "@/components/UserProfileModal";
 import {
   Heart,
   MessageCircle,
@@ -27,6 +28,12 @@ interface Project {
   deadline?: string;
 }
 
+interface Community {
+  name: string;
+  role: string;
+  members: string;
+}
+
 interface User {
   id: string;
   name: string;
@@ -43,6 +50,7 @@ interface User {
   projects?: Project[];
   yearsExperience?: number;
   companies?: string[];
+  communities?: Community[];
 }
 
 // Expanded profile card for followed members
@@ -363,6 +371,8 @@ const ConnectSection = memo(
     onFollowUser,
     onViewUser,
   }: ConnectSectionProps) => {
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
     // Memoized user data to prevent unnecessary re-calculations
     const users = useMemo<User[]>(
       () => [
@@ -382,6 +392,19 @@ const ConnectSection = memo(
           yearsExperience: 8,
           companies: ["Amazon", "Microsoft"],
           isOnline: true,
+          communities: [
+            {
+              name: "Web Development Hub",
+              role: "Core Member",
+              members: "2.3k",
+            },
+            { name: "React Enthusiasts", role: "Moderator", members: "1.8k" },
+            {
+              name: "Open Source Contributors",
+              role: "Active Contributor",
+              members: "950",
+            },
+          ],
           projects: [
             {
               id: "p1",
@@ -420,6 +443,19 @@ const ConnectSection = memo(
           yearsExperience: 6,
           companies: ["Google", "Flipkart"],
           isOnline: false,
+          communities: [
+            {
+              name: "Data Science Hub India",
+              role: "Technical Lead",
+              members: "4.2k",
+            },
+            {
+              name: "AI/ML Researchers",
+              role: "Research Contributor",
+              members: "2.7k",
+            },
+            { name: "Python Developers", role: "Core Member", members: "5.8k" },
+          ],
           projects: [
             {
               id: "p3",
@@ -444,6 +480,18 @@ const ConnectSection = memo(
           expertise: ["React Native", "Flutter", "iOS", "Android"],
           bio: "Senior iOS developer with 5+ years experience. Love mentoring aspiring mobile developers.",
           isOnline: true,
+          communities: [
+            {
+              name: "Flutter Developers India",
+              role: "Community Lead",
+              members: "3.1k",
+            },
+            {
+              name: "Mobile UI/UX Designers",
+              role: "Active Member",
+              members: "1.2k",
+            },
+          ],
         },
         {
           id: "4",
@@ -466,6 +514,19 @@ const ConnectSection = memo(
           yearsExperience: 5,
           companies: ["Zomato", "Swiggy"],
           isOnline: true,
+          communities: [
+            {
+              name: "UX Designers India",
+              role: "Community Manager",
+              members: "3.8k",
+            },
+            { name: "Product Design Hub", role: "Mentor", members: "2.4k" },
+            {
+              name: "Design Systems Coalition",
+              role: "Active Member",
+              members: "1.9k",
+            },
+          ],
           projects: [
             {
               id: "p4",
@@ -491,6 +552,18 @@ const ConnectSection = memo(
           expertise: ["Docker", "Kubernetes", "AWS", "CI/CD", "Terraform"],
           bio: "DevOps expert at Microsoft. Passionate about cloud technologies and automation.",
           isOnline: false,
+          communities: [
+            {
+              name: "DevOps Engineers India",
+              role: "Core Member",
+              members: "4.5k",
+            },
+            {
+              name: "Cloud Native Developers",
+              role: "Technical Lead",
+              members: "2.1k",
+            },
+          ],
         },
         {
           id: "6",
@@ -509,6 +582,18 @@ const ConnectSection = memo(
           ],
           bio: "Senior PM at Flipkart. Guiding students on product thinking and career transitions.",
           isOnline: true,
+          communities: [
+            {
+              name: "Product Managers Network",
+              role: "Senior Member",
+              members: "2.8k",
+            },
+            {
+              name: "Startup Product Leaders",
+              role: "Advisor",
+              members: "1.5k",
+            },
+          ],
         },
       ],
       [],
@@ -563,11 +648,16 @@ const ConnectSection = memo(
 
     const handleView = useCallback(
       (userId: string) => {
+        const user = users.find((u) => u.id === userId);
+        if (user) {
+          setSelectedUser(user);
+          setIsProfileModalOpen(true);
+        }
         if (onViewUser) {
           onViewUser(userId);
         }
       },
-      [onViewUser],
+      [users, onViewUser],
     );
 
     const handleJoinProject = useCallback(
@@ -590,10 +680,9 @@ const ConnectSection = memo(
     return (
       <div className="space-y-8">
         <div className="text-center">
-          <h3 className="text-2xl font-bold mb-2">Connect with Members</h3>
+          <h3 className="text-2xl font-bold mb-2">Connected Members</h3>
           <p className="text-muted-foreground">
-            Learn from experienced professionals and collaborate on exciting
-            projects
+            Your network of experienced professionals and collaborators
           </p>
         </div>
 
@@ -602,7 +691,7 @@ const ConnectSection = memo(
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h4 className="text-xl font-semibold text-primary">
-                Your Connected Members
+                Connected Members
               </h4>
               <Badge variant="secondary" className="bg-primary/10 text-primary">
                 {followedMentors.length} connected
@@ -663,6 +752,21 @@ const ConnectSection = memo(
             </div>
           )}
         </div>
+
+        {/* User Profile Modal */}
+        <UserProfileModal
+          user={selectedUser}
+          isOpen={isProfileModalOpen}
+          onClose={() => {
+            setIsProfileModalOpen(false);
+            setSelectedUser(null);
+          }}
+          onFollow={handleFollow}
+          onMessage={handleMessage}
+          isFollowing={
+            selectedUser ? followedUsers.has(selectedUser.id) : false
+          }
+        />
       </div>
     );
   },
