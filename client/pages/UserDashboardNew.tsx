@@ -122,8 +122,12 @@ export default function UserDashboard() {
   // Save to localStorage when state changes (debounced to prevent excessive saves)
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      if (joinedProjects.length > 0) {
-        localStorage.setItem("joinedProjects", JSON.stringify(joinedProjects));
+      try {
+        if (joinedProjects.length > 0) {
+          localStorage.setItem("joinedProjects", JSON.stringify(joinedProjects));
+        }
+      } catch (error) {
+        console.error("Error saving joinedProjects to localStorage:", error);
       }
     }, 500);
     return () => clearTimeout(timeoutId);
@@ -131,11 +135,15 @@ export default function UserDashboard() {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      if (joinedCommunities.size > 0) {
-        localStorage.setItem(
-          "joinedCommunities",
-          JSON.stringify(Array.from(joinedCommunities)),
-        );
+      try {
+        if (joinedCommunities.size > 0) {
+          localStorage.setItem(
+            "joinedCommunities",
+            JSON.stringify(Array.from(joinedCommunities)),
+          );
+        }
+      } catch (error) {
+        console.error("Error saving joinedCommunities to localStorage:", error);
       }
     }, 500);
     return () => clearTimeout(timeoutId);
@@ -143,8 +151,12 @@ export default function UserDashboard() {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      if (userActivity.length > 0) {
-        localStorage.setItem("userActivity", JSON.stringify(userActivity));
+      try {
+        if (userActivity.length > 0) {
+          localStorage.setItem("userActivity", JSON.stringify(userActivity));
+        }
+      } catch (error) {
+        console.error("Error saving userActivity to localStorage:", error);
       }
     }, 500);
     return () => clearTimeout(timeoutId);
@@ -152,10 +164,14 @@ export default function UserDashboard() {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      localStorage.setItem(
-        "followedUsers",
-        JSON.stringify(Array.from(followedUsers)),
-      );
+      try {
+        localStorage.setItem(
+          "followedUsers",
+          JSON.stringify(Array.from(followedUsers)),
+        );
+      } catch (error) {
+        console.error("Error saving followedUsers to localStorage:", error);
+      }
     }, 500);
     return () => clearTimeout(timeoutId);
   }, [followedUsers]);
