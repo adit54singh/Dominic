@@ -80,6 +80,17 @@ export default function UserDashboard() {
   const [projectsCompleted, setProjectsCompleted] = useState(0);
   const [viewingCommunity, setViewingCommunity] = useState<string | null>(null);
   const [communityPosts, setCommunityPosts] = useState<Array<any>>([]);
+  const [selectedCommunityForView, setSelectedCommunityForView] = useState<any>(null);
+
+  // Use community store for real-time updates
+  const {
+    communities,
+    joinedCommunities: storeCommunities,
+    joinCommunity: storeJoinCommunity,
+    leaveCommunity: storeLeaveCommunity,
+    currentCommunity,
+    setCurrentCommunity
+  } = useCommunityStore();
 
   // Load user onboarding data from localStorage
   useEffect(() => {
