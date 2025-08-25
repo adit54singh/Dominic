@@ -1510,14 +1510,60 @@ export default function UserDashboard() {
           <div className="text-center mb-8">
             <h2 className="text-2xl sm:text-3xl font-bold mb-2">Discover</h2>
             <p className="text-muted-foreground">
-              Get inspired by verified professionals sharing their journey, work
-              culture, and collaborative projects you can join
+              Share your journey, connect with peers, and discover amazing content from the community
             </p>
           </div>
-          <DiscoverFeed
-            selectedDomain={selectedDomain}
-            joinedProjects={joinedProjects}
-            onJoinProject={joinProject}
+
+          {/* Post Creator Section */}
+          <PostCreator
+            user={{
+              name: user.name,
+              avatar: user.avatar
+            }}
+            onCreatePost={(post) => {
+              addActivity({
+                type: "post_created",
+                action: "Created a new post",
+                details: post.content.substring(0, 50) + "...",
+                timestamp: new Date().toISOString(),
+              });
+            }}
+          />
+
+          {/* Reels and Posts Feed */}
+          <ReelsAndPosts
+            onLike={(postId) => {
+              addActivity({
+                type: "post_liked",
+                action: "Liked a post",
+                details: `Liked post ${postId}`,
+                timestamp: new Date().toISOString(),
+              });
+            }}
+            onComment={(postId, comment) => {
+              addActivity({
+                type: "post_commented",
+                action: "Commented on a post",
+                details: comment.substring(0, 50) + "...",
+                timestamp: new Date().toISOString(),
+              });
+            }}
+            onShare={(postId) => {
+              addActivity({
+                type: "post_shared",
+                action: "Shared a post",
+                details: `Shared post ${postId}`,
+                timestamp: new Date().toISOString(),
+              });
+            }}
+            onSave={(postId) => {
+              addActivity({
+                type: "post_saved",
+                action: "Saved a post",
+                details: `Saved post ${postId}`,
+                timestamp: new Date().toISOString(),
+              });
+            }}
           />
         </div>
       );
