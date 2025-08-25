@@ -94,24 +94,28 @@ export default function UserDashboard() {
     }
 
     // Load saved joined projects, communities, and activity
-    const savedJoinedProjects = localStorage.getItem("joinedProjects");
-    if (savedJoinedProjects) {
-      setJoinedProjects(JSON.parse(savedJoinedProjects));
-    }
+    try {
+      const savedJoinedProjects = localStorage.getItem("joinedProjects");
+      if (savedJoinedProjects) {
+        setJoinedProjects(JSON.parse(savedJoinedProjects));
+      }
 
-    const savedJoinedCommunities = localStorage.getItem("joinedCommunities");
-    if (savedJoinedCommunities) {
-      setJoinedCommunities(new Set(JSON.parse(savedJoinedCommunities)));
-    }
+      const savedJoinedCommunities = localStorage.getItem("joinedCommunities");
+      if (savedJoinedCommunities) {
+        setJoinedCommunities(new Set(JSON.parse(savedJoinedCommunities)));
+      }
 
-    const savedUserActivity = localStorage.getItem("userActivity");
-    if (savedUserActivity) {
-      setUserActivity(JSON.parse(savedUserActivity));
-    }
+      const savedUserActivity = localStorage.getItem("userActivity");
+      if (savedUserActivity) {
+        setUserActivity(JSON.parse(savedUserActivity));
+      }
 
-    const savedFollowedUsers = localStorage.getItem("followedUsers");
-    if (savedFollowedUsers) {
-      setFollowedUsers(new Set(JSON.parse(savedFollowedUsers)));
+      const savedFollowedUsers = localStorage.getItem("followedUsers");
+      if (savedFollowedUsers) {
+        setFollowedUsers(new Set(JSON.parse(savedFollowedUsers)));
+      }
+    } catch (error) {
+      console.error("Error loading data from localStorage:", error);
     }
   }, []);
 
