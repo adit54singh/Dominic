@@ -32,7 +32,7 @@ import {
   Cloud,
   Zap,
   Bot,
-  VrHeadset,
+  Monitor,
   Cpu,
   Palette,
 } from "lucide-react";
