@@ -2242,10 +2242,14 @@ export default function UserDashboard() {
     setCurrentCommunity(community);
   };
 
-  // Effect to sync store with initial communities
+  // Effect to sync store with initial communities (run once)
   useEffect(() => {
-    // Auto-join domain-based communities for new users
-    if (userOnboardingData?.domains && communities.length > 0) {
+    // Auto-join domain-based communities for new users (only once)
+    if (
+      userOnboardingData?.domains &&
+      communities.length > 0 &&
+      !hasInitializedCommunities.current
+    ) {
       const userDomains = userOnboardingData.domains;
       let hasChanges = false;
 
@@ -2262,9 +2266,10 @@ export default function UserDashboard() {
             storeJoinCommunity(community.id);
           }
         });
+        hasInitializedCommunities.current = true;
       }
     }
-  }, [userOnboardingData?.domains]); // Remove communities and storeJoinCommunity from dependencies
+  }, [userOnboardingData?.domains, communities.length]); // Safe dependencies
 
   // Enhanced Community View Modal
   if (selectedCommunityForView) {
