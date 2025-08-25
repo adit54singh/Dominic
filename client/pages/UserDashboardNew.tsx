@@ -243,8 +243,12 @@ export default function UserDashboard() {
 
   // Save user onboarding data to localStorage when explicitly updated
   const saveUserOnboardingData = useCallback((data: any) => {
-    if (data) {
-      localStorage.setItem("userOnboardingData", JSON.stringify(data));
+    try {
+      if (data) {
+        localStorage.setItem("userOnboardingData", JSON.stringify(data));
+      }
+    } catch (error) {
+      console.error("Error saving userOnboardingData to localStorage:", error);
     }
   }, []);
 
