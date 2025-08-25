@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 export default function AnimatedDomains() {
   const techDomains = [
@@ -7,7 +6,6 @@ export default function AnimatedDomains() {
     "Data Science & Analytics", 
     "UI/UX Design",
     "Digital Marketing",
-    "Content Creation",
     "Machine Learning",
     "Cybersecurity",
     "Mobile App Development",
@@ -16,13 +14,10 @@ export default function AnimatedDomains() {
     "Web Development",
     "Game Development",
     "DevOps Engineering",
-    "Product Management",
-    "Technical Writing",
   ];
 
-  const upcomingNonTechDomains = [
+  const nonTechDomains = [
     "Fashion Designing",
-    "Travel & Tourism",
     "Fine Arts & Painting",
     "Music Production",
     "Photography",
@@ -33,60 +28,11 @@ export default function AnimatedDomains() {
     "Dance & Choreography",
     "Theater & Drama",
     "Jewelry Design",
-    "Graphic Arts",
     "Film Making",
-    "Sustainable Living",
   ];
 
-  const [currentTechDomains, setCurrentTechDomains] = useState<string[]>([]);
-  const [currentNonTechDomains, setCurrentNonTechDomains] = useState<string[]>([]);
-  const [techVisible, setTechVisible] = useState(true);
-  const [nonTechVisible, setNonTechVisible] = useState(false);
-
-  useEffect(() => {
-    const showRandomTechDomains = () => {
-      const shuffled = [...techDomains].sort(() => 0.5 - Math.random());
-      const selected = shuffled.slice(0, 7); // Always show 7 for hexagon grid
-      setCurrentTechDomains(selected);
-      setTechVisible(true);
-
-      setTimeout(() => {
-        setTechVisible(false);
-      }, 3000);
-    };
-
-    const showRandomNonTechDomains = () => {
-      const shuffled = [...upcomingNonTechDomains].sort(() => 0.5 - Math.random());
-      const selected = shuffled.slice(0, 7); // Always show 7 for hexagon grid
-      setCurrentNonTechDomains(selected);
-      setNonTechVisible(true);
-
-      setTimeout(() => {
-        setNonTechVisible(false);
-      }, 3000);
-    };
-
-    // Initial display
-    showRandomTechDomains();
-
-    // Stagger the non-tech domains
-    const nonTechTimeout = setTimeout(() => {
-      showRandomNonTechDomains();
-    }, 1500);
-
-    // Set intervals for continuous animation
-    const techInterval = setInterval(showRandomTechDomains, 8000);
-    const nonTechInterval = setInterval(showRandomNonTechDomains, 8000);
-
-    return () => {
-      clearTimeout(nonTechTimeout);
-      clearInterval(techInterval);
-      clearInterval(nonTechInterval);
-    };
-  }, []);
-
-  // Hexagon component with James Webb telescope mirror styling
-  const HexagonMirror = ({ 
+  // Domain card component with smooth animations
+  const DomainCard = ({ 
     domain, 
     index, 
     color, 
@@ -101,177 +47,106 @@ export default function AnimatedDomains() {
       <motion.div
         initial={{ 
           opacity: 0, 
-          scale: 0.3,
-          rotateY: -90,
+          y: 50,
+          scale: 0.9,
         }}
         animate={{ 
           opacity: 1, 
+          y: 0,
           scale: 1,
-          rotateY: 0,
           transition: {
-            delay: index * 0.1,
-            duration: 0.6,
-            ease: "easeOut",
-          }
-        }}
-        exit={{ 
-          opacity: 0, 
-          scale: 0.8,
-          rotateY: 90,
-          transition: {
-            delay: (6 - index) * 0.05,
-            duration: 0.4,
+            delay: index * 0.15,
+            duration: 1.2,
+            ease: [0.25, 0.46, 0.45, 0.94], // Smooth ease curve
           }
         }}
         whileHover={{ 
-          scale: 1.1,
-          rotateZ: 5,
-          transition: { duration: 0.3 }
+          scale: 1.05,
+          y: -8,
+          transition: { duration: 0.6, ease: "easeOut" }
         }}
-        className="relative group perspective-1000"
-        style={{
-          transformStyle: "preserve-3d",
-        }}
+        className="relative group cursor-pointer"
       >
-        {/* Hexagonal mirror */}
-        <div 
-          className="hexagon-mirror relative w-32 h-32 cursor-pointer"
-          style={{
-            background: `linear-gradient(135deg, ${color}15, ${color}25)`,
-            clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
-            border: `2px solid ${color}40`,
-            boxShadow: `0 0 20px ${color}30, inset 0 0 20px ${color}20`,
-          }}
-        >
-          {/* Glowing effect */}
-          <motion.div
-            className="absolute inset-0"
-            style={{
-              background: `radial-gradient(circle at center, ${color}30, transparent)`,
-              clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
-            }}
-            animate={{
-              opacity: [0.5, 1, 0.5],
-              scale: [1, 1.05, 1],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              delay: index * 0.3,
-            }}
-          />
-          
-          {/* Content */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center">
-            <div className="text-[10px] font-bold text-white mb-1 leading-tight">
-              {domain}
-            </div>
-            <div className="text-[8px] text-white/70">
-              {isNonTech ? "Coming Soon" : `${Math.floor(Math.random() * 500) + 100}+ learners`}
-            </div>
-          </div>
-
-          {/* Reflection effect */}
-          <motion.div
-            className="absolute inset-0 opacity-0 group-hover:opacity-100"
-            style={{
-              background: `linear-gradient(45deg, transparent 30%, ${color}40 50%, transparent 70%)`,
-              clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
-            }}
-            transition={{ duration: 0.3 }}
-          />
-        </div>
-
-        {/* Connecting lines (like James Webb telescope) */}
-        {index < 6 && (
-          <motion.div
-            className="absolute -right-4 top-1/2 w-8 h-0.5 opacity-30"
-            style={{ backgroundColor: color }}
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ delay: index * 0.1 + 0.3, duration: 0.4 }}
-          />
-        )}
-      </motion.div>
-    );
-  };
-
-  // Hexagon grid arrangement (James Webb telescope mirror pattern)
-  const HexagonGrid = ({ domains, colors, isNonTech = false }: { 
-    domains: string[]; 
-    colors: string[];
-    isNonTech?: boolean;
-  }) => {
-    return (
-      <div className="relative flex items-center justify-center min-h-[500px]">
-        {/* Center hexagon */}
-        <div className="absolute z-10">
-          <HexagonMirror 
-            domain={domains[0]} 
-            index={0} 
-            color={colors[0]}
-            isNonTech={isNonTech}
-          />
-        </div>
-        
-        {/* Surrounding hexagons in James Webb pattern */}
-        {domains.slice(1, 7).map((domain, index) => {
-          const angle = (index * 60) * (Math.PI / 180); // 60 degrees apart
-          const radius = 120; // Distance from center
-          const x = Math.cos(angle) * radius;
-          const y = Math.sin(angle) * radius;
-          
-          return (
-            <div
-              key={`${domain}-${index}`}
-              className="absolute"
-              style={{
-                transform: `translate(${x}px, ${y}px)`,
-              }}
-            >
-              <HexagonMirror 
-                domain={domain} 
-                index={index + 1} 
-                color={colors[(index + 1) % colors.length]}
-                isNonTech={isNonTech}
-              />
-            </div>
-          );
-        })}
-
-        {/* Background cosmic effect */}
+        {/* Glowing background effect */}
         <motion.div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100"
+          style={{
+            background: `linear-gradient(135deg, ${color}20, ${color}10)`,
+            filter: "blur(20px)",
+          }}
           animate={{
-            rotate: 360,
+            scale: [1, 1.1, 1],
           }}
           transition={{
-            duration: 100,
+            duration: 4,
             repeat: Infinity,
-            ease: "linear",
+            ease: "easeInOut",
+          }}
+        />
+
+        {/* Main card */}
+        <div 
+          className="relative bg-card/90 backdrop-blur-lg border border-border/50 rounded-2xl p-8 shadow-2xl"
+          style={{
+            background: `linear-gradient(135deg, ${color}08, ${color}04)`,
+            borderColor: `${color}20`,
           }}
         >
-          {Array.from({ length: 20 }).map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 bg-white/20 rounded-full"
-              style={{
-                left: `${20 + i * 3}%`,
-                top: `${15 + (i % 3) * 20}%`,
-              }}
-              animate={{
-                opacity: [0.2, 0.8, 0.2],
-                scale: [1, 1.5, 1],
-              }}
-              transition={{
-                duration: 3 + Math.random() * 2,
-                repeat: Infinity,
-                delay: i * 0.1,
-              }}
-            />
-          ))}
-        </motion.div>
-      </div>
+          {/* Domain icon area */}
+          <div className={`w-16 h-16 rounded-xl bg-gradient-to-br mb-6 flex items-center justify-center text-white shadow-lg mx-auto`}
+               style={{
+                 background: `linear-gradient(135deg, ${color}, ${color}80)`,
+               }}>
+            <div className="text-2xl font-bold">
+              {domain.split(' ').map(word => word[0]).join('')}
+            </div>
+          </div>
+          
+          {/* Domain name */}
+          <h3 className="text-xl font-bold text-center mb-4 group-hover:text-primary transition-all duration-500">
+            {domain}
+          </h3>
+          
+          {/* Status indicator */}
+          <div className="text-center">
+            {isNonTech ? (
+              <div className="inline-flex items-center space-x-2">
+                <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
+                <span className="text-sm text-muted-foreground">Coming Soon</span>
+              </div>
+            ) : (
+              <div className="inline-flex items-center space-x-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                <span className="text-sm text-muted-foreground">Available Now</span>
+              </div>
+            )}
+          </div>
+
+          {/* Animated border */}
+          <motion.div
+            className="absolute inset-0 rounded-2xl border-2 border-transparent opacity-0 group-hover:opacity-100"
+            style={{
+              background: `linear-gradient(135deg, ${color}, ${color}60) border-box`,
+              WebkitMask: "linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)",
+              WebkitMaskComposite: "subtract",
+            }}
+            animate={{
+              background: [
+                `linear-gradient(0deg, ${color}, ${color}60) border-box`,
+                `linear-gradient(90deg, ${color}, ${color}60) border-box`,
+                `linear-gradient(180deg, ${color}, ${color}60) border-box`,
+                `linear-gradient(270deg, ${color}, ${color}60) border-box`,
+                `linear-gradient(360deg, ${color}, ${color}60) border-box`,
+              ]
+            }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          />
+        </div>
+      </motion.div>
     );
   };
 
@@ -281,8 +156,13 @@ export default function AnimatedDomains() {
     "#10B981", // Emerald
     "#F59E0B", // Amber
     "#EF4444", // Red
+    "#3B82F6", // Blue
     "#8B5CF6", // Purple
     "#06B6D4", // Cyan
+    "#10B981", // Emerald
+    "#F59E0B", // Amber
+    "#EF4444", // Red
+    "#3B82F6", // Blue
   ];
 
   const nonTechColors = [
@@ -293,142 +173,187 @@ export default function AnimatedDomains() {
     "#84CC16", // Lime
     "#06B6D4", // Cyan
     "#8B5CF6", // Purple
+    "#10B981", // Emerald
+    "#F59E0B", // Amber
+    "#EF4444", // Red
+    "#EC4899", // Pink
+    "#F97316", // Orange
   ];
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-black via-slate-900 to-black relative overflow-hidden">
-      {/* Cosmic background */}
+    <div className="min-h-screen w-full bg-gradient-to-br from-background via-background to-muted/10 relative overflow-hidden">
+      {/* Subtle background effects */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-purple-900/10 via-transparent to-transparent"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-orange-900/10 via-transparent to-transparent"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-accent/5 via-transparent to-transparent"></div>
+      </div>
+
+      {/* Floating particles - slower animation */}
+      <div className="absolute inset-0 pointer-events-none">
+        {Array.from({ length: 12 }).map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-primary/20 rounded-full"
+            animate={{
+              opacity: [0.2, 0.6, 0.2],
+              scale: [1, 1.2, 1],
+              y: [0, -30, 0],
+              x: [0, Math.sin(i) * 20, 0],
+            }}
+            transition={{
+              duration: 8 + Math.random() * 4, // Much slower
+              repeat: Infinity,
+              delay: i * 0.5,
+              ease: "easeInOut",
+            }}
+            style={{
+              left: `${10 + i * 7}%`,
+              top: `${20 + (i % 4) * 20}%`,
+            }}
+          />
+        ))}
       </div>
 
       <div className="relative z-10 pt-24 pb-12 px-6">
-        {/* Header Section */}
+        {/* Header Section - No rotating prism */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
           className="text-center mb-20 max-w-5xl mx-auto"
         >
-          <h1 className="text-6xl md:text-8xl font-bold mb-8 bg-gradient-to-r from-blue-400 via-purple-400 to-orange-400 bg-clip-text text-transparent leading-tight">
+          <h1 className="text-6xl md:text-8xl font-bold mb-8 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent leading-tight">
             Learning Domains
           </h1>
-          <p className="text-2xl md:text-3xl text-gray-300 mb-8 font-light">
-            Explore infinite possibilities like the James Webb telescope explores space
+          <p className="text-2xl md:text-3xl text-muted-foreground mb-8 font-light">
+            Discover your path in technology and creative fields
           </p>
+          
+          {/* Simple decorative line instead of rotating prism */}
           <motion.div
             animate={{ 
-              rotate: 360,
-              scale: [1, 1.1, 1],
+              scaleX: [0.8, 1.2, 0.8],
             }}
             transition={{ 
-              rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-              scale: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+              duration: 4, 
+              repeat: Infinity,
+              ease: "easeInOut"
             }}
-            className="w-32 h-32 mx-auto mb-8"
-            style={{
-              background: "conic-gradient(from 0deg, #8B5CF6, #06B6D4, #F59E0B, #EF4444, #8B5CF6)",
-              clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
-            }}
+            className="w-32 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full"
           />
         </motion.div>
 
         {/* Tech Domains Section */}
         <div className="mb-32">
-          <motion.h2
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-            className="text-4xl md:text-5xl font-bold text-center mb-16 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent"
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 1.2 }}
+            className="text-center mb-16"
           >
-            Tech Domains Mirror Array
-          </motion.h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+              Technology Domains
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Build your career in cutting-edge technology fields with expert mentorship and hands-on projects
+            </p>
+          </motion.div>
 
-          <div className="relative">
-            <AnimatePresence mode="wait">
-              {techVisible && currentTechDomains.length > 0 && (
-                <motion.div
-                  key={`tech-${currentTechDomains.join()}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <HexagonGrid 
-                    domains={currentTechDomains} 
-                    colors={techColors}
-                    isNonTech={false}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {techDomains.map((domain, index) => (
+                <DomainCard
+                  key={domain}
+                  domain={domain}
+                  index={index}
+                  color={techColors[index % techColors.length]}
+                  isNonTech={false}
+                />
+              ))}
+            </div>
           </div>
         </div>
+
+        {/* Divider */}
+        <motion.div
+          initial={{ opacity: 0, scaleX: 0 }}
+          animate={{ opacity: 1, scaleX: 1 }}
+          transition={{ delay: 1, duration: 1.5 }}
+          className="w-full max-w-4xl mx-auto mb-32"
+        >
+          <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
+          <div className="flex justify-center -mt-3">
+            <div className="bg-background px-6 py-2">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                className="w-6 h-6 border-2 border-accent rounded-full border-t-transparent"
+              />
+            </div>
+          </div>
+        </motion.div>
 
         {/* Non-Tech Domains Section */}
         <div className="mb-20">
-          <motion.h2
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.5 }}
-            className="text-4xl md:text-5xl font-bold text-center mb-8 bg-gradient-to-r from-orange-400 to-pink-400 bg-clip-text text-transparent"
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2, duration: 1.2 }}
+            className="text-center mb-16"
           >
-            Creative Domains Constellation
-          </motion.h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-orange-400 to-pink-400 bg-clip-text text-transparent">
+              Creative Domains
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-4">
+              Express your creativity and build skills in diverse artistic and creative fields
+            </p>
+            <motion.div
+              animate={{ opacity: [0.7, 1, 0.7] }}
+              transition={{ duration: 3, repeat: Infinity }}
+              className="inline-flex items-center space-x-2 text-orange-400"
+            >
+              <span className="text-sm font-medium">✨ Coming Soon</span>
+            </motion.div>
+          </motion.div>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7 }}
-            className="text-center text-gray-400 mb-16 text-xl"
-          >
-            ✨ Coming Soon - Where creativity meets technology
-          </motion.p>
-
-          <div className="relative">
-            <AnimatePresence mode="wait">
-              {nonTechVisible && currentNonTechDomains.length > 0 && (
-                <motion.div
-                  key={`nontech-${currentNonTechDomains.join()}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <HexagonGrid 
-                    domains={currentNonTechDomains} 
-                    colors={nonTechColors}
-                    isNonTech={true}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {nonTechDomains.map((domain, index) => (
+                <DomainCard
+                  key={domain}
+                  domain={domain}
+                  index={index}
+                  color={nonTechColors[index % nonTechColors.length]}
+                  isNonTech={true}
+                />
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Footer indicator */}
+        {/* Footer */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
+          transition={{ delay: 2, duration: 1.5 }}
           className="text-center mt-20"
         >
-          <motion.p
+          <p className="text-muted-foreground text-lg">
+            Ready to start your learning journey?
+          </p>
+          <motion.div
             animate={{ 
-              opacity: [0.5, 1, 0.5],
-              y: [0, -5, 0],
+              scale: [1, 1.05, 1],
             }}
             transition={{ 
-              duration: 2, 
+              duration: 3, 
               repeat: Infinity,
               ease: "easeInOut"
             }}
-            className="text-gray-400 text-lg"
+            className="mt-4"
           >
-            Domains refresh like telescope calibrations... 🔭
-          </motion.p>
+            <span className="text-2xl">🚀</span>
+          </motion.div>
         </motion.div>
       </div>
     </div>
