@@ -348,9 +348,11 @@ export default function UserDashboard() {
     };
   };
 
-  // Function to join a community
+  // Function to join a community (integrated with store)
   const joinCommunity = (communityId: string, communityName: string) => {
-    setJoinedCommunities((prev) => new Set([...prev, communityId]));
+    // Update store
+    storeJoinCommunity(communityId);
+
     addActivity({
       type: "community_joined",
       action: `Joined community: ${communityName}`,
@@ -359,13 +361,11 @@ export default function UserDashboard() {
     });
   };
 
-  // Function to leave a community
+  // Function to leave a community (integrated with store)
   const leaveCommunity = (communityId: string, communityName: string) => {
-    setJoinedCommunities((prev) => {
-      const newSet = new Set(prev);
-      newSet.delete(communityId);
-      return newSet;
-    });
+    // Update store
+    storeLeaveCommunity(communityId);
+
     addActivity({
       type: "community_left",
       action: `Left community: ${communityName}`,
@@ -1064,7 +1064,7 @@ export default function UserDashboard() {
               <Card className="hover:shadow-lg transition-colors">
                 <CardContent className="p-6 text-center">
                   <div className="text-3xl font-bold text-purple-500 mb-2">
-                    {joinedCommunities.size}
+                    {storeCommunities.length}
                   </div>
                   <div className="text-sm text-muted-foreground">
                     Communities
@@ -1111,7 +1111,7 @@ export default function UserDashboard() {
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-yellow-500">
-                          {joinedCommunities.size}
+                          {storeCommunities.length}
                         </div>
                         <div className="text-xs text-muted-foreground">
                           Communities
@@ -1886,63 +1886,12 @@ export default function UserDashboard() {
             </CardContent>
           </Card>
 
-          {/* Community Events */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Calendar className="w-5 h-5 text-green-500" />
-                <span>Upcoming Community Events</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {[
-                  {
-                    title: "Web3 Developer Meetup",
-                    community: "Blockchain Developers",
-                    date: "Tomorrow 7:00 PM",
-                    attendees: 245,
-                    type: "Virtual",
-                  },
-                  {
-                    title: "AI Ethics Discussion",
-                    community: "AI/ML Researchers",
-                    date: "Friday 6:00 PM",
-                    attendees: 180,
-                    type: "Hybrid",
-                  },
-                  {
-                    title: "Content Creation Workshop",
-                    community: "Content Creators",
-                    date: "Saturday 2:00 PM",
-                    attendees: 320,
-                    type: "Virtual",
-                  },
-                ].map((event, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
-                  >
-                    <div>
-                      <h4 className="font-medium text-sm">{event.title}</h4>
-                      <p className="text-xs text-muted-foreground">
-                        {event.community} • {event.date} • {event.attendees}{" "}
-                        attending
-                      </p>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Badge variant="outline" className="text-xs">
-                        {event.type}
-                      </Badge>
-                      <Button variant="ghost" size="sm" className="text-xs">
-                        Join Event
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          {/* Enhanced Upcoming Community Events */}
+          <UpcomingCommunityEvents
+            userDomains={userOnboardingData?.domains || ['software-dev', 'data-science']}
+            maxEvents={6}
+            showFilters={true}
+          />
         </div>
       );
     } else if (activeTab === "community-hub" && viewingCommunity) {
