@@ -12,10 +12,10 @@ db.pragma('foreign_keys = ON');
 
 console.log('Connected to SQLite database at:', DB_PATH);
 
-export const initializeDatabase = async () => {
+export const initializeDatabase = () => {
   try {
     // Users table
-    await dbRun(`
+    db.exec(`
       CREATE TABLE IF NOT EXISTS users (
         id TEXT PRIMARY KEY,
         google_id TEXT UNIQUE,
@@ -35,7 +35,7 @@ export const initializeDatabase = async () => {
     `);
 
     // Projects table
-    await dbRun(`
+    db.exec(`
       CREATE TABLE IF NOT EXISTS projects (
         id TEXT PRIMARY KEY,
         user_id TEXT NOT NULL,
@@ -53,7 +53,7 @@ export const initializeDatabase = async () => {
     `);
 
     // Communities table
-    await dbRun(`
+    db.exec(`
       CREATE TABLE IF NOT EXISTS communities (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
@@ -71,7 +71,7 @@ export const initializeDatabase = async () => {
     `);
 
     // User communities join table
-    await dbRun(`
+    db.exec(`
       CREATE TABLE IF NOT EXISTS user_communities (
         user_id TEXT NOT NULL,
         community_id TEXT NOT NULL,
@@ -83,7 +83,7 @@ export const initializeDatabase = async () => {
     `);
 
     // Activity table (for real-time tracking)
-    await dbRun(`
+    db.exec(`
       CREATE TABLE IF NOT EXISTS activities (
         id TEXT PRIMARY KEY,
         user_id TEXT NOT NULL,
@@ -96,7 +96,7 @@ export const initializeDatabase = async () => {
     `);
 
     // Following relationships
-    await dbRun(`
+    db.exec(`
       CREATE TABLE IF NOT EXISTS follows (
         follower_id TEXT NOT NULL,
         following_id TEXT NOT NULL,
@@ -108,7 +108,7 @@ export const initializeDatabase = async () => {
     `);
 
     // Sessions table for express-session
-    await dbRun(`
+    db.exec(`
       CREATE TABLE IF NOT EXISTS sessions (
         sid TEXT PRIMARY KEY,
         sess TEXT NOT NULL,
@@ -123,32 +123,35 @@ export const initializeDatabase = async () => {
   }
 };
 
-// Helper functions
-export const runQuery = async (query: string, params: any[] = []) => {
-  return new Promise((resolve, reject) => {
-    db.run(query, params, function (err) {
-      if (err) reject(err);
-      else resolve(this);
-    });
-  });
+// Helper functions for better-sqlite3
+export const runQuery = (query: string, params: any[] = []) => {
+  try {
+    const stmt = db.prepare(query);
+    return stmt.run(...params);
+  } catch (error) {
+    console.error('Query error:', error, query);
+    throw error;
+  }
 };
 
-export const getQuery = async (query: string, params: any[] = []) => {
-  return new Promise((resolve, reject) => {
-    db.get(query, params, (err, row) => {
-      if (err) reject(err);
-      else resolve(row);
-    });
-  });
+export const getQuery = (query: string, params: any[] = []) => {
+  try {
+    const stmt = db.prepare(query);
+    return stmt.get(...params);
+  } catch (error) {
+    console.error('Query error:', error, query);
+    throw error;
+  }
 };
 
-export const allQuery = async (query: string, params: any[] = []) => {
-  return new Promise((resolve, reject) => {
-    db.all(query, params, (err, rows) => {
-      if (err) reject(err);
-      else resolve(rows || []);
-    });
-  });
+export const allQuery = (query: string, params: any[] = []) => {
+  try {
+    const stmt = db.prepare(query);
+    return stmt.all(...params);
+  } catch (error) {
+    console.error('Query error:', error, query);
+    throw error;
+  }
 };
 
 export default db;
