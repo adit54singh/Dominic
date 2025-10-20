@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 // Lazy load components for better performance
 const Index = lazy(() => import("./pages/Index"));
@@ -35,27 +36,29 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Suspense fallback={<LoadingSpinner />}>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/onboarding" element={<Onboarding />} />
-            <Route path="/dashboard" element={<UserDashboard />} />
-            <Route path="/UserDashboard" element={<UserDashboard />} />
-            <Route path="/profile" element={<UserProfile />} />
-            <Route path="/profile/:userId" element={<UserProfile />} />
-            <Route path="/domains" element={<Domains />} />
-            <Route path="/mentors" element={<Mentors />} />
-            <Route path="/community" element={<Community />} />
-            <Route path="/about" element={<About />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
+      <AuthProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Suspense fallback={<LoadingSpinner />}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/onboarding" element={<Onboarding />} />
+              <Route path="/dashboard" element={<UserDashboard />} />
+              <Route path="/UserDashboard" element={<UserDashboard />} />
+              <Route path="/profile" element={<UserProfile />} />
+              <Route path="/profile/:userId" element={<UserProfile />} />
+              <Route path="/domains" element={<Domains />} />
+              <Route path="/mentors" element={<Mentors />} />
+              <Route path="/community" element={<Community />} />
+              <Route path="/about" element={<About />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
