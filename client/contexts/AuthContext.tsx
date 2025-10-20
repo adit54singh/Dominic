@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { io, Socket } from "socket.io-client";
 
 export interface User {
   id: string;
@@ -62,23 +62,31 @@ interface AuthContextType {
   communities: Community[];
   activities: Activity[];
   socket: Socket | null;
-  
+
   // Methods
   login: () => void;
   logout: () => Promise<void>;
   updateProfile: (profile: Partial<User>) => Promise<void>;
-  createProject: (project: Omit<Project, 'id' | 'user_id' | 'created_at' | 'updated_at'>) => Promise<Project>;
+  createProject: (
+    project: Omit<Project, "id" | "user_id" | "created_at" | "updated_at">,
+  ) => Promise<Project>;
   joinCommunity: (communityId: string) => Promise<void>;
   leaveCommunity: (communityId: string) => Promise<void>;
-  addActivity: (activity: Omit<Activity, 'id' | 'user_id' | 'timestamp'>) => Promise<void>;
+  addActivity: (
+    activity: Omit<Activity, "id" | "user_id" | "timestamp">,
+  ) => Promise<void>;
   followUser: (userId: string) => Promise<void>;
   unfollowUser: (userId: string) => Promise<void>;
-  syncData: (type: 'projects' | 'communities' | 'activity' | 'all') => Promise<void>;
+  syncData: (
+    type: "projects" | "communities" | "activity" | "all",
+  ) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [projects, setProjects] = useState<Project[]>([]);
@@ -91,13 +99,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const initAuth = async () => {
       try {
         // Check current authentication status
-        const res = await fetch('/api/auth/user', { credentials: 'include' });
+        const res = await fetch("/api/auth/user", { credentials: "include" });
         if (res.ok) {
           const userData = await res.json();
           setUser(userData);
 
           // Connect to Socket.io with user ID
-          const newSocket = io('/', {
+          const newSocket = io("/", {
             auth: {
               userId: userData.id,
             },
@@ -108,44 +116,44 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           });
 
           // Socket event listeners
-          newSocket.on('activity:new', (activity: Activity) => {
+          newSocket.on("activity:new", (activity: Activity) => {
             setActivities((prev) => [activity, ...prev].slice(0, 50));
           });
 
-          newSocket.on('project:updated', (project: Project) => {
+          newSocket.on("project:updated", (project: Project) => {
             setProjects((prev) =>
-              prev.map((p) => (p.id === project.id ? project : p))
+              prev.map((p) => (p.id === project.id ? project : p)),
             );
           });
 
-          newSocket.on('community:joined', (community: Community) => {
+          newSocket.on("community:joined", (community: Community) => {
             setCommunities((prev) => [...prev, community]);
           });
 
-          newSocket.on('community:member-joined', (data) => {
+          newSocket.on("community:member-joined", (data) => {
             // Update community member count
             setCommunities((prev) =>
               prev.map((c) =>
                 c.id === data.communityId
                   ? { ...c, members: c.members + 1 }
-                  : c
-              )
+                  : c,
+              ),
             );
           });
 
-          newSocket.on('user:followed', (data) => {
+          newSocket.on("user:followed", (data) => {
             // Handle being followed
-            console.log('You were followed by:', data.followerId);
+            console.log("You were followed by:", data.followerId);
           });
 
-          newSocket.on('data:synced', (syncData) => {
+          newSocket.on("data:synced", (syncData) => {
             if (syncData.projects) setProjects(syncData.projects);
             if (syncData.communities) setCommunities(syncData.communities);
             if (syncData.activity) setActivities(syncData.activity);
           });
 
-          newSocket.on('error', (error) => {
-            console.error('Socket error:', error);
+          newSocket.on("error", (error) => {
+            console.error("Socket error:", error);
           });
 
           setSocket(newSocket);
@@ -156,7 +164,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           await fetchActivity(userData.id);
         }
       } catch (error) {
-        console.error('Auth initialization error:', error);
+        console.error("Auth initialization error:", error);
       } finally {
         setIsLoading(false);
       }
@@ -173,49 +181,53 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchProjects = async (userId: string) => {
     try {
-      const res = await fetch('/api/user/projects', { credentials: 'include' });
+      const res = await fetch("/api/user/projects", { credentials: "include" });
       if (res.ok) {
         const data = await res.json();
         setProjects(data);
       }
     } catch (error) {
-      console.error('Error fetching projects:', error);
+      console.error("Error fetching projects:", error);
     }
   };
 
   const fetchCommunities = async (userId: string) => {
     try {
-      const res = await fetch('/api/user/communities', { credentials: 'include' });
+      const res = await fetch("/api/user/communities", {
+        credentials: "include",
+      });
       if (res.ok) {
         const data = await res.json();
         setCommunities(data);
       }
     } catch (error) {
-      console.error('Error fetching communities:', error);
+      console.error("Error fetching communities:", error);
     }
   };
 
   const fetchActivity = async (userId: string) => {
     try {
-      const res = await fetch('/api/user/activity?limit=50', { credentials: 'include' });
+      const res = await fetch("/api/user/activity?limit=50", {
+        credentials: "include",
+      });
       if (res.ok) {
         const data = await res.json();
         setActivities(data);
       }
     } catch (error) {
-      console.error('Error fetching activity:', error);
+      console.error("Error fetching activity:", error);
     }
   };
 
   const login = () => {
-    window.location.href = '/api/auth/google';
+    window.location.href = "/api/auth/google";
   };
 
   const logout = async () => {
     try {
-      await fetch('/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include',
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
       });
       setUser(null);
       setProjects([]);
@@ -225,18 +237,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         socket.disconnect();
         setSocket(null);
       }
-      window.location.href = '/';
+      window.location.href = "/";
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     }
   };
 
   const updateProfile = async (profile: Partial<User>) => {
     try {
-      const res = await fetch('/api/user/profile', {
-        method: 'PUT',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/user/profile", {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(profile),
       });
       if (res.ok) {
@@ -244,17 +256,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(updatedUser);
       }
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error("Error updating profile:", error);
       throw error;
     }
   };
 
-  const createProject = async (project: Omit<Project, 'id' | 'user_id' | 'created_at' | 'updated_at'>) => {
+  const createProject = async (
+    project: Omit<Project, "id" | "user_id" | "created_at" | "updated_at">,
+  ) => {
     try {
-      const res = await fetch('/api/user/projects', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/user/projects", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(project),
       });
       if (res.ok) {
@@ -262,111 +276,115 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setProjects((prev) => [newProject, ...prev]);
         return newProject;
       }
-      throw new Error('Failed to create project');
+      throw new Error("Failed to create project");
     } catch (error) {
-      console.error('Error creating project:', error);
+      console.error("Error creating project:", error);
       throw error;
     }
   };
 
   const joinCommunity = async (communityId: string) => {
     try {
-      const res = await fetch('/api/user/communities/join', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/user/communities/join", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ communityId }),
       });
       if (!res.ok) {
-        throw new Error('Failed to join community');
+        throw new Error("Failed to join community");
       }
 
       if (socket) {
-        socket.emit('community:join', { communityId });
+        socket.emit("community:join", { communityId });
       }
     } catch (error) {
-      console.error('Error joining community:', error);
+      console.error("Error joining community:", error);
       throw error;
     }
   };
 
   const leaveCommunity = async (communityId: string) => {
     try {
-      const res = await fetch('/api/user/communities/leave', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/user/communities/leave", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ communityId }),
       });
       if (res.ok) {
         setCommunities((prev) => prev.filter((c) => c.id !== communityId));
       }
     } catch (error) {
-      console.error('Error leaving community:', error);
+      console.error("Error leaving community:", error);
       throw error;
     }
   };
 
-  const addActivity = async (activity: Omit<Activity, 'id' | 'user_id' | 'timestamp'>) => {
+  const addActivity = async (
+    activity: Omit<Activity, "id" | "user_id" | "timestamp">,
+  ) => {
     try {
       if (socket) {
-        socket.emit('activity', activity);
+        socket.emit("activity", activity);
       } else {
         // Fallback to HTTP request
-        await fetch('/api/user/activity', {
-          method: 'POST',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
+        await fetch("/api/user/activity", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(activity),
         });
       }
     } catch (error) {
-      console.error('Error adding activity:', error);
+      console.error("Error adding activity:", error);
       throw error;
     }
   };
 
   const followUser = async (userId: string) => {
     try {
-      const res = await fetch('/api/user/follow', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/user/follow", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ followingId: userId }),
       });
       if (!res.ok) {
-        throw new Error('Failed to follow user');
+        throw new Error("Failed to follow user");
       }
 
       if (socket) {
-        socket.emit('user:follow', { followingId: userId });
+        socket.emit("user:follow", { followingId: userId });
       }
     } catch (error) {
-      console.error('Error following user:', error);
+      console.error("Error following user:", error);
       throw error;
     }
   };
 
   const unfollowUser = async (userId: string) => {
     try {
-      const res = await fetch('/api/user/unfollow', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/user/unfollow", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ followingId: userId }),
       });
       if (!res.ok) {
-        throw new Error('Failed to unfollow user');
+        throw new Error("Failed to unfollow user");
       }
     } catch (error) {
-      console.error('Error unfollowing user:', error);
+      console.error("Error unfollowing user:", error);
       throw error;
     }
   };
 
-  const syncData = async (type: 'projects' | 'communities' | 'activity' | 'all') => {
+  const syncData = async (
+    type: "projects" | "communities" | "activity" | "all",
+  ) => {
     if (socket) {
-      socket.emit('data:sync', { type });
+      socket.emit("data:sync", { type });
     }
   };
 
@@ -396,7 +414,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
+    throw new Error("useAuth must be used within AuthProvider");
   }
   return context;
 };

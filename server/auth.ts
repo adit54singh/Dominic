@@ -1,11 +1,14 @@
-import passport from 'passport';
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import { v4 as uuidv4 } from 'uuid';
-import { getQuery, runQuery } from './db';
+import passport from "passport";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import { v4 as uuidv4 } from "uuid";
+import { getQuery, runQuery } from "./db";
 
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || 'your-client-id';
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || 'your-client-secret';
-const CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || 'http://localhost:8080/api/auth/google/callback';
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "your-client-id";
+const GOOGLE_CLIENT_SECRET =
+  process.env.GOOGLE_CLIENT_SECRET || "your-client-secret";
+const CALLBACK_URL =
+  process.env.GOOGLE_CALLBACK_URL ||
+  "http://localhost:8080/api/auth/google/callback";
 
 passport.use(
   new GoogleStrategy(
@@ -22,18 +25,20 @@ passport.use(
         }
 
         // Try to find existing user
-        let user = await getQuery('SELECT * FROM users WHERE google_id = ?', [profile.id]);
+        let user = await getQuery("SELECT * FROM users WHERE google_id = ?", [
+          profile.id,
+        ]);
 
         if (!user) {
           // Create new user
           const userId = uuidv4();
-          const name = profile.displayName || email.split('@')[0];
-          const avatar = profile.photos?.[0]?.value || '';
+          const name = profile.displayName || email.split("@")[0];
+          const avatar = profile.photos?.[0]?.value || "";
 
           await runQuery(
             `INSERT INTO users (id, google_id, email, name, avatar, created_at, updated_at)
              VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
-            [userId, profile.id, email, name, avatar]
+            [userId, profile.id, email, name, avatar],
           );
 
           user = {
@@ -56,8 +61,8 @@ passport.use(
       } catch (error) {
         done(error);
       }
-    }
-  )
+    },
+  ),
 );
 
 passport.serializeUser((user: any, done) => {
@@ -66,7 +71,7 @@ passport.serializeUser((user: any, done) => {
 
 passport.deserializeUser(async (id: string, done) => {
   try {
-    const user = await getQuery('SELECT * FROM users WHERE id = ?', [id]);
+    const user = await getQuery("SELECT * FROM users WHERE id = ?", [id]);
     done(null, user);
   } catch (error) {
     done(error);

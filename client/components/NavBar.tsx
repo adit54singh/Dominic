@@ -61,7 +61,9 @@ export default function NavBar() {
                     {user.name?.charAt(0)?.toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-                <span className="hidden sm:inline text-sm font-medium">{user.name}</span>
+                <span className="hidden sm:inline text-sm font-medium">
+                  {user.name}
+                </span>
               </button>
 
               {isUserMenuOpen && (

@@ -6,7 +6,7 @@ import { createServer } from "./server";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
-    host: "::",  
+    host: "::",
     port: 8080,
     fs: {
       allow: [".", "./client", "./shared"],
@@ -19,15 +19,15 @@ export default defineConfig(({ mode }) => ({
       output: {
         manualChunks: {
           // Split vendor libraries into separate chunks for better caching
-          'react-vendor': ['react', 'react-dom'],
-          'router-vendor': ['react-router-dom'],
-          'ui-vendor': ['lucide-react'],
-          'query-vendor': ['@tanstack/react-query']
-        }
-      }
+          "react-vendor": ["react", "react-dom"],
+          "router-vendor": ["react-router-dom"],
+          "ui-vendor": ["lucide-react"],
+          "query-vendor": ["@tanstack/react-query"],
+        },
+      },
     },
     // Increase chunk size warning limit
-    chunkSizeWarningLimit: 1000
+    chunkSizeWarningLimit: 1000,
   },
   plugins: [react(), expressPlugin()],
   resolve: {

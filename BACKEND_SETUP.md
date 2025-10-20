@@ -5,6 +5,7 @@ This guide explains how to set up the backend with Google OAuth, SQLite database
 ## Architecture Overview
 
 The backend is built with:
+
 - **Express.js** - API server
 - **SQLite** - File-based database (no subscription needed)
 - **Passport.js** - Google OAuth authentication
@@ -12,7 +13,9 @@ The backend is built with:
 - **TypeScript** - Type-safe backend code
 
 ### CAP Theorem Implementation
+
 The system prioritizes **Consistency + Availability** by:
+
 - Using Socket.io for real-time, per-user updates
 - Storing all data in SQLite with immediate persistence
 - Maintaining user-specific rooms for isolated updates
@@ -37,6 +40,7 @@ The system prioritizes **Consistency + Availability** by:
 ## Step 2: Configure Environment Variables
 
 1. Copy `.env.example` to `.env`:
+
    ```bash
    cp .env.example .env
    ```
@@ -56,30 +60,38 @@ The system prioritizes **Consistency + Availability** by:
 ## Step 3: Database
 
 The database is automatically created on first run:
+
 - **Location**: `dominic.db` (in project root)
 - **Type**: SQLite3 (file-based, no server needed)
 
 ### Database Tables
 
 #### users
+
 Stores user profiles and account information.
 
 #### projects
+
 User projects with progress tracking.
 
 #### communities
+
 Community hub information and metadata.
 
 #### user_communities
+
 Join table linking users to communities they've joined.
 
 #### activities
+
 Real-time activity log for each user.
 
 #### follows
+
 User follow relationships.
 
 #### sessions
+
 Express session storage.
 
 ---
@@ -87,6 +99,7 @@ Express session storage.
 ## Step 4: Authentication Flow
 
 ### Login
+
 1. User clicks "Sign In with Google"
 2. Redirected to Google OAuth consent screen
 3. Google redirects back to `/api/auth/google/callback`
@@ -95,7 +108,9 @@ Express session storage.
 6. Frontend receives authenticated user
 
 ### Real-time Connection
+
 Once authenticated:
+
 1. Frontend connects to Socket.io with user ID
 2. Joins user-specific room: `user:{userId}`
 3. Receives real-time updates for:
@@ -105,6 +120,7 @@ Once authenticated:
    - Follow events
 
 ### Logout
+
 1. Session destroyed
 2. Socket.io connection closed
 3. Redirected to home page
@@ -114,12 +130,14 @@ Once authenticated:
 ## Step 5: API Endpoints
 
 ### Authentication
+
 - `GET /api/auth/google` - Start Google OAuth flow
 - `GET /api/auth/google/callback` - OAuth callback (automatic)
 - `GET /api/auth/user` - Get current user (public)
 - `POST /api/auth/logout` - Logout (requires auth)
 
 ### User Profile
+
 - `PUT /api/user/profile` - Update user profile
 - `GET /api/user/projects` - List user's projects
 - `POST /api/user/projects` - Create new project
@@ -136,56 +154,58 @@ Once authenticated:
 ## Step 6: Real-time Socket Events
 
 ### Client → Server
+
 ```javascript
 // Log activity
-socket.emit('activity', {
-  type: 'project_joined',
-  action: 'Joined project: React App',
-  details: 'Collaborative frontend project'
+socket.emit("activity", {
+  type: "project_joined",
+  action: "Joined project: React App",
+  details: "Collaborative frontend project",
 });
 
 // Update project progress
-socket.emit('project:update', {
-  projectId: 'project-123',
+socket.emit("project:update", {
+  projectId: "project-123",
   progress: 75,
-  status: 'in-progress'
+  status: "in-progress",
 });
 
 // Join community
-socket.emit('community:join', { communityId: 'react-123' });
+socket.emit("community:join", { communityId: "react-123" });
 
 // Follow user
-socket.emit('user:follow', { followingId: 'user-456' });
+socket.emit("user:follow", { followingId: "user-456" });
 
 // Sync data
-socket.emit('data:sync', { type: 'all' }); // or 'projects', 'communities', 'activity'
+socket.emit("data:sync", { type: "all" }); // or 'projects', 'communities', 'activity'
 ```
 
 ### Server → Client
+
 ```javascript
 // Activity added (real-time)
-socket.on('activity:new', (activity) => {
-  console.log('New activity:', activity);
+socket.on("activity:new", (activity) => {
+  console.log("New activity:", activity);
 });
 
 // Project updated (real-time)
-socket.on('project:updated', (project) => {
-  console.log('Project updated:', project);
+socket.on("project:updated", (project) => {
+  console.log("Project updated:", project);
 });
 
 // Community joined
-socket.on('community:joined', (community) => {
-  console.log('Joined community:', community);
+socket.on("community:joined", (community) => {
+  console.log("Joined community:", community);
 });
 
 // Being followed
-socket.on('user:followed', (data) => {
-  console.log('Followed by:', data.followerId);
+socket.on("user:followed", (data) => {
+  console.log("Followed by:", data.followerId);
 });
 
 // Data synced
-socket.on('data:synced', (syncData) => {
-  console.log('Data synced:', syncData);
+socket.on("data:synced", (syncData) => {
+  console.log("Data synced:", syncData);
 });
 ```
 
@@ -194,6 +214,7 @@ socket.on('data:synced', (syncData) => {
 ## Step 7: Running the Application
 
 ### Development
+
 ```bash
 # Install dependencies (if not already done)
 pnpm install
@@ -205,6 +226,7 @@ pnpm dev
 The app will be available at `http://localhost:8080`
 
 ### Production Build
+
 ```bash
 # Build frontend and backend
 pnpm build
@@ -218,6 +240,7 @@ pnpm start
 ## Monitoring Real-time Updates
 
 ### Frontend (useAuth Hook)
+
 ```typescript
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -247,20 +270,24 @@ function MyComponent() {
 ## Troubleshooting
 
 ### "Cannot connect to database"
+
 - Check if `dominic.db` exists in project root
 - Ensure write permissions in project directory
 
 ### "Google OAuth callback not working"
+
 - Verify `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are correct
 - Confirm redirect URL matches Google Cloud configuration
 - Check that `GOOGLE_CALLBACK_URL` matches your domain
 
 ### "Socket.io connection fails"
+
 - Ensure Socket.io is properly initialized in both frontend and backend
 - Check browser console for connection errors
 - Verify user is authenticated before connecting
 
 ### "Real-time updates not working"
+
 - Check user ID is passed to Socket.io auth
 - Verify user room: `user:{userId}` is being joined
 - Monitor Socket.io events in browser DevTools
@@ -314,6 +341,7 @@ client/
 ## Support
 
 For issues or questions:
+
 - Check browser console for errors
 - Look at server logs
 - Verify environment variables are set

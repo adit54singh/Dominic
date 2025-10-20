@@ -1,8 +1,8 @@
-import initSqlJs, { Database } from 'sql.js';
-import fs from 'fs';
-import path from 'path';
+import initSqlJs, { Database } from "sql.js";
+import fs from "fs";
+import path from "path";
 
-const DB_PATH = path.join(process.cwd(), 'dominic.db');
+const DB_PATH = path.join(process.cwd(), "dominic.db");
 
 let db: Database | null = null;
 
@@ -15,10 +15,10 @@ export const initializeDatabase = async () => {
     if (fs.existsSync(DB_PATH)) {
       data = fs.readFileSync(DB_PATH);
       db = new SQL.Database(data);
-      console.log('Loaded existing database from:', DB_PATH);
+      console.log("Loaded existing database from:", DB_PATH);
     } else {
       db = new SQL.Database();
-      console.log('Created new database at:', DB_PATH);
+      console.log("Created new database at:", DB_PATH);
     }
 
     // Create tables
@@ -112,9 +112,9 @@ export const initializeDatabase = async () => {
     `);
 
     saveDatabase();
-    console.log('Database initialized successfully');
+    console.log("Database initialized successfully");
   } catch (error) {
-    console.error('Error initializing database:', error);
+    console.error("Error initializing database:", error);
     throw error;
   }
 };
@@ -126,24 +126,24 @@ export const saveDatabase = () => {
     const buffer = Buffer.from(data);
     fs.writeFileSync(DB_PATH, buffer);
   } catch (error) {
-    console.error('Error saving database:', error);
+    console.error("Error saving database:", error);
   }
 };
 
 export const runQuery = (query: string, params: any[] = []) => {
-  if (!db) throw new Error('Database not initialized');
+  if (!db) throw new Error("Database not initialized");
   try {
     db.run(query, params);
     saveDatabase();
     return { changes: db.getRowsModified() };
   } catch (error) {
-    console.error('Query error:', error, query);
+    console.error("Query error:", error, query);
     throw error;
   }
 };
 
 export const getQuery = (query: string, params: any[] = []) => {
-  if (!db) throw new Error('Database not initialized');
+  if (!db) throw new Error("Database not initialized");
   try {
     const stmt = db.prepare(query);
     stmt.bind(params);
@@ -155,13 +155,13 @@ export const getQuery = (query: string, params: any[] = []) => {
     stmt.free();
     return undefined;
   } catch (error) {
-    console.error('Query error:', error, query);
+    console.error("Query error:", error, query);
     throw error;
   }
 };
 
 export const allQuery = (query: string, params: any[] = []) => {
-  if (!db) throw new Error('Database not initialized');
+  if (!db) throw new Error("Database not initialized");
   try {
     const stmt = db.prepare(query);
     stmt.bind(params);
@@ -172,7 +172,7 @@ export const allQuery = (query: string, params: any[] = []) => {
     stmt.free();
     return results;
   } catch (error) {
-    console.error('Query error:', error, query);
+    console.error("Query error:", error, query);
     throw error;
   }
 };

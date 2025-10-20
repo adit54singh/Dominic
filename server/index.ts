@@ -30,10 +30,12 @@ export async function createServer() {
   await initializeDatabase();
 
   // Middleware
-  app.use(cors({
-    origin: ['http://localhost:8080', 'http://localhost:5173'],
-    credentials: true,
-  }));
+  app.use(
+    cors({
+      origin: ["http://localhost:8080", "http://localhost:5173"],
+      credentials: true,
+    }),
+  );
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
@@ -48,7 +50,7 @@ export async function createServer() {
         httpOnly: true,
         sameSite: "lax",
       },
-    })
+    }),
   );
 
   // Passport middleware
