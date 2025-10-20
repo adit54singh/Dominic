@@ -1,21 +1,28 @@
-import Database from 'better-sqlite3';
+import initSqlJs, { Database } from 'sql.js';
+import fs from 'fs';
 import path from 'path';
 
 const DB_PATH = path.join(process.cwd(), 'dominic.db');
 
-const db = new Database(DB_PATH, {
-  verbose: process.env.NODE_ENV === 'development' ? console.log : undefined,
-});
+let db: Database | null = null;
 
-// Enable foreign keys
-db.pragma('foreign_keys = ON');
-
-console.log('Connected to SQLite database at:', DB_PATH);
-
-export const initializeDatabase = () => {
+export const initializeDatabase = async () => {
   try {
-    // Users table
-    db.exec(`
+    const SQL = await initSqlJs();
+
+    // Load existing database or create new one
+    let data: Buffer | undefined;
+    if (fs.existsSync(DB_PATH)) {
+      data = fs.readFileSync(DB_PATH);
+      db = new SQL.Database(data);
+      console.log('Loaded existing database from:', DB_PATH);
+    } else {
+      db = new SQL.Database();
+      console.log('Created new database at:', DB_PATH);
+    }
+
+    // Create tables
+    db.run(`
       CREATE TABLE IF NOT EXISTS users (
         id TEXT PRIMARY KEY,
         google_id TEXT UNIQUE,
@@ -34,8 +41,7 @@ export const initializeDatabase = () => {
       )
     `);
 
-    // Projects table
-    db.exec(`
+    db.run(`
       CREATE TABLE IF NOT EXISTS projects (
         id TEXT PRIMARY KEY,
         user_id TEXT NOT NULL,
@@ -47,13 +53,11 @@ export const initializeDatabase = () => {
         progress INTEGER DEFAULT 0,
         due_date DATETIME,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id)
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `);
 
-    // Communities table
-    db.exec(`
+    db.run(`
       CREATE TABLE IF NOT EXISTS communities (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
@@ -70,45 +74,36 @@ export const initializeDatabase = () => {
       )
     `);
 
-    // User communities join table
-    db.exec(`
+    db.run(`
       CREATE TABLE IF NOT EXISTS user_communities (
         user_id TEXT NOT NULL,
         community_id TEXT NOT NULL,
         joined_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (user_id, community_id),
-        FOREIGN KEY (user_id) REFERENCES users(id),
-        FOREIGN KEY (community_id) REFERENCES communities(id)
+        PRIMARY KEY (user_id, community_id)
       )
     `);
 
-    // Activity table (for real-time tracking)
-    db.exec(`
+    db.run(`
       CREATE TABLE IF NOT EXISTS activities (
         id TEXT PRIMARY KEY,
         user_id TEXT NOT NULL,
         type TEXT NOT NULL,
         action TEXT,
         details TEXT,
-        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id)
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `);
 
-    // Following relationships
-    db.exec(`
+    db.run(`
       CREATE TABLE IF NOT EXISTS follows (
         follower_id TEXT NOT NULL,
         following_id TEXT NOT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (follower_id, following_id),
-        FOREIGN KEY (follower_id) REFERENCES users(id),
-        FOREIGN KEY (following_id) REFERENCES users(id)
+        PRIMARY KEY (follower_id, following_id)
       )
     `);
 
-    // Sessions table for express-session
-    db.exec(`
+    db.run(`
       CREATE TABLE IF NOT EXISTS sessions (
         sid TEXT PRIMARY KEY,
         sess TEXT NOT NULL,
@@ -116,6 +111,7 @@ export const initializeDatabase = () => {
       )
     `);
 
+    saveDatabase();
     console.log('Database initialized successfully');
   } catch (error) {
     console.error('Error initializing database:', error);
@@ -123,11 +119,23 @@ export const initializeDatabase = () => {
   }
 };
 
-// Helper functions for better-sqlite3
-export const runQuery = (query: string, params: any[] = []) => {
+export const saveDatabase = () => {
+  if (!db) return;
   try {
-    const stmt = db.prepare(query);
-    return stmt.run(...params);
+    const data = db.export();
+    const buffer = Buffer.from(data);
+    fs.writeFileSync(DB_PATH, buffer);
+  } catch (error) {
+    console.error('Error saving database:', error);
+  }
+};
+
+export const runQuery = (query: string, params: any[] = []) => {
+  if (!db) throw new Error('Database not initialized');
+  try {
+    db.run(query, params);
+    saveDatabase();
+    return { changes: db.getRowsModified() };
   } catch (error) {
     console.error('Query error:', error, query);
     throw error;
@@ -135,9 +143,17 @@ export const runQuery = (query: string, params: any[] = []) => {
 };
 
 export const getQuery = (query: string, params: any[] = []) => {
+  if (!db) throw new Error('Database not initialized');
   try {
     const stmt = db.prepare(query);
-    return stmt.get(...params);
+    stmt.bind(params);
+    if (stmt.step()) {
+      const row = stmt.getAsObject();
+      stmt.free();
+      return row;
+    }
+    stmt.free();
+    return undefined;
   } catch (error) {
     console.error('Query error:', error, query);
     throw error;
@@ -145,9 +161,16 @@ export const getQuery = (query: string, params: any[] = []) => {
 };
 
 export const allQuery = (query: string, params: any[] = []) => {
+  if (!db) throw new Error('Database not initialized');
   try {
     const stmt = db.prepare(query);
-    return stmt.all(...params);
+    stmt.bind(params);
+    const results: any[] = [];
+    while (stmt.step()) {
+      results.push(stmt.getAsObject());
+    }
+    stmt.free();
+    return results;
   } catch (error) {
     console.error('Query error:', error, query);
     throw error;
