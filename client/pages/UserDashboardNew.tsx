@@ -249,7 +249,7 @@ export default function UserDashboard() {
       }
       setDiscoverySessionStart(null);
     }
-  }, [activeTab, discoverySessionStart, addActivity]);
+  }, [activeTab, discoverySessionStart]);
 
   // Save user onboarding data to localStorage when explicitly updated
   const saveUserOnboardingData = useCallback((data: any) => {
