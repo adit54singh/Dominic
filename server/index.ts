@@ -23,11 +23,11 @@ import {
   unfollowUser,
 } from "./routes/auth";
 
-export function createServer() {
+export async function createServer() {
   const app = express();
 
   // Initialize database
-  initializeDatabase();
+  await initializeDatabase();
 
   // Middleware
   app.use(cors({
