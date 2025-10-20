@@ -1,21 +1,16 @@
-import sqlite3 from 'sqlite3';
+import Database from 'better-sqlite3';
 import path from 'path';
-import { promisify } from 'util';
 
 const DB_PATH = path.join(process.cwd(), 'dominic.db');
 
-const db = new sqlite3.Database(DB_PATH, (err) => {
-  if (err) {
-    console.error('Database connection error:', err);
-  } else {
-    console.log('Connected to SQLite database at:', DB_PATH);
-  }
+const db = new Database(DB_PATH, {
+  verbose: process.env.NODE_ENV === 'development' ? console.log : undefined,
 });
 
-// Promisify database methods for async/await support
-const dbRun = promisify(db.run.bind(db));
-const dbGet = promisify(db.get.bind(db));
-const dbAll = promisify(db.all.bind(db));
+// Enable foreign keys
+db.pragma('foreign_keys = ON');
+
+console.log('Connected to SQLite database at:', DB_PATH);
 
 export const initializeDatabase = async () => {
   try {
