@@ -4,8 +4,8 @@ import { createServer as createHTTPServer } from "http";
 import { setupSocket } from "./socket";
 import * as express from "express";
 
-(async () => {
-  const app = await createServer();
+(() => {
+  const app = createServer();
   const port = process.env.PORT || 3000;
 
   // In production, serve the built SPA files
