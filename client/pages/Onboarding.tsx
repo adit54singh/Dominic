@@ -75,7 +75,10 @@ interface OnboardingData {
 }
 
 export default function Onboarding() {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState<OnboardingData>({
     domains: [],
     skills: [],
