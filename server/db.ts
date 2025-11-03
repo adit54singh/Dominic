@@ -1,181 +1,236 @@
-import initSqlJs, { Database } from "sql.js";
-import fs from "fs";
-import path from "path";
+import mysql from "mysql2/promise";
 
-const DB_PATH = path.join(process.cwd(), "dominic.db");
-
-let db: Database | null = null;
+// Create MySQL connection pool
+let pool: mysql.Pool | null = null;
 
 export const initializeDatabase = async () => {
   try {
-    const SQL = await initSqlJs();
+    // Create connection pool
+    pool = mysql.createPool({
+      host: process.env.MYSQL_HOST || "localhost",
+      port: parseInt(process.env.MYSQL_PORT || "3306"),
+      user: process.env.MYSQL_USER || "root",
+      password: process.env.MYSQL_PASSWORD || "",
+      database: process.env.MYSQL_DB || "dominic",
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
+    });
 
-    // Load existing database or create new one
-    let data: Buffer | undefined;
-    if (fs.existsSync(DB_PATH)) {
-      data = fs.readFileSync(DB_PATH);
-      db = new SQL.Database(data);
-      console.log("Loaded existing database from:", DB_PATH);
-    } else {
-      db = new SQL.Database();
-      console.log("Created new database at:", DB_PATH);
-    }
+    console.log(
+      `Connected to MySQL database: ${process.env.MYSQL_DB || "dominic"}`,
+    );
+
+    // Test connection
+    const connection = await pool.getConnection();
+    await connection.ping();
+    connection.release();
+    console.log("MySQL connection test successful");
 
     // Create tables
-    db.run(`
-      CREATE TABLE IF NOT EXISTS users (
-        id TEXT PRIMARY KEY,
-        google_id TEXT UNIQUE,
-        email TEXT UNIQUE NOT NULL,
-        name TEXT NOT NULL,
-        avatar TEXT,
-        bio TEXT,
-        location TEXT,
-        company TEXT,
-        title TEXT,
-        skills TEXT,
-        experience TEXT,
-        domains TEXT,
-        goals TEXT,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
-    db.run(`
-      CREATE TABLE IF NOT EXISTS projects (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        title TEXT NOT NULL,
-        description TEXT,
-        domain TEXT,
-        tech_stack TEXT,
-        status TEXT DEFAULT 'active',
-        progress INTEGER DEFAULT 0,
-        due_date DATETIME,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
-    db.run(`
-      CREATE TABLE IF NOT EXISTS communities (
-        id TEXT PRIMARY KEY,
-        name TEXT NOT NULL,
-        description TEXT,
-        domain TEXT,
-        category TEXT,
-        privacy TEXT DEFAULT 'public',
-        members INTEGER DEFAULT 0,
-        posts INTEGER DEFAULT 0,
-        rules TEXT,
-        tags TEXT,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
-    db.run(`
-      CREATE TABLE IF NOT EXISTS user_communities (
-        user_id TEXT NOT NULL,
-        community_id TEXT NOT NULL,
-        joined_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (user_id, community_id)
-      )
-    `);
-
-    db.run(`
-      CREATE TABLE IF NOT EXISTS activities (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        type TEXT NOT NULL,
-        action TEXT,
-        details TEXT,
-        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
-    db.run(`
-      CREATE TABLE IF NOT EXISTS follows (
-        follower_id TEXT NOT NULL,
-        following_id TEXT NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (follower_id, following_id)
-      )
-    `);
-
-    db.run(`
-      CREATE TABLE IF NOT EXISTS sessions (
-        sid TEXT PRIMARY KEY,
-        sess TEXT NOT NULL,
-        expire INTEGER NOT NULL
-      )
-    `);
-
-    saveDatabase();
-    console.log("Database initialized successfully");
+    await createTables();
   } catch (error) {
     console.error("Error initializing database:", error);
     throw error;
   }
 };
 
+const createTables = async () => {
+  if (!pool) throw new Error("Database pool not initialized");
+
+  const connection = await pool.getConnection();
+
+  try {
+    // Users table
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS users (
+        id VARCHAR(255) PRIMARY KEY,
+        google_id VARCHAR(255) UNIQUE,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        name VARCHAR(255) NOT NULL,
+        avatar LONGTEXT,
+        bio TEXT,
+        location VARCHAR(255),
+        company VARCHAR(255),
+        title VARCHAR(255),
+        skills LONGTEXT,
+        experience VARCHAR(50),
+        domains LONGTEXT,
+        goals LONGTEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        INDEX idx_email (email),
+        INDEX idx_google_id (google_id)
+      ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+    `);
+
+    // Projects table
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS projects (
+        id VARCHAR(255) PRIMARY KEY,
+        user_id VARCHAR(255) NOT NULL,
+        title VARCHAR(255) NOT NULL,
+        description TEXT,
+        domain VARCHAR(255),
+        tech_stack LONGTEXT,
+        status VARCHAR(50) DEFAULT 'active',
+        progress INT DEFAULT 0,
+        due_date DATETIME,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        INDEX idx_user_id (user_id)
+      ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+    `);
+
+    // Communities table
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS communities (
+        id VARCHAR(255) PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        description TEXT,
+        domain VARCHAR(255),
+        category VARCHAR(255),
+        privacy VARCHAR(50) DEFAULT 'public',
+        members INT DEFAULT 0,
+        posts INT DEFAULT 0,
+        rules LONGTEXT,
+        tags LONGTEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        INDEX idx_domain (domain)
+      ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+    `);
+
+    // User Communities table (many-to-many)
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS user_communities (
+        user_id VARCHAR(255) NOT NULL,
+        community_id VARCHAR(255) NOT NULL,
+        joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (user_id, community_id),
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (community_id) REFERENCES communities(id) ON DELETE CASCADE
+      ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+    `);
+
+    // Activities table
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS activities (
+        id VARCHAR(255) PRIMARY KEY,
+        user_id VARCHAR(255) NOT NULL,
+        type VARCHAR(100) NOT NULL,
+        action TEXT,
+        details TEXT,
+        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        INDEX idx_user_id (user_id),
+        INDEX idx_timestamp (timestamp)
+      ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+    `);
+
+    // Follows table
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS follows (
+        follower_id VARCHAR(255) NOT NULL,
+        following_id VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (follower_id, following_id),
+        FOREIGN KEY (follower_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (following_id) REFERENCES users(id) ON DELETE CASCADE
+      ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+    `);
+
+    // Sessions table for express-session
+    await connection.execute(`
+      CREATE TABLE IF NOT EXISTS sessions (
+        sid VARCHAR(255) PRIMARY KEY,
+        sess LONGTEXT NOT NULL,
+        expire BIGINT NOT NULL,
+        INDEX idx_expire (expire)
+      ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+    `);
+
+    console.log("Database tables created successfully");
+  } catch (error) {
+    console.error("Error creating tables:", error);
+    throw error;
+  } finally {
+    connection.release();
+  }
+};
+
+export const runQuery = async (query: string, params: any[] = []) => {
+  if (!pool) throw new Error("Database pool not initialized");
+
+  const connection = await pool.getConnection();
+  try {
+    const result = await connection.execute(query, params);
+    return {
+      changes: result[0].affectedRows || 0,
+      lastInsertId: result[0].insertId,
+    };
+  } catch (error) {
+    console.error("Query error:", error, query, params);
+    throw error;
+  } finally {
+    connection.release();
+  }
+};
+
+export const getQuery = async (query: string, params: any[] = []) => {
+  if (!pool) throw new Error("Database pool not initialized");
+
+  const connection = await pool.getConnection();
+  try {
+    const [rows] = await connection.execute(query, params);
+    const result = Array.isArray(rows) ? rows[0] : undefined;
+    return result;
+  } catch (error) {
+    console.error("Query error:", error, query, params);
+    throw error;
+  } finally {
+    connection.release();
+  }
+};
+
+export const allQuery = async (query: string, params: any[] = []) => {
+  if (!pool) throw new Error("Database pool not initialized");
+
+  const connection = await pool.getConnection();
+  try {
+    const [rows] = await connection.execute(query, params);
+    return Array.isArray(rows) ? rows : [];
+  } catch (error) {
+    console.error("Query error:", error, query, params);
+    throw error;
+  } finally {
+    connection.release();
+  }
+};
+
+// Keep old sync versions for backwards compatibility (they won't work, but this prevents crashes)
+export const runQuerySync = (query: string, params: any[] = []) => {
+  throw new Error(
+    "Synchronous queries are not supported with MySQL. Use runQuery instead.",
+  );
+};
+
+export const getQuerySync = (query: string, params: any[] = []) => {
+  throw new Error(
+    "Synchronous queries are not supported with MySQL. Use getQuery instead.",
+  );
+};
+
+export const allQuerySync = (query: string, params: any[] = []) => {
+  throw new Error(
+    "Synchronous queries are not supported with MySQL. Use allQuery instead.",
+  );
+};
+
 export const saveDatabase = () => {
-  if (!db) return;
-  try {
-    const data = db.export();
-    const buffer = Buffer.from(data);
-    fs.writeFileSync(DB_PATH, buffer);
-  } catch (error) {
-    console.error("Error saving database:", error);
-  }
+  // MySQL saves automatically, no need for manual save
+  console.log("Database save not needed for MySQL");
 };
 
-export const runQuery = (query: string, params: any[] = []) => {
-  if (!db) throw new Error("Database not initialized");
-  try {
-    db.run(query, params);
-    saveDatabase();
-    return { changes: db.getRowsModified() };
-  } catch (error) {
-    console.error("Query error:", error, query);
-    throw error;
-  }
-};
-
-export const getQuery = (query: string, params: any[] = []) => {
-  if (!db) throw new Error("Database not initialized");
-  try {
-    const stmt = db.prepare(query);
-    stmt.bind(params);
-    if (stmt.step()) {
-      const row = stmt.getAsObject();
-      stmt.free();
-      return row;
-    }
-    stmt.free();
-    return undefined;
-  } catch (error) {
-    console.error("Query error:", error, query);
-    throw error;
-  }
-};
-
-export const allQuery = (query: string, params: any[] = []) => {
-  if (!db) throw new Error("Database not initialized");
-  try {
-    const stmt = db.prepare(query);
-    stmt.bind(params);
-    const results: any[] = [];
-    while (stmt.step()) {
-      results.push(stmt.getAsObject());
-    }
-    stmt.free();
-    return results;
-  } catch (error) {
-    console.error("Query error:", error, query);
-    throw error;
-  }
-};
-
-export default db;
+export default null;
