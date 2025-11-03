@@ -96,6 +96,7 @@ export async function createServer() {
 
   // User routes
   app.put("/api/user/profile", isAuthenticated, updateUserProfile);
+  app.put("/api/user/onboarding", isAuthenticated, updateOnboardingProfile);
   app.get("/api/user/projects", isAuthenticated, getUserProjects);
   app.post("/api/user/projects", isAuthenticated, createProject);
   app.get("/api/user/communities", isAuthenticated, getUserCommunities);
