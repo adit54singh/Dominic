@@ -45,13 +45,27 @@ export const updateUserProfile: RequestHandler = async (req, res) => {
   }
 
   try {
-    const { name, bio, location, company, title, skills, experience, domains } =
-      req.body;
+    const {
+      name,
+      bio,
+      location,
+      company,
+      title,
+      skills,
+      experience,
+      domains,
+      goals,
+    } = req.body;
     const userId = (req.user as any).id;
 
+    // Convert arrays to JSON strings if they're arrays
+    const skillsJson = Array.isArray(skills) ? JSON.stringify(skills) : skills;
+    const domainsJson = Array.isArray(domains) ? JSON.stringify(domains) : domains;
+    const goalsJson = Array.isArray(goals) ? JSON.stringify(goals) : goals;
+
     await runQuery(
-      `UPDATE users 
-       SET name = ?, bio = ?, location = ?, company = ?, title = ?, skills = ?, experience = ?, domains = ?, updated_at = CURRENT_TIMESTAMP
+      `UPDATE users
+       SET name = ?, bio = ?, location = ?, company = ?, title = ?, skills = ?, experience = ?, domains = ?, goals = ?, updated_at = CURRENT_TIMESTAMP
        WHERE id = ?`,
       [
         name,
@@ -59,9 +73,10 @@ export const updateUserProfile: RequestHandler = async (req, res) => {
         location,
         company,
         title,
-        skills,
+        skillsJson,
         experience,
-        domains,
+        domainsJson,
+        goalsJson,
         userId,
       ],
     );
