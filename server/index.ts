@@ -70,6 +70,15 @@ export async function createServer() {
     res.status(401).json({ error: "Not authenticated" });
   };
 
+  // Health check endpoint
+  app.get("/api/health", (_req, res) => {
+    res.json({
+      status: isDatabaseConnected() ? "healthy" : "database_offline",
+      database: isDatabaseConnected() ? "connected" : "disconnected",
+      timestamp: new Date().toISOString(),
+    });
+  });
+
   // Example API routes
   app.get("/api/ping", (_req, res) => {
     const ping = process.env.PING_MESSAGE ?? "ping";
