@@ -196,51 +196,93 @@ const createTables = async () => {
 };
 
 export const runQuery = async (query: string, params: any[] = []) => {
-  if (!pool) throw new Error("Database pool not initialized");
+  if (!pool) {
+    const errorMsg =
+      "Database pool not initialized. Make sure MySQL is running and environment variables are set.";
+    console.error(errorMsg);
+    throw new Error(errorMsg);
+  }
 
-  const connection = await pool.getConnection();
+  if (!dbConnected) {
+    const errorMsg =
+      "Database is not connected. Make sure MySQL server is running at the configured host and port.";
+    console.error(errorMsg);
+    throw new Error(errorMsg);
+  }
+
   try {
-    const result = await connection.execute(query, params);
-    return {
-      changes: result[0].affectedRows || 0,
-      lastInsertId: result[0].insertId,
-    };
+    const connection = await pool.getConnection();
+    try {
+      const result = await connection.execute(query, params);
+      return {
+        changes: result[0].affectedRows || 0,
+        lastInsertId: result[0].insertId,
+      };
+    } finally {
+      connection.release();
+    }
   } catch (error) {
-    console.error("Query error:", error, query, params);
+    console.error("Query error:", error instanceof Error ? error.message : error, query);
     throw error;
-  } finally {
-    connection.release();
   }
 };
 
 export const getQuery = async (query: string, params: any[] = []) => {
-  if (!pool) throw new Error("Database pool not initialized");
+  if (!pool) {
+    const errorMsg =
+      "Database pool not initialized. Make sure MySQL is running and environment variables are set.";
+    console.error(errorMsg);
+    throw new Error(errorMsg);
+  }
 
-  const connection = await pool.getConnection();
+  if (!dbConnected) {
+    const errorMsg =
+      "Database is not connected. Make sure MySQL server is running at the configured host and port.";
+    console.error(errorMsg);
+    throw new Error(errorMsg);
+  }
+
   try {
-    const [rows] = await connection.execute(query, params);
-    const result = Array.isArray(rows) ? rows[0] : undefined;
-    return result;
+    const connection = await pool.getConnection();
+    try {
+      const [rows] = await connection.execute(query, params);
+      const result = Array.isArray(rows) ? rows[0] : undefined;
+      return result;
+    } finally {
+      connection.release();
+    }
   } catch (error) {
-    console.error("Query error:", error, query, params);
+    console.error("Query error:", error instanceof Error ? error.message : error, query);
     throw error;
-  } finally {
-    connection.release();
   }
 };
 
 export const allQuery = async (query: string, params: any[] = []) => {
-  if (!pool) throw new Error("Database pool not initialized");
+  if (!pool) {
+    const errorMsg =
+      "Database pool not initialized. Make sure MySQL is running and environment variables are set.";
+    console.error(errorMsg);
+    throw new Error(errorMsg);
+  }
 
-  const connection = await pool.getConnection();
+  if (!dbConnected) {
+    const errorMsg =
+      "Database is not connected. Make sure MySQL server is running at the configured host and port.";
+    console.error(errorMsg);
+    throw new Error(errorMsg);
+  }
+
   try {
-    const [rows] = await connection.execute(query, params);
-    return Array.isArray(rows) ? rows : [];
+    const connection = await pool.getConnection();
+    try {
+      const [rows] = await connection.execute(query, params);
+      return Array.isArray(rows) ? rows : [];
+    } finally {
+      connection.release();
+    }
   } catch (error) {
-    console.error("Query error:", error, query, params);
+    console.error("Query error:", error instanceof Error ? error.message : error, query);
     throw error;
-  } finally {
-    connection.release();
   }
 };
 
