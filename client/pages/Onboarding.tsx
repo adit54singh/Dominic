@@ -1066,8 +1066,8 @@ export default function Onboarding() {
           </div>
         </nav>
 
-        <div className="container mx-auto px-4 py-20">
-          <div className="max-w-4xl mx-auto">
+        <div className="container mx-auto px-4 py-12">
+          <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
               <div className="w-20 h-20 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-6">
                 <CheckCircle className="w-10 h-10 text-success" />
@@ -1076,17 +1076,31 @@ export default function Onboarding() {
                 Profile Card Created! 🎉
               </h1>
               <p className="text-lg text-muted-foreground mb-8">
-                Your comprehensive profile is ready. Welcome to the Dominic
-                community!
+                Your comprehensive profile is ready. Welcome to the Dominic community!
               </p>
             </div>
 
             {/* Professional Profile Card */}
-            <div className="flex justify-center mb-12">
+            <div className="flex justify-center mb-16">
               <ProfileCard profile={userProfile} />
             </div>
 
-            <div className="text-center space-y-4">
+            {/* ML-Powered Recommendations */}
+            <div className="mb-12">
+              <h2 className="text-3xl font-bold mb-2 text-center">
+                Discover Your Community
+              </h2>
+              <p className="text-center text-muted-foreground mb-8">
+                Based on your profile, here are personalized recommendations for communities and developers you might want to connect with.
+              </p>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <RecommendedCommunities />
+                <RecommendedUsers />
+              </div>
+            </div>
+
+            <div className="text-center space-y-4 py-8 border-t">
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link to="/dashboard">
                   <Button size="lg" className="flex items-center space-x-2">
@@ -1094,16 +1108,15 @@ export default function Onboarding() {
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
-                <Link to="/mentors">
+                <Link to="/community">
                   <Button variant="outline" size="lg">
-                    Find Mentors
+                    Explore All Communities
                   </Button>
                 </Link>
               </div>
 
               <p className="text-sm text-muted-foreground">
-                Your profile will help us connect you with the right mentors and
-                learning opportunities!
+                Your profile helps us connect you with the right communities and learning opportunities!
               </p>
             </div>
           </div>
