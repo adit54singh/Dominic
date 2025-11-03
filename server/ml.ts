@@ -152,7 +152,10 @@ export function createUserProfileVector(userData: {
 /**
  * Calculate cosine similarity between two vectors
  */
-function cosineSimilarity(vec1: Record<string, number>, vec2: Record<string, number>): number {
+function cosineSimilarity(
+  vec1: Record<string, number>,
+  vec2: Record<string, number>,
+): number {
   const allKeys = new Set([...Object.keys(vec1), ...Object.keys(vec2)]);
 
   let dotProduct = 0;
@@ -192,7 +195,10 @@ export function calculateProfileSimilarity(
   userVector1: UserProfileVector,
   userVector2: UserProfileVector,
 ): number {
-  const skillSimilarity = cosineSimilarity(userVector1.skills, userVector2.skills);
+  const skillSimilarity = cosineSimilarity(
+    userVector1.skills,
+    userVector2.skills,
+  );
   const domainSet1 = new Set(Object.keys(userVector1.domains));
   const domainSet2 = new Set(Object.keys(userVector2.domains));
   const domainSimilarity = jaccardSimilarity(domainSet1, domainSet2);
@@ -225,19 +231,25 @@ export function findMatchingCommunities(
 
       // Check skill overlap
       const communityTags = community.tags.map((t) => t.toLowerCase().trim());
-      const skillMatches = communityTags.filter((tag) => userVector.skills[tag]).length;
+      const skillMatches = communityTags.filter(
+        (tag) => userVector.skills[tag],
+      ).length;
       const skillScore = skillMatches / Math.max(communityTags.length, 1);
 
       // Overall score: domain match is primary, skills are secondary
       const score =
-        (domainMatch > 0 ? 0.6 : 0) + skillScore * 0.4 + (skillMatches > 0 ? 0.1 : 0);
+        (domainMatch > 0 ? 0.6 : 0) +
+        skillScore * 0.4 +
+        (skillMatches > 0 ? 0.1 : 0);
 
       const reasons: string[] = [];
       if (domainMatch > 0) {
         reasons.push(`matches your interest in ${community.domain}`);
       }
       if (skillMatches > 0) {
-        reasons.push(`relevant to your skills: ${communityTags.slice(0, 2).join(", ")}`);
+        reasons.push(
+          `relevant to your skills: ${communityTags.slice(0, 2).join(", ")}`,
+        );
       }
 
       return {
@@ -299,7 +311,9 @@ export function findMatchingUsers(
 
       const reasons: string[] = [];
       if (commonSkills.length > 0) {
-        reasons.push(`shares your skills: ${commonSkills.slice(0, 2).join(", ")}`);
+        reasons.push(
+          `shares your skills: ${commonSkills.slice(0, 2).join(", ")}`,
+        );
       }
       if (commonDomains.length > 0) {
         reasons.push(`interested in ${commonDomains.slice(0, 2).join(", ")}`);
@@ -328,7 +342,10 @@ export function findMatchingUsers(
  * Normalize term for comparison
  */
 export function normalizeTerm(term: string): string {
-  return term.toLowerCase().trim().replace(/[^\w\s]/g, "");
+  return term
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s]/g, "");
 }
 
 /**
@@ -346,7 +363,9 @@ export function rankRecommendations(
       let bonus = 0;
 
       if (userPreferences?.preferredDomains) {
-        if (userPreferences.preferredDomains.some((d) => rec.reason.includes(d))) {
+        if (
+          userPreferences.preferredDomains.some((d) => rec.reason.includes(d))
+        ) {
           bonus += 0.1;
         }
       }

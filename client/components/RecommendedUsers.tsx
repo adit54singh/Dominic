@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Loader2, Users, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -18,7 +24,9 @@ interface Props {
 }
 
 export default function RecommendedUsers({ className }: Props) {
-  const [recommendations, setRecommendations] = useState<UserRecommendation[]>([]);
+  const [recommendations, setRecommendations] = useState<UserRecommendation[]>(
+    [],
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
@@ -69,7 +77,9 @@ export default function RecommendedUsers({ className }: Props) {
         <Card>
           <CardHeader>
             <CardTitle>Recommended Users</CardTitle>
-            <CardDescription>Connect with developers who share your interests</CardDescription>
+            <CardDescription>
+              Connect with developers who share your interests
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex justify-center items-center py-12">
@@ -89,13 +99,17 @@ export default function RecommendedUsers({ className }: Props) {
             <TrendingUp className="w-5 h-5 text-primary" />
             <div>
               <CardTitle>Recommended Users</CardTitle>
-              <CardDescription>Connect with developers who share your interests</CardDescription>
+              <CardDescription>
+                Connect with developers who share your interests
+              </CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardContent>
           {error && (
-            <div className="text-sm text-red-500 mb-4 p-3 bg-red-50 rounded-lg">{error}</div>
+            <div className="text-sm text-red-500 mb-4 p-3 bg-red-50 rounded-lg">
+              {error}
+            </div>
           )}
 
           {recommendations.length === 0 ? (
@@ -112,7 +126,9 @@ export default function RecommendedUsers({ className }: Props) {
                   <CardContent className="flex-1 pt-4">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
-                        <h3 className="font-semibold text-sm line-clamp-1">{user.name}</h3>
+                        <h3 className="font-semibold text-sm line-clamp-1">
+                          {user.name}
+                        </h3>
                         <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
                           {user.description}
                         </p>
@@ -121,12 +137,16 @@ export default function RecommendedUsers({ className }: Props) {
                         <div className="text-xs font-semibold text-primary">
                           {(user.similarity * 100).toFixed(0)}%
                         </div>
-                        <div className="text-xs text-muted-foreground">match</div>
+                        <div className="text-xs text-muted-foreground">
+                          match
+                        </div>
                       </div>
                     </div>
 
                     <div className="mt-3 pt-3 border-t">
-                      <p className="text-xs text-muted-foreground italic">{user.reason}</p>
+                      <p className="text-xs text-muted-foreground italic">
+                        {user.reason}
+                      </p>
                     </div>
                   </CardContent>
 
@@ -134,7 +154,9 @@ export default function RecommendedUsers({ className }: Props) {
                     <Button
                       size="sm"
                       className="w-full"
-                      variant={followedUsers.has(user.id) ? "outline" : "default"}
+                      variant={
+                        followedUsers.has(user.id) ? "outline" : "default"
+                      }
                       disabled={followedUsers.has(user.id)}
                       onClick={() => handleFollowUser(user.id)}
                     >

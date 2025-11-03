@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Loader2, Users, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -18,10 +24,14 @@ interface Props {
 }
 
 export default function RecommendedCommunities({ className }: Props) {
-  const [recommendations, setRecommendations] = useState<CommunityRecommendation[]>([]);
+  const [recommendations, setRecommendations] = useState<
+    CommunityRecommendation[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [joinedCommunities, setJoinedCommunities] = useState<Set<string>>(new Set());
+  const [joinedCommunities, setJoinedCommunities] = useState<Set<string>>(
+    new Set(),
+  );
 
   useEffect(() => {
     fetchRecommendations();
@@ -69,7 +79,9 @@ export default function RecommendedCommunities({ className }: Props) {
         <Card>
           <CardHeader>
             <CardTitle>Recommended Communities</CardTitle>
-            <CardDescription>Personalized suggestions based on your profile</CardDescription>
+            <CardDescription>
+              Personalized suggestions based on your profile
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex justify-center items-center py-12">
@@ -89,20 +101,25 @@ export default function RecommendedCommunities({ className }: Props) {
             <TrendingUp className="w-5 h-5 text-primary" />
             <div>
               <CardTitle>Recommended Communities</CardTitle>
-              <CardDescription>Personalized suggestions based on your profile</CardDescription>
+              <CardDescription>
+                Personalized suggestions based on your profile
+              </CardDescription>
             </div>
           </div>
         </CardHeader>
         <CardContent>
           {error && (
-            <div className="text-sm text-red-500 mb-4 p-3 bg-red-50 rounded-lg">{error}</div>
+            <div className="text-sm text-red-500 mb-4 p-3 bg-red-50 rounded-lg">
+              {error}
+            </div>
           )}
 
           {recommendations.length === 0 ? (
             <div className="text-center py-8">
               <Users className="w-12 h-12 text-muted-foreground mx-auto mb-2 opacity-50" />
               <p className="text-muted-foreground">
-                No communities to recommend right now. Try updating your profile!
+                No communities to recommend right now. Try updating your
+                profile!
               </p>
             </div>
           ) : (
@@ -112,7 +129,9 @@ export default function RecommendedCommunities({ className }: Props) {
                   <CardContent className="flex-1 pt-4">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
-                        <h3 className="font-semibold text-sm line-clamp-2">{community.name}</h3>
+                        <h3 className="font-semibold text-sm line-clamp-2">
+                          {community.name}
+                        </h3>
                         <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
                           {community.description}
                         </p>
@@ -121,12 +140,16 @@ export default function RecommendedCommunities({ className }: Props) {
                         <div className="text-xs font-semibold text-primary">
                           {(community.similarity * 100).toFixed(0)}%
                         </div>
-                        <div className="text-xs text-muted-foreground">match</div>
+                        <div className="text-xs text-muted-foreground">
+                          match
+                        </div>
                       </div>
                     </div>
 
                     <div className="mt-3 pt-3 border-t">
-                      <p className="text-xs text-muted-foreground italic">{community.reason}</p>
+                      <p className="text-xs text-muted-foreground italic">
+                        {community.reason}
+                      </p>
                     </div>
                   </CardContent>
 
@@ -134,11 +157,17 @@ export default function RecommendedCommunities({ className }: Props) {
                     <Button
                       size="sm"
                       className="w-full"
-                      variant={joinedCommunities.has(community.id) ? "outline" : "default"}
+                      variant={
+                        joinedCommunities.has(community.id)
+                          ? "outline"
+                          : "default"
+                      }
                       disabled={joinedCommunities.has(community.id)}
                       onClick={() => handleJoinCommunity(community.id)}
                     >
-                      {joinedCommunities.has(community.id) ? "Joined" : "Join Community"}
+                      {joinedCommunities.has(community.id)
+                        ? "Joined"
+                        : "Join Community"}
                     </Button>
                   </div>
                 </Card>

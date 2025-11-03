@@ -108,9 +108,17 @@ export async function createServer() {
   app.post("/api/user/unfollow", isAuthenticated, unfollowUser);
 
   // Recommendations routes (ML-based)
-  app.get("/api/recommendations/communities", isAuthenticated, getRecommendedCommunities);
+  app.get(
+    "/api/recommendations/communities",
+    isAuthenticated,
+    getRecommendedCommunities,
+  );
   app.get("/api/recommendations/users", isAuthenticated, getRecommendedUsers);
-  app.get("/api/recommendations/personalized", isAuthenticated, getPersonalizedRecommendations);
+  app.get(
+    "/api/recommendations/personalized",
+    isAuthenticated,
+    getPersonalizedRecommendations,
+  );
 
   return app;
 }

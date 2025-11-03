@@ -35,7 +35,11 @@ export const initializeDatabase = async () => {
         ),
       ]);
 
-      if (connection && typeof connection === "object" && "release" in connection) {
+      if (
+        connection &&
+        typeof connection === "object" &&
+        "release" in connection
+      ) {
         await (connection as any).ping();
         (connection as any).release();
         dbConnected = true;
@@ -49,7 +53,9 @@ export const initializeDatabase = async () => {
       dbConnected = false;
       console.error(
         `✗ Failed to connect to MySQL at ${host}:${port}`,
-        connectionError instanceof Error ? connectionError.message : connectionError,
+        connectionError instanceof Error
+          ? connectionError.message
+          : connectionError,
       );
       console.warn(
         "⚠ Database is offline. Make sure MySQL is running:",
@@ -229,7 +235,11 @@ export const runQuery = async (query: string, params: any[] = []) => {
       connection.release();
     }
   } catch (error) {
-    console.error("Query error:", error instanceof Error ? error.message : error, query);
+    console.error(
+      "Query error:",
+      error instanceof Error ? error.message : error,
+      query,
+    );
     throw error;
   }
 };
@@ -259,7 +269,11 @@ export const getQuery = async (query: string, params: any[] = []) => {
       connection.release();
     }
   } catch (error) {
-    console.error("Query error:", error instanceof Error ? error.message : error, query);
+    console.error(
+      "Query error:",
+      error instanceof Error ? error.message : error,
+      query,
+    );
     throw error;
   }
 };
@@ -288,7 +302,11 @@ export const allQuery = async (query: string, params: any[] = []) => {
       connection.release();
     }
   } catch (error) {
-    console.error("Query error:", error instanceof Error ? error.message : error, query);
+    console.error(
+      "Query error:",
+      error instanceof Error ? error.message : error,
+      query,
+    );
     throw error;
   }
 };

@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Loader2, ArrowLeft, RefreshCw } from "lucide-react";
 import RecommendedCommunities from "@/components/RecommendedCommunities";
 import RecommendedUsers from "@/components/RecommendedUsers";
@@ -80,9 +86,10 @@ export default function Recommendations() {
               Discover Your Next Connection
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Based on your profile and interests, we've selected communities and developers
-              that align with your goals and technical expertise. Join communities to collaborate
-              and follow users to stay updated with their work.
+              Based on your profile and interests, we've selected communities
+              and developers that align with your goals and technical expertise.
+              Join communities to collaborate and follow users to stay updated
+              with their work.
             </p>
           </div>
 
@@ -96,18 +103,33 @@ export default function Recommendations() {
           <Card className="bg-blue-50 border-blue-200">
             <CardContent className="pt-6">
               <div className="space-y-3">
-                <h3 className="font-semibold text-sm">How Recommendations Work</h3>
+                <h3 className="font-semibold text-sm">
+                  How Recommendations Work
+                </h3>
                 <p className="text-sm text-muted-foreground">
                   Our ML-based recommendation system analyzes your:
                 </p>
                 <ul className="text-sm text-muted-foreground space-y-1 ml-4 list-disc">
-                  <li><strong>Skills & Technologies:</strong> Languages, frameworks, and tools you know</li>
-                  <li><strong>Technology Domains:</strong> Areas like web dev, AI, DevOps, etc.</li>
-                  <li><strong>Experience Level:</strong> Beginner, intermediate, or advanced</li>
-                  <li><strong>Goals:</strong> What you want to achieve on the platform</li>
+                  <li>
+                    <strong>Skills & Technologies:</strong> Languages,
+                    frameworks, and tools you know
+                  </li>
+                  <li>
+                    <strong>Technology Domains:</strong> Areas like web dev, AI,
+                    DevOps, etc.
+                  </li>
+                  <li>
+                    <strong>Experience Level:</strong> Beginner, intermediate,
+                    or advanced
+                  </li>
+                  <li>
+                    <strong>Goals:</strong> What you want to achieve on the
+                    platform
+                  </li>
                 </ul>
                 <p className="text-sm text-muted-foreground mt-3">
-                  This helps us suggest communities and users with matching interests and expertise levels.
+                  This helps us suggest communities and users with matching
+                  interests and expertise levels.
                 </p>
               </div>
             </CardContent>

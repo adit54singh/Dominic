@@ -393,7 +393,8 @@ export default function Onboarding() {
 
       setCurrentStep(currentStep + 1);
     } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : "Unknown error occurred";
+      const errorMsg =
+        error instanceof Error ? error.message : "Unknown error occurred";
       console.error("Error saving profile:", errorMsg);
       alert(`Failed to save profile: ${errorMsg}`);
     }
@@ -1128,7 +1129,8 @@ export default function Onboarding() {
                 Profile Card Created! 🎉
               </h1>
               <p className="text-lg text-muted-foreground mb-8">
-                Your comprehensive profile is ready. Welcome to the Dominic community!
+                Your comprehensive profile is ready. Welcome to the Dominic
+                community!
               </p>
             </div>
 
@@ -1143,7 +1145,8 @@ export default function Onboarding() {
                 Discover Your Community
               </h2>
               <p className="text-center text-muted-foreground mb-8">
-                Based on your profile, here are personalized recommendations for communities and developers you might want to connect with.
+                Based on your profile, here are personalized recommendations for
+                communities and developers you might want to connect with.
               </p>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -1168,7 +1171,8 @@ export default function Onboarding() {
               </div>
 
               <p className="text-sm text-muted-foreground">
-                Your profile helps us connect you with the right communities and learning opportunities!
+                Your profile helps us connect you with the right communities and
+                learning opportunities!
               </p>
             </div>
           </div>

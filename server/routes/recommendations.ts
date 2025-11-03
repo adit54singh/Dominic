@@ -55,13 +55,21 @@ export const getRecommendedCommunities: RequestHandler = async (req, res) => {
       "SELECT community_id FROM user_communities WHERE user_id = ?",
       [userId],
     );
-    const joinedIds = new Set((joinedCommunities as any[]).map((c) => c.community_id));
+    const joinedIds = new Set(
+      (joinedCommunities as any[]).map((c) => c.community_id),
+    );
 
     // Filter out already joined communities
-    const availableCommunities = communitiesWithTags.filter((c) => !joinedIds.has(c.id));
+    const availableCommunities = communitiesWithTags.filter(
+      (c) => !joinedIds.has(c.id),
+    );
 
     // Find matching communities
-    const recommendations = findMatchingCommunities(userVector, availableCommunities, limit);
+    const recommendations = findMatchingCommunities(
+      userVector,
+      availableCommunities,
+      limit,
+    );
 
     // Rank and return
     const rankedRecommendations = rankRecommendations(recommendations, {
@@ -133,13 +141,19 @@ export const getRecommendedUsers: RequestHandler = async (req, res) => {
       "SELECT following_id FROM follows WHERE follower_id = ?",
       [userId],
     );
-    const followingIds = new Set((followingList as any[]).map((f) => f.following_id));
+    const followingIds = new Set(
+      (followingList as any[]).map((f) => f.following_id),
+    );
 
     // Filter out already followed users
     const availableUsers = otherUsers.filter((u) => !followingIds.has(u.id));
 
     // Find matching users
-    const recommendations = findMatchingUsers(userVector, availableUsers, limit);
+    const recommendations = findMatchingUsers(
+      userVector,
+      availableUsers,
+      limit,
+    );
 
     // Rank and return
     const rankedRecommendations = rankRecommendations(recommendations, {
@@ -159,15 +173,22 @@ export const getRecommendedUsers: RequestHandler = async (req, res) => {
 /**
  * Get personalized dashboard recommendations (mix of communities and users)
  */
-export const getPersonalizedRecommendations: RequestHandler = async (req, res) => {
+export const getPersonalizedRecommendations: RequestHandler = async (
+  req,
+  res,
+) => {
   if (!req.user) {
     return res.status(401).json({ error: "Not authenticated" });
   }
 
   try {
     const userId = (req.user as any).id;
-    const communityLimit = req.query.communityLimit ? parseInt(req.query.communityLimit as string) : 3;
-    const userLimit = req.query.userLimit ? parseInt(req.query.userLimit as string) : 3;
+    const communityLimit = req.query.communityLimit
+      ? parseInt(req.query.communityLimit as string)
+      : 3;
+    const userLimit = req.query.userLimit
+      ? parseInt(req.query.userLimit as string)
+      : 3;
 
     // Get user profile
     const user = await getQuery("SELECT * FROM users WHERE id = ?", [userId]);
@@ -196,7 +217,9 @@ export const getPersonalizedRecommendations: RequestHandler = async (req, res) =
       "SELECT community_id FROM user_communities WHERE user_id = ?",
       [userId],
     );
-    const joinedIds = new Set((joinedCommunities as any[]).map((c) => c.community_id));
+    const joinedIds = new Set(
+      (joinedCommunities as any[]).map((c) => c.community_id),
+    );
 
     const communitiesWithTags = (allCommunities as any[])
       .filter((c) => !joinedIds.has(c.id))
@@ -208,7 +231,11 @@ export const getPersonalizedRecommendations: RequestHandler = async (req, res) =
         tags: c.tags ? JSON.parse(c.tags) : [],
       }));
 
-    const communityRecs = findMatchingCommunities(userVector, communitiesWithTags, communityLimit);
+    const communityRecs = findMatchingCommunities(
+      userVector,
+      communitiesWithTags,
+      communityLimit,
+    );
 
     // Get user recommendations
     const allUsers = await allQuery(
@@ -219,7 +246,9 @@ export const getPersonalizedRecommendations: RequestHandler = async (req, res) =
       "SELECT following_id FROM follows WHERE follower_id = ?",
       [userId],
     );
-    const followingIds = new Set((followingList as any[]).map((f) => f.following_id));
+    const followingIds = new Set(
+      (followingList as any[]).map((f) => f.following_id),
+    );
 
     const otherUsers = (allUsers as any[])
       .filter((u) => !followingIds.has(u.id))
@@ -237,7 +266,9 @@ export const getPersonalizedRecommendations: RequestHandler = async (req, res) =
     const userRecs = findMatchingUsers(userVector, otherUsers, userLimit);
 
     res.json({
-      communities: rankRecommendations(communityRecs, { preferredDomains: domains }),
+      communities: rankRecommendations(communityRecs, {
+        preferredDomains: domains,
+      }),
       users: rankRecommendations(userRecs, { preferredDomains: domains }),
     });
   } catch (error) {
