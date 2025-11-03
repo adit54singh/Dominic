@@ -22,6 +22,11 @@ import {
   followUser,
   unfollowUser,
 } from "./routes/auth";
+import {
+  getRecommendedCommunities,
+  getRecommendedUsers,
+  getPersonalizedRecommendations,
+} from "./routes/recommendations";
 
 export async function createServer() {
   const app = express();
