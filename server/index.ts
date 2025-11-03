@@ -4,7 +4,7 @@ import cors from "cors";
 import session from "express-session";
 import passport from "passport";
 import { handleDemo } from "./routes/demo";
-import { initializeDatabase } from "./db";
+import { initializeDatabase, isDatabaseConnected } from "./db";
 import authPassport from "./auth";
 import {
   googleAuth,
