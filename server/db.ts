@@ -71,7 +71,15 @@ export const initializeDatabase = async () => {
 export const isDatabaseConnected = () => dbConnected;
 
 const createTables = async () => {
-  if (!pool) throw new Error("Database pool not initialized");
+  if (!pool) {
+    console.warn("Cannot create tables: database pool not initialized");
+    return;
+  }
+
+  if (!dbConnected) {
+    console.warn("Cannot create tables: database not connected");
+    return;
+  }
 
   const connection = await pool.getConnection();
 
