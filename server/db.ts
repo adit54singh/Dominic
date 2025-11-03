@@ -36,6 +36,7 @@ export const initializeDatabase = async () => {
         skills TEXT,
         experience TEXT,
         domains TEXT,
+        goals TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )
