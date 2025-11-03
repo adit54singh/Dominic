@@ -90,6 +90,35 @@ export const updateUserProfile: RequestHandler = async (req, res) => {
   }
 };
 
+export const updateOnboardingProfile: RequestHandler = async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
+
+  try {
+    const { skills, experience, domains, goals } = req.body;
+    const userId = (req.user as any).id;
+
+    // Convert arrays to JSON strings if they're arrays
+    const skillsJson = Array.isArray(skills) ? JSON.stringify(skills) : skills;
+    const domainsJson = Array.isArray(domains) ? JSON.stringify(domains) : domains;
+    const goalsJson = Array.isArray(goals) ? JSON.stringify(goals) : goals;
+
+    await runQuery(
+      `UPDATE users
+       SET skills = ?, experience = ?, domains = ?, goals = ?, updated_at = CURRENT_TIMESTAMP
+       WHERE id = ?`,
+      [skillsJson, experience, domainsJson, goalsJson, userId],
+    );
+
+    const updatedUser = await getQuery("SELECT * FROM users WHERE id = ?", [userId]);
+    res.json(updatedUser);
+  } catch (error) {
+    console.error("Error updating onboarding profile:", error);
+    res.status(500).json({ error: "Failed to update profile" });
+  }
+};
+
 export const getUserProjects: RequestHandler = async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ error: "Not authenticated" });
