@@ -342,9 +342,10 @@ export default function Onboarding() {
 
   const saveProfileAndComplete = async () => {
     try {
-      const response = await fetch("/api/user/profile", {
+      const response = await fetch("/api/user/onboarding", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           skills: data.skills,
           experience: data.experience,
