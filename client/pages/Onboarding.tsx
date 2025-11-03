@@ -354,13 +354,21 @@ export default function Onboarding() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to save profile");
+        let errorMessage = "Failed to save profile";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch {
+          errorMessage = `Server error: ${response.status} ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
       }
 
       setCurrentStep(currentStep + 1);
     } catch (error) {
-      console.error("Error saving profile:", error);
-      alert("Failed to save profile. Please try again.");
+      const errorMsg = error instanceof Error ? error.message : "Unknown error occurred";
+      console.error("Error saving profile:", errorMsg);
+      alert(`Failed to save profile: ${errorMsg}`);
     }
   };
 
