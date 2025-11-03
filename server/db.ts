@@ -2,38 +2,73 @@ import mysql from "mysql2/promise";
 
 // Create MySQL connection pool
 let pool: mysql.Pool | null = null;
+let dbConnected = false;
 
 export const initializeDatabase = async () => {
   try {
+    const host = process.env.MYSQL_HOST || "localhost";
+    const port = parseInt(process.env.MYSQL_PORT || "3306");
+    const user = process.env.MYSQL_USER || "root";
+    const database = process.env.MYSQL_DB || "dominic";
+
+    console.log(`Attempting to connect to MySQL at ${host}:${port}...`);
+
     // Create connection pool
     pool = mysql.createPool({
-      host: process.env.MYSQL_HOST || "localhost",
-      port: parseInt(process.env.MYSQL_PORT || "3306"),
-      user: process.env.MYSQL_USER || "root",
+      host,
+      port,
+      user,
       password: process.env.MYSQL_PASSWORD || "",
-      database: process.env.MYSQL_DB || "dominic",
+      database,
       waitForConnections: true,
       connectionLimit: 10,
       queueLimit: 0,
+      enableKeepAlive: true,
+      keepAliveInitialDelayMs: 0,
     });
 
-    console.log(
-      `Connected to MySQL database: ${process.env.MYSQL_DB || "dominic"}`,
-    );
-
     // Test connection
-    const connection = await pool.getConnection();
-    await connection.ping();
-    connection.release();
-    console.log("MySQL connection test successful");
+    try {
+      const connection = await Promise.race([
+        pool.getConnection(),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Connection timeout")), 5000),
+        ),
+      ]);
 
-    // Create tables
-    await createTables();
+      if (connection && typeof connection === "object" && "release" in connection) {
+        await (connection as any).ping();
+        (connection as any).release();
+        dbConnected = true;
+        console.log(`✓ Successfully connected to MySQL database: ${database}`);
+
+        // Create tables
+        await createTables();
+        console.log("✓ Database tables initialized successfully");
+      }
+    } catch (connectionError) {
+      dbConnected = false;
+      console.error(
+        `✗ Failed to connect to MySQL at ${host}:${port}`,
+        connectionError instanceof Error ? connectionError.message : connectionError,
+      );
+      console.warn(
+        "⚠ Database is offline. Make sure MySQL is running:",
+        `  - Host: ${host}`,
+        `  - Port: ${port}`,
+        `  - User: ${user}`,
+        `  - Database: ${database}`,
+      );
+      // Don't throw - let the app start anyway
+      // Database operations will fail at runtime with clear errors
+    }
   } catch (error) {
-    console.error("Error initializing database:", error);
-    throw error;
+    console.error("Error during database initialization:", error);
+    // Don't throw - let the app start anyway
   }
 };
+
+export const isDatabaseConnected = () => dbConnected;
 
 const createTables = async () => {
   if (!pool) throw new Error("Database pool not initialized");
