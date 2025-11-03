@@ -18,6 +18,7 @@ const UserProfile = lazy(() => import("./pages/UserProfile"));
 const Domains = lazy(() => import("./pages/Domains"));
 const Mentors = lazy(() => import("./pages/Mentors"));
 const Community = lazy(() => import("./pages/Community"));
+const Recommendations = lazy(() => import("./pages/Recommendations"));
 const About = lazy(() => import("./pages/About"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
