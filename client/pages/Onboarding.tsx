@@ -36,6 +36,8 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import ProfileCard from "@/components/ProfileCard";
+import RecommendedCommunities from "@/components/RecommendedCommunities";
+import RecommendedUsers from "@/components/RecommendedUsers";
 
 interface ProjectData {
   name: string;
