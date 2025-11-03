@@ -1008,6 +1008,23 @@ export default function Onboarding() {
     }
   };
 
+  // Show loading screen while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-accent/5">
+        <div className="flex flex-col items-center space-y-4">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          <p className="text-muted-foreground">Loading your onboarding...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect if not authenticated
+  if (!isAuthenticated) {
+    return null; // Will redirect via useEffect
+  }
+
   if (currentStep > totalSteps) {
     // Generate user's profile data for the professional card
     const getInitials = (name: string) => {
