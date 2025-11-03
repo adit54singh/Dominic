@@ -104,6 +104,28 @@ export default function Onboarding() {
 
   const totalSteps = 4;
 
+  useEffect(() => {
+    // Check if user is authenticated
+    const checkAuth = async () => {
+      try {
+        const response = await fetch("/api/auth/user");
+        if (response.ok) {
+          setIsAuthenticated(true);
+        } else {
+          // Not authenticated, redirect to home
+          navigate("/");
+        }
+      } catch (error) {
+        console.error("Auth check failed:", error);
+        navigate("/");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [navigate]);
+
   const techDomains = [
     {
       id: "software-dev",
