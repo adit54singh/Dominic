@@ -338,8 +338,34 @@ export default function Onboarding() {
     }
   };
 
+  const saveProfileAndComplete = async () => {
+    try {
+      const response = await fetch("/api/user/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          skills: data.skills,
+          experience: data.experience,
+          domains: data.domains,
+          goals: data.goals,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save profile");
+      }
+
+      setCurrentStep(currentStep + 1);
+    } catch (error) {
+      console.error("Error saving profile:", error);
+      alert("Failed to save profile. Please try again.");
+    }
+  };
+
   const nextStep = () => {
-    if (currentStep <= totalSteps) {
+    if (currentStep === totalSteps) {
+      saveProfileAndComplete();
+    } else if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
     }
   };
