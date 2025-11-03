@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -36,6 +37,8 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import ProfileCard from "@/components/ProfileCard";
+import RecommendedCommunities from "@/components/RecommendedCommunities";
+import RecommendedUsers from "@/components/RecommendedUsers";
 
 interface ProjectData {
   name: string;
@@ -72,7 +75,10 @@ interface OnboardingData {
 }
 
 export default function Onboarding() {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState<OnboardingData>({
     domains: [],
     skills: [],
@@ -97,6 +103,28 @@ export default function Onboarding() {
   });
 
   const totalSteps = 4;
+
+  useEffect(() => {
+    // Check if user is authenticated
+    const checkAuth = async () => {
+      try {
+        const response = await fetch("/api/auth/user");
+        if (response.ok) {
+          setIsAuthenticated(true);
+        } else {
+          // Not authenticated, redirect to home
+          navigate("/");
+        }
+      } catch (error) {
+        console.error("Auth check failed:", error);
+        navigate("/");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [navigate]);
 
   const techDomains = [
     {
@@ -338,8 +366,44 @@ export default function Onboarding() {
     }
   };
 
+  const saveProfileAndComplete = async () => {
+    try {
+      const response = await fetch("/api/user/onboarding", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          skills: data.skills,
+          experience: data.experience,
+          domains: data.domains,
+          goals: data.goals,
+        }),
+      });
+
+      if (!response.ok) {
+        let errorMessage = "Failed to save profile";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+        } catch {
+          errorMessage = `Server error: ${response.status} ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
+      }
+
+      setCurrentStep(currentStep + 1);
+    } catch (error) {
+      const errorMsg =
+        error instanceof Error ? error.message : "Unknown error occurred";
+      console.error("Error saving profile:", errorMsg);
+      alert(`Failed to save profile: ${errorMsg}`);
+    }
+  };
+
   const nextStep = () => {
-    if (currentStep <= totalSteps) {
+    if (currentStep === totalSteps) {
+      saveProfileAndComplete();
+    } else if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -945,6 +1009,23 @@ export default function Onboarding() {
     }
   };
 
+  // Show loading screen while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-accent/5">
+        <div className="flex flex-col items-center space-y-4">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          <p className="text-muted-foreground">Loading your onboarding...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect if not authenticated
+  if (!isAuthenticated) {
+    return null; // Will redirect via useEffect
+  }
+
   if (currentStep > totalSteps) {
     // Generate user's profile data for the professional card
     const getInitials = (name: string) => {
@@ -1038,8 +1119,8 @@ export default function Onboarding() {
           </div>
         </nav>
 
-        <div className="container mx-auto px-4 py-20">
-          <div className="max-w-4xl mx-auto">
+        <div className="container mx-auto px-4 py-12">
+          <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
               <div className="w-20 h-20 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-6">
                 <CheckCircle className="w-10 h-10 text-success" />
@@ -1054,11 +1135,27 @@ export default function Onboarding() {
             </div>
 
             {/* Professional Profile Card */}
-            <div className="flex justify-center mb-12">
+            <div className="flex justify-center mb-16">
               <ProfileCard profile={userProfile} />
             </div>
 
-            <div className="text-center space-y-4">
+            {/* ML-Powered Recommendations */}
+            <div className="mb-12">
+              <h2 className="text-3xl font-bold mb-2 text-center">
+                Discover Your Community
+              </h2>
+              <p className="text-center text-muted-foreground mb-8">
+                Based on your profile, here are personalized recommendations for
+                communities and developers you might want to connect with.
+              </p>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <RecommendedCommunities />
+                <RecommendedUsers />
+              </div>
+            </div>
+
+            <div className="text-center space-y-4 py-8 border-t">
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link to="/dashboard">
                   <Button size="lg" className="flex items-center space-x-2">
@@ -1066,15 +1163,15 @@ export default function Onboarding() {
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
-                <Link to="/mentors">
+                <Link to="/community">
                   <Button variant="outline" size="lg">
-                    Find Mentors
+                    Explore All Communities
                   </Button>
                 </Link>
               </div>
 
               <p className="text-sm text-muted-foreground">
-                Your profile will help us connect you with the right mentors and
+                Your profile helps us connect you with the right communities and
                 learning opportunities!
               </p>
             </div>

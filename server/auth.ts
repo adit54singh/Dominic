@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { v4 as uuidv4 } from "uuid";
-import { getQuery, runQuery } from "./db";
+import { getQuery, runQuery, isDatabaseConnected } from "./db";
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "your-client-id";
 const GOOGLE_CLIENT_SECRET =

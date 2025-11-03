@@ -18,6 +18,7 @@ const UserProfile = lazy(() => import("./pages/UserProfile"));
 const Domains = lazy(() => import("./pages/Domains"));
 const Mentors = lazy(() => import("./pages/Mentors"));
 const Community = lazy(() => import("./pages/Community"));
+const Recommendations = lazy(() => import("./pages/Recommendations"));
 const About = lazy(() => import("./pages/About"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
@@ -52,6 +53,7 @@ const App = () => (
               <Route path="/domains" element={<Domains />} />
               <Route path="/mentors" element={<Mentors />} />
               <Route path="/community" element={<Community />} />
+              <Route path="/recommendations" element={<Recommendations />} />
               <Route path="/about" element={<About />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
