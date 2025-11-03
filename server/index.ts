@@ -12,6 +12,7 @@ import {
   getCurrentUser,
   logout,
   updateUserProfile,
+  updateOnboardingProfile,
   getUserProjects,
   createProject,
   getUserCommunities,
